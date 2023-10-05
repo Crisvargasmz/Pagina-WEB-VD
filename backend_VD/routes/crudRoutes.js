@@ -189,55 +189,61 @@ module.exports = (db) => {
 
   //Ruta para insertar compras
 
-  router.post('/createcompras', (req, res) => {
-    const {fecha_compra,hora_compra,estado,fecha_estimada} = req.body;
-  
-    // Verifica si se proporcionó el nombre de la categoría
-    if (!fecha_compra ||!hora_compra ||!estado ||!fecha_estimada) {
-      return res.status(400).json({ error: 'Todos los campos son obligatorios' });
+// Definir la ruta para insertar compra y detalle
+router.post('/createcompras', (req, res) => {
+  const { fecha_compra, hora_compra, estado, fecha_estimada, cantidad_Compra, precio_Compra, id_Producto } = req.body;
+
+  if (!fecha_compra || !hora_compra || !estado || !fecha_estimada || !cantidad_Compra || !precio_Compra || !id_Producto) {
+    return res.status(400).json({ error: 'Todos los campos son obligatorios' });
+  }
+
+  const compraSql = 'INSERT INTO compras (fecha_compra, hora_compra, estado, fecha_estimada) VALUES (?,?,?,?)';
+  const compraValues = [fecha_compra, hora_compra, estado, fecha_estimada];
+
+  db.beginTransaction((err) => {
+    if (err) {
+      console.error('Error al iniciar la transacción:', err);
+      res.status(500).json({ error: 'Error al iniciar la transacción' });
+      return;
     }
-  
-    // Consulta SQL para insertar una nueva categoría
-    const sql = 'INSERT INTO compras (fecha_compra,hora_compra,estado,fecha_estimada) VALUES (?,?,?,?)';
-    const values = [fecha_compra,hora_compra,estado,fecha_estimada];
-  
-    // Ejecuta la consulta SQL
-    db.query(sql, values, (err, result) => {
+
+    db.query(compraSql, compraValues, (err, compraResult) => {
       if (err) {
-        console.error('Error al insertar compra:', err);
-        res.status(500).json({ error: 'Error al insertar compra' });
+        db.rollback(() => {
+          console.error('Error al insertar compra:', err);
+          res.status(500).json({ error: 'Error al insertar compra' });
+        });
       } else {
-        // Devuelve una respuesta exitosa
-        res.status(201).json({ message: 'compra insertada con éxito' });
+        const idCompra = compraResult.insertId;
+
+        const detalleCompraSql = 'INSERT INTO detalle_compra (cantidad_Compra, precio_Compra, id_Producto, id_Compra) VALUES (?,?,?,?)';
+        const detalleCompraValues = [cantidad_Compra, precio_Compra, id_Producto, idCompra];
+
+        db.query(detalleCompraSql, detalleCompraValues, (err, detalleCompraResult) => {
+          if (err) {
+            db.rollback(() => {
+              console.error('Error al insertar detallecompra:', err);
+              res.status(500).json({ error: 'Error al insertar detallecompra' });
+            });
+          } else {
+            db.commit((err) => {
+              if (err) {
+                db.rollback(() => {
+                  console.error('Error al confirmar la transacción:', err);
+                  res.status(500).json({ error: 'Error al confirmar la transacción' });
+                });
+              } else {
+                res.status(201).json({ message: 'Compra y detallecompra insertados con éxito' });
+              }
+            });
+          }
+        });
       }
     });
   });
+});
 
-//Ruta para insertar detallecompra
-
-  router.post('/createdetallecompra', (req, res) => {
-    const {cantidad_Compra,precio_Compra,id_Producto,id_Compra} = req.body
   
-    // Verifica si se proporcionó el nombre de la categoría
-    if (!cantidad_Compra ||!precio_Compra ||!id_Producto ||!id_Compra) {
-      return res.status(400).json({ error: 'Todos los campos son obligatorios' });
-    }
-  
-    // Consulta SQL para insertar una nueva categoría
-    const sql = 'INSERT INTO detalle_compra (cantidad_Compra,precio_Compra,id_Producto,id_Compra) VALUES (?,?,?,?)';
-    const values = [cantidad_Compra,precio_Compra,id_Producto,id_Compra];
-  
-    // Ejecuta la consulta SQL
-    db.query(sql, values, (err, result) => {
-      if (err) {
-        console.error('Error al insertar detallecompra:', err);
-        res.status(500).json({ error: 'Error al insertar detallecompra' });
-      } else {
-        // Devuelve una respuesta exitosa
-        res.status(201).json({ message: 'detallecompra insertada con éxito' });
-      }
-    });
-  });
 
   //Ruta para insertar Marca
 
