@@ -345,8 +345,8 @@ router.post('/createusuarios', (req, res) => {
       // Realiza la consulta SQL para actualizar el registro por ID
       const sql = `
         UPDATE categorias
-        SET nombre_Categoria = ?,
-        WHERE ID = ?
+        SET nombre_Categoria = ?
+        WHERE id_Categoria = ?
       `;
   
       const values = [nombre_Categoria,id];
@@ -380,7 +380,7 @@ router.post('/createusuarios', (req, res) => {
       // Realiza la consulta SQL para actualizar el registro por ID
       const sql = `
         UPDATE comentarios
-        SET calificacion, fecha_comentario, contenido_comentario, id_usuario = ?,?,?,?
+        SET calificacion = ?, fecha_comentario = ?, contenido_comentario = ?, id_usuario = ?
         WHERE id_Comentario = ?
       `;
   
@@ -450,7 +450,7 @@ router.post('/createusuarios', (req, res) => {
       // Realiza la consulta SQL para actualizar el registro por ID
       const sql = `
         UPDATE detalle_compra
-        SET cantidad_Compra, precio_Compra, id_Producto, id_Compra = ?,?,?,?
+        SET cantidad_Compra = ?, precio_Compra = ?, id_Producto = ?, id_Compra = ?
         WHERE id_Detallecompra = ?
       `;
   
@@ -519,10 +519,11 @@ router.post('/createusuarios', (req, res) => {
   
       // Realiza la consulta SQL para actualizar el registro por ID
       const sql = `
-        UPDATE productos
-        SET nombre_Producto,presentacion,imagen,descripcion,precio,cantidad,id_Marca,id_Categoria = ?,?,?,?,?,?,?,?
-        WHERE id_Producto = ?
-      `;
+  UPDATE productos
+  SET nombre_Producto = ?, presentacion = ?, imagen = ?, descripcion = ?, precio = ?, cantidad = ?, id_Marca = ?, id_Categoria = ?
+  WHERE id_Producto = ?
+`;
+
   
       const values = [nombre_Producto,presentacion,imagen,descripcion,precio,cantidad,id_Marca,id_Categoria,id];
   
@@ -555,7 +556,7 @@ router.post('/createusuarios', (req, res) => {
           // Realiza la consulta SQL para actualizar el registro por ID
           const sql = `
             UPDATE usuarios
-            SET nombre_Usuario, correo_Electronico, contrasena = ?, ?, ?
+            SET nombre_Usuario = ?, correo_Electronico = ?, contrasena = ?
             WHERE id_Usuario = ?
           `;
       
