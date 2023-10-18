@@ -3,13 +3,42 @@ const router = express.Router();
 
 module.exports = (db) => {
 
+
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Ruta para leer los nombres de marca y categoria
+
+// Ruta para obtener los nombres de las categorías
+router.get('/nombrecategorias', (req, res) => {
+  const sql = 'SELECT id_Categoria, nombre_Categoria FROM categorias';
+  db.query(sql, (err, result) => {
+    if (err) {
+      console.error('Error al obtener las categorías:', err);
+      res.status(500).json({ error: 'Error al obtener las categorías' });
+    } else {
+      res.status(200).json(result);
+    }
+  });
+});
+
+// Ruta para obtener los nombres de las marcas
+router.get('/nombremarcas', (req, res) => {
+  const sql = 'SELECT id_Marca, nombre_Marca FROM marcas';
+  db.query(sql, (err, result) => {
+    if (err) {
+      console.error('Error al obtener las marcas:', err);
+      res.status(500).json({ error: 'Error al obtener las marcas' });
+    } else {
+      res.status(200).json(result);
+    }
+  });
+});
 
  // Ruta para consultar Categoria
 
   router.get('/readcategoria', (req, res) => {
 
-    const sql = 'SELECT * FROM Categorias';
+    const sql = 'SELECT * FROM categorias';
   
     db.query(sql, (err, result) => {
         if (err) {
