@@ -10,7 +10,7 @@ const db = mysql.createConnection({
 
     host: 'localhost',
     user: 'root',
-    password: '130605',
+    password: 'cris2004',
     database: 'variedadesduarte'
 
     });
@@ -26,9 +26,11 @@ const db = mysql.createConnection({
 });
     // Configuración de CORS
     app.listen(port, () => {
-        console.log(`Servidor backend en funcionapuertomiento en el  ${port}`);
+        console.log(`Servidor backend funcionando en el puerto:${port}`);
 
 });
+
+app.use(cors());
 
 const crudRoutes = require('./routes/crudRoutes.js')(db);
 app.use('/crud', crudRoutes);
