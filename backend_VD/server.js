@@ -24,6 +24,9 @@ const db = mysql.createConnection({
     console.log('Conexión exitosa a la base de datos' );
     }
 });
+
+app.use(cors());
+
     // Configuración de CORS
     app.listen(port, () => {
         console.log(`Servidor backend funcionando en el puerto:${port}`);
