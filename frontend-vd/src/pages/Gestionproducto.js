@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Container, Card, Row, Col, Form, Modal, FloatingLabel  } from 'react-bootstrap';
+import { Table, Button, Container, Card, Row, Col, Form, Modal, FloatingLabel } from 'react-bootstrap';
 import Header from '../components/Header';
 
 function Gestionproducto() {
@@ -16,8 +16,10 @@ function Gestionproducto() {
     id_Marca: '',
     id_Categoria: '',
   });
+  const [marcas, setMarcas] = useState([]); // Estado para almacenar las marcas
+  const [categorias, setCategorias] = useState([]); // Estado para almacenar las categorías
 
-  // Función para abrir el modal y pasar los datos del docente seleccionado
+  // Función para abrir el modal y pasar los datos del producto seleccionado
   const openModal = (producto) => {
     setSelectedProducto(producto);
 
@@ -34,7 +36,7 @@ function Gestionproducto() {
     setShowModal(true);
   };
 
-// Función para manejar cambios en el formulario
+  // Función para manejar cambios en el formulario
   const handleFormChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -50,6 +52,28 @@ function Gestionproducto() {
       .catch((error) => console.error('Error al obtener los productos:', error));
   };
 
+  // Función para cargar las marcas desde el servidor
+  const loadMarcas = () => {
+    fetch('http://localhost:5000/crud/nombremarcas') // Asegúrate de tener una ruta válida en tu servidor para obtener las marcas
+      .then((response) => response.json())
+      .then((data) => setMarcas(data))
+      .catch((error) => console.error('Error al obtener las marcas:', error));
+  };
+
+  // Función para cargar las categorías desde el servidor
+  const loadCategorias = () => {
+    fetch('http://localhost:5000/crud/nombrecategorias') // Asegúrate de tener una ruta válida en tu servidor para obtener las categorías
+      .then((response) => response.json())
+      .then((data) => setCategorias(data))
+      .catch((error) => console.error('Error al obtener las categorías:', error));
+  };
+
+  // Realiza una solicitud GET al servidor para obtener los productos y cargar las marcas y categorías
+  useEffect(() => {
+    loadProducto();
+    loadMarcas();
+    loadCategorias();
+  }, []);
 
   // Función para enviar el formulario de actualización
   const handleUpdate = () => {
@@ -63,39 +87,31 @@ function Gestionproducto() {
     })
       .then((response) => {
         if (response.ok) {
-          // La actualización fue exitosa, puedes cerrar el modal y refrescar la lista de docentes
+          // La actualización fue exitosa, puedes cerrar el modal y refrescar la lista de productos
           setShowModal(false);
-          loadProducto(); // Cargar la lista de docentes actualizada
+          loadProducto(); // Cargar la lista de productos actualizada
         }
       })
       .catch((error) => console.error('Error al actualizar el registro:', error));
   };
 
-  // Función para eliminar un docente
+  // Función para eliminar un producto
   const handleDelete = (id_Producto) => {
     const confirmation = window.confirm('¿Seguro que deseas eliminar este producto?');
     if (confirmation) {
-      // Realiza la solicitud DELETE al servidor para eliminar el docente
+      // Realiza la solicitud DELETE al servidor para eliminar el producto
       fetch(`http://localhost:5000/crud/deleteproducto/${id_Producto}`, {
         method: 'DELETE',
       })
         .then((response) => {
           if (response.ok) {
-            // La eliminación fue exitosa, refresca la lista de docentes
+            // La eliminación fue exitosa, refresca la lista de productos
             loadProducto();
           }
         })
         .catch((error) => console.error('Error al eliminar el producto:', error));
     }
   };
-
-  // Realiza una solicitud GET al servidor para obtener los docentes
-  useEffect(() => {
-    fetch('http://localhost:5000/crud/readproducto')
-      .then((response) => response.json())
-      .then((data) => setProductos(data))
-      .catch((error) => console.error('Error al obtener los productos:', error));
-  }, []);
 
   return (
     <div>
@@ -111,11 +127,11 @@ function Gestionproducto() {
                 <th>Nombre</th>
                 <th>Presentación</th>
                 <th>Imagen</th>
-                <th>Descripcion</th>
+                <th>Descripción</th>
                 <th>Precio</th>
                 <th>Cantidad</th>
                 <th>Marca</th>
-                <th>Categoria</th>
+                <th>Categoría</th>
               </tr>
             </thead>
             <tbody>
@@ -128,8 +144,8 @@ function Gestionproducto() {
                   <td>{producto.descripcion}</td>
                   <td>{producto.precio}</td>
                   <td>{producto.cantidad}</td>
-                  <td>{producto.id_Marca}</td>
-                  <td>{producto.id_Categoria}</td>
+                  <td>{marcas.find((marca) => marca.id_Marca === producto.id_Marca)?.nombre_Marca}</td>
+                  <td>{categorias.find((categoria) => categoria.id_Categoria === producto.id_Categoria)?.nombre_Categoria}</td>
                   <td>
                     <Button variant="primary" onClick={() => openModal(producto)}>Actualizar</Button>
                     <Button variant="danger" onClick={() => handleDelete(producto.id_Producto)}>Eliminar</Button>
@@ -151,7 +167,6 @@ function Gestionproducto() {
               <Card.Title>Registro de producto</Card.Title>
               <Form className="mt-3">
                 <Row className="g-3">
-
                   <Col sm="6" md="6" lg="4">
                     <FloatingLabel controlId="nombre_Producto" label="Nombre">
                       <Form.Control
@@ -163,95 +178,83 @@ function Gestionproducto() {
                       />
                     </FloatingLabel>
                   </Col>
-
                   <Col sm="6" md="6" lg="4">
                     <FloatingLabel controlId="presentacion" label="Presentación">
                       <Form.Control
                         type="text"
-                        placeholder="Ingrese la presentacion"
+                        placeholder="Ingrese la presentación"
                         name="presentacion"
                         value={formData.presentacion}
                         onChange={handleFormChange}
                       />
                     </FloatingLabel>
                   </Col>
-
                   <Col sm="12" md="6" lg="4">
                     <FloatingLabel controlId="imagen" label="Imagen">
-                      <Form.Control 
-                        type="text" 
+                      <Form.Control
+                        type="text"
                         placeholder="Ingrese la imagen"
                         name="imagen"
                         value={formData.imagen}
-                        onChange={handleFormChange} 
+                        onChange={handleFormChange}
                       />
                     </FloatingLabel>
                   </Col>
-
-                 
-
                   <Col sm="12" md="6" lg="8">
                     <FloatingLabel controlId="descripcion" label="Descripción">
-                      <Form.Control 
-                        type="text" 
-                        placeholder="Ingrese la descripcion"
+                      <Form.Control
+                        type="text"
+                        placeholder="Ingrese la descripción"
                         name="descripcion"
                         value={formData.descripcion}
-                        onChange={handleFormChange} 
+                        onChange={handleFormChange}
                       />
                     </FloatingLabel>
                   </Col>
-
                   <Col sm="12" md="6" lg="4">
                     <FloatingLabel controlId="precio" label="Precio">
-                      <Form.Control 
-                        type="number" 
+                      <Form.Control
+                        type="number"
                         placeholder="Ingrese el precio"
                         name="precio"
                         value={formData.precio}
-                        onChange={handleFormChange} 
+                        onChange={handleFormChange}
                       />
                     </FloatingLabel>
                   </Col>
-
                   <Col sm="12" md="6" lg="4">
                     <FloatingLabel controlId="cantidad" label="Cantidad">
-                      <Form.Control 
-                        type="number" 
+                      <Form.Control
+                        type="number"
                         placeholder="Ingrese la cantidad"
                         name="cantidad"
                         value={formData.cantidad}
-                        onChange={handleFormChange} 
+                        onChange={handleFormChange}
                       />
                     </FloatingLabel>
-                  </Col>  
-
+                  </Col>
                   <Col sm="12" md="6" lg="4">
                     <FloatingLabel controlId="id_Marca" label="Marca">
-                      <Form.Control 
-                        type="id_Marca" 
+                      <Form.Control
+                        type="text"
                         placeholder="Ingrese la marca"
                         name="id_Marca"
                         value={formData.id_Marca}
-                        onChange={handleFormChange} 
+                        onChange={handleFormChange}
                       />
                     </FloatingLabel>
-                  </Col>  
-
-
+                  </Col>
                   <Col sm="12" md="6" lg="4">
-                    <FloatingLabel controlId="id_Categoria" label="Categoria">
-                      <Form.Control 
-                        type="number" 
-                        placeholder="Ingrese la categoria"
+                    <FloatingLabel controlId="id_Categoria" label="Categoría">
+                      <Form.Control
+                        type="text"
+                        placeholder="Ingrese la categoría"
                         name="id_Categoria"
                         value={formData.id_Categoria}
-                        onChange={handleFormChange} 
+                        onChange={handleFormChange}
                       />
                     </FloatingLabel>
-                  </Col>  
-
-          
+                  </Col>
                 </Row>
               </Form>
             </Card.Body>
@@ -266,7 +269,6 @@ function Gestionproducto() {
           </Button>
         </Modal.Footer>
       </Modal>
-
     </div>
   );
 }
