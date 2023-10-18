@@ -163,7 +163,7 @@ function Producto() {
 
               </Row>
               <div className="center-button">
-                <Button variant="primary" type="submit" className="mt-3 product-button" size="lg">
+                <Button variant="primary" type="submit" className="mt-3" size="lg">
                   Registrar
                 </Button>
               </div>

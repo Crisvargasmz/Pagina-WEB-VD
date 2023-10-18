@@ -15,7 +15,7 @@ function Header() {
       {/* Navbar principal */}
       <Navbar className="navbar-color" variant="dark" expand="md">
         <Container>
-          <Navbar.Brand href="#home">Eliab51</Navbar.Brand>
+          <Navbar.Brand href="#home">Variedades Duarte</Navbar.Brand>
           <Navbar.Toggle
             aria-controls="basic-navbar-nav"
             style={{ display: 'none' }}
@@ -37,19 +37,12 @@ function Header() {
                   <Link to="/Producto" className="link-unstyled">Registrar Producto </Link>
                 </NavDropdown.Item>
 
-                <NavDropdown.Item>
-                  <Link to="/actualizar-cliente" className="link-unstyled">Actualizar Producto</Link>
-                </NavDropdown.Item>
-
-                <NavDropdown.Item>
-                  <Link to="/ver-cliente" className="link-unstyled">Ver Producto</Link>
-                </NavDropdown.Item>
-
                 <NavDropdown.Divider />
 
                 <NavDropdown.Item>
-                  <Link to="/eliminar-cliente" className="link-unstyled">Eliminar Producto</Link>
+                  <Link to="/Gestionproducto" className="link-unstyled">Producto</Link>
                 </NavDropdown.Item>
+
               </NavDropdown>
 
             </Nav>
