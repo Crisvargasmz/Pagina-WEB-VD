@@ -193,16 +193,16 @@ router.get('/nombremarcas', (req, res) => {
   //Ruta para insertar comentarios
 
   router.post('/createcomentarios', (req, res) => {
-    const { calificacion, fecha_comentario, contenido_comentario, id_usuario } = req.body;
+    const { calificacion, fecha_Comentario, contenido_Comentario, id_Usuario,id_Producto} = req.body;
   
     // Verifica si se proporcionó el nombre de la categoría
-    if (!calificacion ||!fecha_comentario ||! contenido_comentario ||! id_usuario ) {
+    if (!calificacion ||!fecha_Comentario ||! contenido_Comentario ||! id_Usuario||!id_Producto ) {
       return res.status(400).json({ error: 'Todos los campos son obligatorios' });
     }
   
     // Consulta SQL para insertar una nueva categoría
-    const sql = 'INSERT INTO comentarios (calificacion, fecha_comentario, contenido_comentario, id_usuario) VALUES (?,?,?,?)';
-    const values = [calificacion, fecha_comentario, contenido_comentario, id_usuario];
+    const sql = 'INSERT INTO comentarios (calificacion, fecha_Comentario, contenido_Comentario, id_Usuario,id_Producto) VALUES (?,?,?,?,?)';
+    const values = [calificacion, fecha_Comentario, contenido_Comentario, id_Usuario,id_Producto];
   
     // Ejecuta la consulta SQL
     db.query(sql, values, (err, result) => {
@@ -334,12 +334,12 @@ router.post('/createusuarios', (req, res) => {
   const {nombre_Usuario,correo_Electronico,contrasena} = req.body
 
   // Verifica si se proporcionó el nombre de la categoría
-  if (!nombre_Usuario,correo_Electronico,contrasena) {
+  if (!nombre_Usuario||!correo_Electronico||!contrasena) {
     return res.status(400).json({ error: 'Todos los campos son obligatorios' });
   }
 
   // Consulta SQL para insertar una nueva categoría
-  const sql = 'INSERT INTO usuarios (nombre_Usuario,correo_Electronico,contrasena) VALUES (?)';
+  const sql = 'INSERT INTO usuarios (nombre_Usuario,correo_Electronico,contrasena) VALUES (?,?,?)';
   const values = [nombre_Usuario,correo_Electronico,contrasena];
 
   // Ejecuta la consulta SQL
@@ -399,7 +399,7 @@ router.post('/createusuarios', (req, res) => {
       const id = req.params.id;
   
       // Recibe los datos actualizados desde el cuerpo de la solicitud (req.body)
-      const {calificacion, fecha_comentario, contenido_comentario, id_usuario} = req.body;
+      const {calificacion,contenido_Comentario} = req.body;
   
       // Verifica si se proporcionaron los datos necesarios
       if (!calificacion) {
@@ -409,11 +409,11 @@ router.post('/createusuarios', (req, res) => {
       // Realiza la consulta SQL para actualizar el registro por ID
       const sql = `
         UPDATE comentarios
-        SET calificacion = ?, fecha_comentario = ?, contenido_comentario = ?, id_usuario = ?
+        SET calificacion = ?,contenido_Comentario = ?
         WHERE id_Comentario = ?
       `;
   
-      const values = [calificacion, fecha_comentario, contenido_comentario, id_usuario,id];
+      const values = [calificacion,contenido_Comentario,id];
   
       // Ejecuta la consulta
       db.query(sql, values, (err, result) => {
@@ -613,10 +613,10 @@ router.post('/createusuarios', (req, res) => {
     const id = req.params.id;
 
     // Realiza la consulta SQL para eliminar el registro por ID
-    const sql = 'DELETE FROM categorias WHERE ID = ?';
+    const sql = 'DELETE FROM categorias WHERE id_Categoria = ?';
 
     // Ejecuta la consulta
-    db.query(sql, [id_Categoria], (err, result) => {
+    db.query(sql, [id], (err, result) => {
       if (err) {
         console.error('Error al eliminar el registro:', err);
         res.status(500).json({ error: 'Error al eliminar el registro' });
