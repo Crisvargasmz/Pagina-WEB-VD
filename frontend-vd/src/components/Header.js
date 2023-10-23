@@ -37,13 +37,60 @@ function Header() {
                   <Link to="/Producto" className="link-unstyled">Registrar Producto </Link>
                 </NavDropdown.Item>
 
+                <NavDropdown.Item>
+                  <Link to="/Categoria" className="link-unstyled">Registrar Categoría</Link>
+                </NavDropdown.Item>
+
+                <NavDropdown.Item>
+                  <Link to="/Marca" className="link-unstyled">Registrar Marca</Link>
+                </NavDropdown.Item>
+
                 <NavDropdown.Divider />
 
                 <NavDropdown.Item>
-                  <Link to="/Gestionproducto" className="link-unstyled">Producto</Link>
+                  <Link to="/Gestionproducto" className="link-unstyled">Productos</Link>
+                </NavDropdown.Item>
+
+                <NavDropdown.Item>
+                  <Link to="/Gestioncategoria" className="link-unstyled">Categorias</Link>
+                </NavDropdown.Item>
+
+                <NavDropdown.Item>
+                  <Link to="/Gestionmarca" className="link-unstyled">Marcas</Link>
                 </NavDropdown.Item>
 
               </NavDropdown>
+
+              <NavDropdown title="Usuario" id="usuario">
+
+                <NavDropdown.Item>
+                  <Link to="/Usuario" className="link-unstyled">Registrar Usuario</Link>
+                </NavDropdown.Item>
+
+                <NavDropdown.Divider />
+
+                <NavDropdown.Item>
+                  <Link to="/Gestionusuario" className="link-unstyled">Usuarios</Link>
+                </NavDropdown.Item>
+
+              </NavDropdown>
+              
+              <NavDropdown title="Comentarios" id="comentario">
+
+              <NavDropdown.Item>
+                <Link to="/Comentario" className="link-unstyled">Registrar Comentario</Link>
+              </NavDropdown.Item>
+
+              <NavDropdown.Divider />
+
+              <NavDropdown.Item>
+                <Link to="/Gestioncomentario" className="link-unstyled">Comentarios</Link>
+              </NavDropdown.Item>
+
+              </NavDropdown>
+
+
+              
 
             </Nav>
           </Navbar.Collapse>
