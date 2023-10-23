@@ -38,7 +38,9 @@ calificacion INT,
 fecha_Comentario DATE,
 contenido_Comentario VARCHAR (250),
 id_Usuario INT,
-CONSTRAINT FK_Comentario_Usuario FOREIGN KEY (id_Usuario) REFERENCES Usuarios(id_Usuario)
+CONSTRAINT FK_Comentario_Usuario FOREIGN KEY (id_Usuario) REFERENCES Usuarios(id_Usuario),
+id_Producto INT,
+CONSTRAINT FK_Comentario_Producto FOREIGN KEY (id_Producto) REFERENCES Productos(id_Producto)
 );
 
 CREATE TABLE Compras(
