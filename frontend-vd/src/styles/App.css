@@ -30,3 +30,38 @@
   justify-content: center;
 }
 
+.Seleccion{
+  cursor: pointer;
+  border-radius: 4px;
+  padding-left: 6px;
+  transition: all .1s;
+}
+.Seleccion:hover{
+  background-color: #0e3ad8;
+  color: #ffff;
+}
+
+.show-button {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+
+.centrado{
+  text-align: center;
+}
+.title{
+  text-align: center;
+  border-bottom: 4px solid #0e3ad8;
+  padding-bottom: 5px;
+  font-weight: bold;
+}
+.actualizar{
+  margin-right: 5px;
+
+}
+.eliminar{
+  margin-left: 5px;
+}
