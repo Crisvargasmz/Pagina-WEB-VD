@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Button, Container, Card, Row, Col, Form, Modal, FloatingLabel } from 'react-bootstrap';
 import Header from '../components/Header';
+import { FaSistrix, FaPencil, FaTrashCan} from 'react-icons/fa6';
 
 function Gestionproducto() {
   const [productos, setProductos] = useState([]);
@@ -16,8 +17,8 @@ function Gestionproducto() {
     id_Marca: '',
     id_Categoria: '',
   });
-  const [marcas, setMarcas] = useState([]); // Estado para almacenar las marcas
-  const [categorias, setCategorias] = useState([]); // Estado para almacenar las categorías
+  const [marcas, setMarcas] = useState([]);
+  const [categorias, setCategorias] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedBrand, setSelectedBrand] = useState(null);
@@ -27,7 +28,7 @@ function Gestionproducto() {
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
   };
-  
+
   const filteredProducto = productos.filter((producto) => {
     const nombre_Producto = producto.nombre_Producto.toLowerCase();
     const presentacion = producto.presentacion.toLowerCase();
@@ -35,8 +36,7 @@ function Gestionproducto() {
     const marca = marcas.find((marca) => marca.id_Marca === producto.id_Marca)?.nombre_Marca.toLowerCase();
     const categoria = categorias.find((categoria) => categoria.id_Categoria === producto.id_Categoria)?.nombre_Categoria.toLowerCase();
     const search = searchQuery.toLowerCase();
-  
-    // Verifica si la cadena de búsqueda se encuentra en algún campo
+
     return (
       nombre_Producto.includes(search) ||
       presentacion.includes(search) ||
@@ -46,7 +46,6 @@ function Gestionproducto() {
     );
   });
 
-  // Función para abrir el modal y pasar los datos del producto seleccionado
   const openModal = (producto) => {
     setSelectedProducto(producto);
 
@@ -67,7 +66,6 @@ function Gestionproducto() {
     const { name, value } = e.target;
 
     if (name === 'id_Categoria' || name === 'id_Marca') {
-      // Si se selecciona una categoría o marca en el formulario, se almacenará su ID
       setFormData({
         ...formData,
         [name]: value,
@@ -87,32 +85,27 @@ function Gestionproducto() {
       .catch((error) => console.error('Error al obtener los productos:', error));
   };
 
-  // Función para cargar las marcas desde el servidor
   const loadMarcas = () => {
-    fetch('http://localhost:5000/crud/nombremarcas') // Asegúrate de tener una ruta válida en tu servidor para obtener las marcas
+    fetch('http://localhost:5000/crud/nombremarcas')
       .then((response) => response.json())
       .then((data) => setMarcas(data))
       .catch((error) => console.error('Error al obtener las marcas:', error));
   };
 
-  // Función para cargar las categorías desde el servidor
   const loadCategorias = () => {
-    fetch('http://localhost:5000/crud/nombrecategorias') // Asegúrate de tener una ruta válida en tu servidor para obtener las categorías
+    fetch('http://localhost:5000/crud/nombrecategorias')
       .then((response) => response.json())
       .then((data) => setCategorias(data))
       .catch((error) => console.error('Error al obtener las categorías:', error));
   };
 
-  // Realiza una solicitud GET al servidor para obtener los productos y cargar las marcas y categorías
   useEffect(() => {
     loadProducto();
     loadMarcas();
     loadCategorias();
   }, []);
 
-  // Función para enviar el formulario de actualización
   const handleUpdate = () => {
-    // Realiza la solicitud PUT al servidor para actualizar el registro
     fetch(`http://localhost:5000/crud/updateproducto/${selectedproducto.id_Producto}`, {
       method: 'PUT',
       headers: {
@@ -122,25 +115,21 @@ function Gestionproducto() {
     })
       .then((response) => {
         if (response.ok) {
-          // La actualización fue exitosa, puedes cerrar el modal y refrescar la lista de productos
           setShowModal(false);
-          loadProducto(); // Cargar la lista de productos actualizada
+          loadProducto();
         }
       })
       .catch((error) => console.error('Error al actualizar el registro:', error));
   };
 
-  // Función para eliminar un producto
   const handleDelete = (id_Producto) => {
     const confirmation = window.confirm('¿Seguro que deseas eliminar este producto?');
     if (confirmation) {
-      // Realiza la solicitud DELETE al servidor para eliminar el producto
       fetch(`http://localhost:5000/crud/deleteproducto/${id_Producto}`, {
         method: 'DELETE',
       })
         .then((response) => {
           if (response.ok) {
-            // La eliminación fue exitosa, refresca la lista de productos
             loadProducto();
           }
         })
@@ -148,7 +137,6 @@ function Gestionproducto() {
     }
   };
 
-  // Funciones para abrir y cerrar el Modal de categorías
   const openCategoryModal = () => {
     setShowCategoryModal(true);
   };
@@ -157,17 +145,15 @@ function Gestionproducto() {
     setShowCategoryModal(false);
   };
 
-  // Función para seleccionar una categoría desde el Modal de categorías
   const selectCategory = (category) => {
     setSelectedCategory(category);
     setFormData({
       ...formData,
-      id_Categoria: category.id_Categoria, // Establece el ID internamente
+      id_Categoria: category.id_Categoria,
     });
     closeCategoryModal();
   };
 
-  // Funciones para abrir y cerrar el Modal de marcas
   const openBrandModal = () => {
     setShowBrandModal(true);
   };
@@ -176,12 +162,11 @@ function Gestionproducto() {
     setShowBrandModal(false);
   };
 
-  // Función para seleccionar una marca desde el Modal de marcas
   const selectBrand = (brand) => {
     setSelectedBrand(brand);
     setFormData({
       ...formData,
-      id_Marca: brand.id_Marca, // Establece el ID internamente
+      id_Marca: brand.id_Marca,
     });
     closeBrandModal();
   };
@@ -192,7 +177,7 @@ function Gestionproducto() {
 
       <Card className="m-3">
         <Card.Body>
-          <Card.Title className="mb-3">Listado de Productos</Card.Title>
+          <Card.Title className="mb-3 title ">Listado de Productos</Card.Title>
 
           <Row className="mb-3">
             <Col>
@@ -209,7 +194,7 @@ function Gestionproducto() {
 
           <Table striped bordered hover>
             <thead>
-              <tr>
+              <tr className='centrado'>
                 <th>ID</th>
                 <th>Nombre</th>
                 <th>Presentación</th>
@@ -223,7 +208,7 @@ function Gestionproducto() {
             </thead>
             <tbody>
               {filteredProducto.map((producto) => (
-                <tr key={producto.id_Producto}>
+                <tr className='centrado' key={producto.id_Producto}>
                   <td>{producto.id_Producto}</td>
                   <td>{producto.nombre_Producto}</td>
                   <td>{producto.presentacion}</td>
@@ -234,8 +219,8 @@ function Gestionproducto() {
                   <td>{marcas.find((marca) => marca.id_Marca === producto.id_Marca)?.nombre_Marca}</td>
                   <td>{categorias.find((categoria) => categoria.id_Categoria === producto.id_Categoria)?.nombre_Categoria}</td>
                   <td>
-                    <Button variant="primary" onClick={() => openModal(producto)}>Actualizar</Button>
-                    <Button variant="danger" onClick={() => handleDelete(producto.id_Producto)}>Eliminar</Button>
+                    <Button className='actualizar' variant="primary" onClick={() => openModal(producto)}><FaPencil/></Button>
+                    <Button className='eliminar' variant="danger" onClick={() => handleDelete(producto.id_Producto)}><FaTrashCan/></Button>
                   </td>
                 </tr>
               ))}
@@ -321,20 +306,33 @@ function Gestionproducto() {
                     </FloatingLabel>
                   </Col>
                   <Col sm="12" md="6" lg="4">
-                    <Button variant="primary" onClick={openCategoryModal}>
-                      Seleccionar Categoría
-                    </Button>
-                    {selectedCategory && (
-                      <label>Categoría seleccionada: {selectedCategory.nombre_Categoria}</label>
-                    )}
+                    <FloatingLabel controlId="categoria" label="Categoría">
+                      <Form.Control
+                        type="text"
+                        placeholder="Categoría seleccionada"
+                        name="categoria"
+                        value={selectedCategory ? selectedCategory.nombre_Categoria : ''}
+                        readOnly
+                      />
+                      <Button className='show-button' variant="primary" onClick={openCategoryModal}>
+                      <FaSistrix/>
+                      </Button>
+                    </FloatingLabel>
                   </Col>
                   <Col sm="12" md="6" lg="4">
-                    <Button variant="primary" onClick={openBrandModal}>
-                      Seleccionar Marca
-                    </Button>
-                    {selectedBrand && (
-                      <label>Marca seleccionada: {selectedBrand.nombre_Marca}</label>
-                    )}
+                    <FloatingLabel controlId="marca" label="Marca">
+                      <Form.Control
+                        type="text"
+                        placeholder="Marca seleccionada"
+                        name="marca"
+                        value={selectedBrand ? selectedBrand.nombre_Marca : ''}
+                        readOnly
+                      />
+                      <Button className='show-button' variant="primary" onClick={openBrandModal}>
+                      <FaSistrix/>
+                      </Button>
+                    </FloatingLabel>
+
                   </Col>
                 </Row>
               </Form>
@@ -357,7 +355,7 @@ function Gestionproducto() {
         </Modal.Header>
         <Modal.Body>
           {categorias.map((category) => (
-            <div key={category.id_Categoria} onClick={() => selectCategory(category)}>
+            <div className='Seleccion' key={category.id_Categoria} onClick={() => selectCategory(category)}>
               {category.nombre_Categoria}
             </div>
           ))}
@@ -369,7 +367,7 @@ function Gestionproducto() {
         </Modal.Header>
         <Modal.Body>
           {marcas.map((brand) => (
-            <div key={brand.id_Marca} onClick={() => selectBrand(brand)}>
+            <div className='Seleccion' key={brand.id_Marca} onClick={() => selectBrand(brand)}>
               {brand.nombre_Marca}
             </div>
           ))}
