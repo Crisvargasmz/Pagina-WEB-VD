@@ -18,6 +18,33 @@ function Gestionproducto() {
   });
   const [marcas, setMarcas] = useState([]); // Estado para almacenar las marcas
   const [categorias, setCategorias] = useState([]); // Estado para almacenar las categorías
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedBrand, setSelectedBrand] = useState(null);
+  const [showCategoryModal, setShowCategoryModal] = useState(false);
+  const [showBrandModal, setShowBrandModal] = useState(false);
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+  
+  const filteredProducto = productos.filter((producto) => {
+    const nombre_Producto = producto.nombre_Producto.toLowerCase();
+    const presentacion = producto.presentacion.toLowerCase();
+    const descripcion = producto.descripcion.toLowerCase();
+    const marca = marcas.find((marca) => marca.id_Marca === producto.id_Marca)?.nombre_Marca.toLowerCase();
+    const categoria = categorias.find((categoria) => categoria.id_Categoria === producto.id_Categoria)?.nombre_Categoria.toLowerCase();
+    const search = searchQuery.toLowerCase();
+  
+    // Verifica si la cadena de búsqueda se encuentra en algún campo
+    return (
+      nombre_Producto.includes(search) ||
+      presentacion.includes(search) ||
+      descripcion.includes(search) ||
+      marca.includes(search) ||
+      categoria.includes(search)
+    );
+  });
 
   // Función para abrir el modal y pasar los datos del producto seleccionado
   const openModal = (producto) => {
@@ -36,13 +63,21 @@ function Gestionproducto() {
     setShowModal(true);
   };
 
-  // Función para manejar cambios en el formulario
   const handleFormChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+
+    if (name === 'id_Categoria' || name === 'id_Marca') {
+      // Si se selecciona una categoría o marca en el formulario, se almacenará su ID
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
   };
 
   const loadProducto = () => {
@@ -113,6 +148,44 @@ function Gestionproducto() {
     }
   };
 
+  // Funciones para abrir y cerrar el Modal de categorías
+  const openCategoryModal = () => {
+    setShowCategoryModal(true);
+  };
+
+  const closeCategoryModal = () => {
+    setShowCategoryModal(false);
+  };
+
+  // Función para seleccionar una categoría desde el Modal de categorías
+  const selectCategory = (category) => {
+    setSelectedCategory(category);
+    setFormData({
+      ...formData,
+      id_Categoria: category.id_Categoria, // Establece el ID internamente
+    });
+    closeCategoryModal();
+  };
+
+  // Funciones para abrir y cerrar el Modal de marcas
+  const openBrandModal = () => {
+    setShowBrandModal(true);
+  };
+
+  const closeBrandModal = () => {
+    setShowBrandModal(false);
+  };
+
+  // Función para seleccionar una marca desde el Modal de marcas
+  const selectBrand = (brand) => {
+    setSelectedBrand(brand);
+    setFormData({
+      ...formData,
+      id_Marca: brand.id_Marca, // Establece el ID internamente
+    });
+    closeBrandModal();
+  };
+
   return (
     <div>
       <Header />
@@ -120,6 +193,20 @@ function Gestionproducto() {
       <Card className="m-3">
         <Card.Body>
           <Card.Title className="mb-3">Listado de Productos</Card.Title>
+
+          <Row className="mb-3">
+            <Col>
+              <FloatingLabel controlId="search" label="Buscar">
+                <Form.Control
+                  type="text"
+                  placeholder="Buscar"
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                />
+              </FloatingLabel>
+            </Col>
+          </Row>
+
           <Table striped bordered hover>
             <thead>
               <tr>
@@ -135,7 +222,7 @@ function Gestionproducto() {
               </tr>
             </thead>
             <tbody>
-              {productos.map((producto) => (
+              {filteredProducto.map((producto) => (
                 <tr key={producto.id_Producto}>
                   <td>{producto.id_Producto}</td>
                   <td>{producto.nombre_Producto}</td>
@@ -234,26 +321,20 @@ function Gestionproducto() {
                     </FloatingLabel>
                   </Col>
                   <Col sm="12" md="6" lg="4">
-                    <FloatingLabel controlId="id_Marca" label="Marca">
-                      <Form.Control
-                        type="text"
-                        placeholder="Ingrese la marca"
-                        name="id_Marca"
-                        value={formData.id_Marca}
-                        onChange={handleFormChange}
-                      />
-                    </FloatingLabel>
+                    <Button variant="primary" onClick={openCategoryModal}>
+                      Seleccionar Categoría
+                    </Button>
+                    {selectedCategory && (
+                      <label>Categoría seleccionada: {selectedCategory.nombre_Categoria}</label>
+                    )}
                   </Col>
                   <Col sm="12" md="6" lg="4">
-                    <FloatingLabel controlId="id_Categoria" label="Categoría">
-                      <Form.Control
-                        type="text"
-                        placeholder="Ingrese la categoría"
-                        name="id_Categoria"
-                        value={formData.id_Categoria}
-                        onChange={handleFormChange}
-                      />
-                    </FloatingLabel>
+                    <Button variant="primary" onClick={openBrandModal}>
+                      Seleccionar Marca
+                    </Button>
+                    {selectedBrand && (
+                      <label>Marca seleccionada: {selectedBrand.nombre_Marca}</label>
+                    )}
                   </Col>
                 </Row>
               </Form>
@@ -268,6 +349,31 @@ function Gestionproducto() {
             Actualizar
           </Button>
         </Modal.Footer>
+      </Modal>
+
+      <Modal show={showCategoryModal} onHide={closeCategoryModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Seleccionar Categoría</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {categorias.map((category) => (
+            <div key={category.id_Categoria} onClick={() => selectCategory(category)}>
+              {category.nombre_Categoria}
+            </div>
+          ))}
+        </Modal.Body>
+      </Modal>
+      <Modal show={showBrandModal} onHide={closeBrandModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Seleccionar Marca</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {marcas.map((brand) => (
+            <div key={brand.id_Marca} onClick={() => selectBrand(brand)}>
+              {brand.nombre_Marca}
+            </div>
+          ))}
+        </Modal.Body>
       </Modal>
     </div>
   );

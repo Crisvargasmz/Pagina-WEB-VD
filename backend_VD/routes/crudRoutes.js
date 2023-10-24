@@ -755,16 +755,3 @@ router.post('/createusuarios', (req, res) => {
 
     return router;
 };
-
-//Probar en la terminal para insertar un dato.
-//curl -X POST -H "Content-Type: application/json" -d "{\"id\":51004,\"name\":\"Managua\",\"countrycode\":\"IDN\",\"district\":\"Distrito 9\",\"population\":1000000}" http://localhost:5000/crud/create
-
-
-//Probar en la terminal para actualizar un registro existente.
-//curl -X PUT -H "Content-Type: application/json" -d "{\"name\":\"NuevoNombre\",\"countrycode\":\"CO\",\"district\":\"NuevoDistrito\",\"population\":2000000}" http://localhost:5000/crud/update/51003
-
-//Probar en la terminal para eliminar un registro, empleado un id existente.
-//curl -X DELETE http://localhost:5000/crud/delete/51003
-
-
-
