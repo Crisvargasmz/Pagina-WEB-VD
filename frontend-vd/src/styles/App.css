@@ -49,6 +49,16 @@
   z-index: 1;
 }
 
+.show-button1{
+  position: absolute;
+  left: 430px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+
+
+}
+
 .centrado{
   text-align: center;
 }
