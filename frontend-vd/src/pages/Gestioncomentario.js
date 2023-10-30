@@ -4,6 +4,7 @@ import Header from '../components/Header';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar as solidStar } from '@fortawesome/free-solid-svg-icons';
 import { faStar as regularStar } from '@fortawesome/free-regular-svg-icons';
+import { FaSistrix, FaPencil, FaTrashCan} from 'react-icons/fa6';
 
 function Gestioncomentario() {
   const [comentarios, setComentarios] = useState([]);
@@ -126,8 +127,8 @@ function Gestioncomentario() {
                   <td>{comentario.id_Usuario}</td>                 
                   <td>{comentario.id_Producto}</td>
                   <td>
-                    <Button variant="primary" onClick={() => openModal(comentario)}>Actualizar</Button>
-                    <Button variant="danger" onClick={() => handleDelete(comentario.id_Comentario)}>Eliminar</Button>
+                    <Button variant="primary" onClick={() => openModal(comentario)}><FaPencil/></Button>
+                    <Button variant="danger" onClick={() => handleDelete(comentario.id_Comentario)}><FaTrashCan/></Button>
                   </td>
                 </tr>
               ))}
