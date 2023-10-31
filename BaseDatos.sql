@@ -29,7 +29,8 @@ CREATE TABLE Usuarios(
 id_Usuario INT AUTO_INCREMENT PRIMARY KEY,
 nombre_Usuario VARCHAR(25),
 correo_Electronico VARCHAR (150),
-contrasena VARCHAR (15)
+contrasena VARCHAR (15),
+rol VARCHAR (20) NOT NULL
 );
 
 CREATE TABLE Comentarios(
