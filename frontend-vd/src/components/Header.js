@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Navbar, Nav, Offcanvas, Button, NavDropdown, Container } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
-function Header() {
+function Header({rol}) {
   const [showMenu, setShowMenu] = useState(false);
 
   const toggleMenu = () => {
@@ -11,7 +11,13 @@ function Header() {
   };
 
   return (
+      <div>
+
+        {rol === 'admin' && ( 
+
     <div>
+        
+
       {/* Navbar principal */}
       <Navbar className="navbar-color" variant="dark" expand="md">
         <Container>
@@ -136,7 +142,14 @@ function Header() {
             </NavDropdown>
           </Nav>
         </Offcanvas.Body>
-      </Offcanvas>
+        </Offcanvas>
+        </div> )}
+
+        {rol === 'ventas' && (
+        <div>
+          {/* Código para el rol 'ventas' */}
+        </div>
+      )}
     </div>
   );
 }
