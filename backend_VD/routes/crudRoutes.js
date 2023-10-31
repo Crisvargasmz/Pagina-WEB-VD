@@ -6,7 +6,40 @@ module.exports = (db) => {
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Ruta para validar usuarios
+
+  // Ruta para verificar las credenciales y obtener el rol del usuario
+  router.post('/login', (req, res) => {
+    const { nombre_Usuario, contrasena } = req.body;
+
+    if (!nombre_Usuario || !contrasena) {
+      return res.status(400).json({ error: 'Nombre de usuario y contraseña son obligatorios' });
+    }
+
+    // Realizar la consulta para verificar las credenciales en la base de datos
+    const sql = `SELECT rol FROM usuarios WHERE nombre_Usuario = ? AND contrasena = ?`;
+    db.query(sql, [nombre_Usuario, contrasena], (err, result) => {
+      if (err) {
+        console.error('Error al verificar credenciales:', err);
+        return res.status(500).json({ error: 'Error al verificar credenciales' });
+      }
+
+      if (result.length === 1) {
+        const { rol } = result[0];
+        res.json({ rol }); // Devolver el rol si las credenciales son correctas
+      } else {
+        res.status(401).json({ error: 'Credenciales incorrectas' });
+      }
+    });
+  });
+
+
+
+
+
 // Ruta para leer los nombres de marca y categoria
+
 
 // Ruta para obtener los nombres de las categorías
 router.get('/nombrecategorias', (req, res) => {
