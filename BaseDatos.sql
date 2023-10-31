@@ -13,11 +13,11 @@ nombre_Marca VARCHAR (25)
 
 CREATE TABLE Productos  (
 id_Producto INT AUTO_INCREMENT PRIMARY KEY,
-nombre_Producto VARCHAR (25) NOT NULL,
+nombre_Producto VARCHAR (255) NOT NULL,
 presentacion VARCHAR (25) NULL,
-imagen VARCHAR (50) NOT NULL,
-descripcion VARCHAR (250) NULL,
-precio DECIMAL (12.4) NOT NULL,
+imagen VARCHAR (255) NOT NULL,
+descripcion VARCHAR (255) NULL,
+precio DECIMAL (12,4) NOT NULL,
 cantidad INT NOT NULL,
 id_Marca INT,
 CONSTRAINT FK_Producto_Marca FOREIGN KEY (id_Marca) REFERENCES Marcas(id_Marca),
@@ -54,7 +54,7 @@ fecha_Estimada DATE
 CREATE TABLE Detalle_Compra(
 id_Detallecompra INT AUTO_INCREMENT PRIMARY KEY,
 cantidad_Compra INT,
-precio_Compra DECIMAL (12.4),
+precio_Compra DECIMAL (12,4),
 id_Producto INT,
 CONSTRAINT FK_DetalleCompra_Producto FOREIGN KEY (id_Producto) REFERENCES Productos(id_Producto),
 id_Compra INT,

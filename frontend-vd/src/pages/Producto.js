@@ -2,14 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Table, Button, Container, Card, Row, Col, Form, Modal, FloatingLabel } from 'react-bootstrap';
 import Header from '../components/Header';
 import '../styles/App.css';
-import { FaSistrix} from 'react-icons/fa6';
-import { FaSave,FaPlus } from 'react-icons/fa';
+import { FaSistrix } from 'react-icons/fa6';
+import { FaSave, FaPlus } from 'react-icons/fa';
 import axios from 'axios';
 
 function Producto() {
   const [nombre_Producto, setNombre_Producto] = useState('');
   const [presentacion, setPresentacion] = useState('');
-  const [imagen, setImagen] = useState('');
   const [descripcion, setDescripcion] = useState('');
   const [precio, setPrecio] = useState('');
   const [cantidad, setCantidad] = useState('');
@@ -17,6 +16,9 @@ function Producto() {
     id_Marca: '',
     id_Categoria: '',
   });
+
+  const [imageUrl, setImageUrl] = useState('');
+  const [imageFile, setImageFile] = useState(null); // Nuevo estado para el archivo de imagen
 
   const [marcas, setMarcas] = useState([]);
   const [categorias, setCategorias] = useState([]);
@@ -47,6 +49,25 @@ function Producto() {
     loadCategorias();
     loadMarcas();
   }, []);
+
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImageFile(file); // Actualiza el estado imageFile
+      const formData = new FormData();
+      formData.append('imagen', file);
+
+      try {
+        const response = await axios.post('http://localhost:5000/upload', formData);
+        if (response.data.imageUrl) {
+          setImageUrl(response.data.imageUrl);
+        }
+      } catch (error) {
+        console.error('Error al cargar la imagen:', error);
+        // Manejar el error de carga de la imagen
+      }
+    }
+  };
 
   const openCategoryModal = () => {
     setShowCategoryModal(true);
@@ -90,7 +111,6 @@ function Producto() {
     setShowMarcaModal(false);
   };
 
-
   const openCateModal = () => {
     setShowCateModal(true);
   };
@@ -102,31 +122,29 @@ function Producto() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const dataToSend = {
-      nombre_Producto,
-      presentacion,
-      imagen,
-      descripcion,
-      precio,
-      cantidad,
-      id_Marca: formData.id_Marca,
-      id_Categoria: formData.id_Categoria,
-    };
+    const dataToSend = new FormData();
+    dataToSend.append('nombre_Producto', nombre_Producto);
+    dataToSend.append('presentacion', presentacion);
+    dataToSend.append('imagen', imageUrl); // Usar imageUrl en lugar de imageFile
+    dataToSend.append('descripcion', descripcion);
+    dataToSend.append('precio', precio);
+    dataToSend.append('cantidad', cantidad);
+    dataToSend.append('id_Marca', formData.id_Marca);
+    dataToSend.append('id_Categoria', formData.id_Categoria);
 
     try {
-      const response = await fetch('http://localhost:5000/crud/createproducto', {
-        method: 'POST',
+      const response = await axios.post('http://localhost:5000/crud/createproducto', dataToSend, {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(dataToSend),
       });
 
-      if (response.ok) {
-        alert('Registro exitoso');
+      if (response.data.message === 'producto insertado con éxito') {
+        alert('Registro Exitoso');
+        setImageUrl('');
+        setImageFile(null); // Restablece el estado imageFile
         setNombre_Producto('');
         setPresentacion('');
-        setImagen('');
         setDescripcion('');
         setPrecio('');
         setCantidad('');
@@ -176,17 +194,14 @@ function Producto() {
 
   const [nombre_Categoria, setNombre_Categoria] = useState('');
 
-  // Función para manejar el envío del formulario
   const handleSubmitcategoria = async (e) => {
     e.preventDefault();
 
-    // Crear un objeto con los datos del formulario
     const formData = {
       nombre_Categoria,
     };
 
     try {
-      // Realizar una solicitud HTTP al backend para enviar los datos
       const response = await fetch('http://localhost:5000/crud/createcategoria', {
         method: 'POST',
         headers: {
@@ -196,10 +211,8 @@ function Producto() {
       });
 
       if (response.ok) {
-        // El registro se creó exitosamente
         alert('Registro exitoso');
         loadCategorias();
-        // Reiniciar los campos del formulario
         setNombre_Categoria('');
       } else {
         alert('Error al registrar la categoria');
@@ -240,15 +253,15 @@ function Producto() {
                     />
                   </FloatingLabel>
                 </Col>
-                <Col sm="12" md="6" lg="6">
-                  <FloatingLabel controlId="imagen" label="Imagen">
+                <Col sm="6" md="6" lg="6">
+                  <Form.Group controlId="selectedFile" className="mb-3">
                     <Form.Control
-                      type="text"
-                      placeholder="Ingrese una imagen"
-                      value={imagen}
-                      onChange={(e) => setImagen(e.target.value)}
+                      type="file"
+                      accept=".jpg, .png, .jpeg"
+                      size="lg"
+                      onChange={handleFileChange}
                     />
-                  </FloatingLabel>
+                  </Form.Group>
                 </Col>
                 <Col sm="12" md="6" lg="6">
                   <FloatingLabel controlId="descripcion" label="Descripción">
@@ -404,8 +417,6 @@ function Producto() {
           </Form>
         </Modal.Body>
       </Modal>
-
-       
 
     </div>
   );
