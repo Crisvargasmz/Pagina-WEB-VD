@@ -7,6 +7,7 @@ function Usuario() {
   const [nombre_Usuario, setNombre_Usuario] = useState('');
   const [correo_Electronico, setCorreo_Electronico] = useState('');
   const [contrasena, setContrasena] = useState('');
+  const [rol,setRol] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -16,6 +17,7 @@ function Usuario() {
       nombre_Usuario,
       correo_Electronico,
       contrasena,
+      rol,
     };
 
     try {
@@ -32,6 +34,7 @@ function Usuario() {
         setNombre_Usuario('');
         setCorreo_Electronico('');
         setContrasena('');
+        setRol('');
       } else {
         alert('Error al registrar el usuario');
       }
@@ -87,6 +90,17 @@ function Usuario() {
                       placeholder="Ingrese el Correo"
                       value={correo_Electronico}
                       onChange={(e) => setCorreo_Electronico(e.target.value)}
+                    />
+                  </FloatingLabel>
+                </Col>
+
+                <Col sm="6" md="6" lg="12">
+                  <FloatingLabel controlId="rol" label="Rol">
+                    <Form.Control
+                      type="text"
+                      placeholder="Ingrese el rol"
+                      value={rol}
+                      onChange={(e) => setRol(e.target.value)}
                     />
                   </FloatingLabel>
                 </Col>
