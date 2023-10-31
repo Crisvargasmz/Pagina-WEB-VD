@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Alert } from 'react-bootstrap';
 import { Table, Button, Container, Card, Row, Col, Form, Modal, FloatingLabel } from 'react-bootstrap';
 import Header from '../components/Header';
+import { FaSistrix, FaPencil, FaTrashCan} from 'react-icons/fa6';
 
 function Gestionmarca() {
   const [marcas, setMarcas] = useState([]);
@@ -123,8 +124,8 @@ function Gestionmarca() {
                   <td>{marca.id_Marca}</td>
                   <td>{marca.nombre_Marca}</td>
                   <td>
-                    <Button variant="primary" onClick={() => openModal(marca)}>Actualizar</Button>
-                    <Button variant="danger" onClick={() => handleDelete(marca.id_Marca)}>Eliminar</Button>
+                    <Button variant="primary" onClick={() => openModal(marca)}><FaPencil/></Button>
+                    <Button variant="danger" onClick={() => handleDelete(marca.id_Marca)}><FaTrashCan/></Button>
                   </td>
                 </tr>
               ))}

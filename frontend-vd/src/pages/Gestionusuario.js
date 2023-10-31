@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Button, Container, Card, Row, Col, Form, Modal, FloatingLabel } from 'react-bootstrap';
 import Header from '../components/Header';
+import { FaSistrix, FaPencil, FaTrashCan} from 'react-icons/fa6';
 
 function Gestionusuario() {
   const [usuarios, setUsuarios] = useState([]);
@@ -105,8 +106,8 @@ function Gestionusuario() {
                   <td>{usuario.correo_Electronico}</td>
                   <td>{usuario.contrasena}</td>
                   <td>
-                    <Button variant="primary" onClick={() => openModal(usuario)}>Actualizar</Button>
-                    <Button variant="danger" onClick={() => handleDelete(usuario.id_Usuario)}>Eliminar</Button>
+                    <Button variant="primary" onClick={() => openModal(usuario)}><FaPencil/></Button>
+                    <Button variant="danger" onClick={() => handleDelete(usuario.id_Usuario)}><FaTrashCan/></Button>
                   </td>
                 </tr>
               ))}

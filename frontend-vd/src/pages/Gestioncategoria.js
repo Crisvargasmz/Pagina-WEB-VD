@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Alert } from 'react-bootstrap';
 import { Table, Button, Container, Card, Row, Col, Form, Modal, FloatingLabel } from 'react-bootstrap';
 import Header from '../components/Header';
+import { FaSistrix, FaPencil, FaTrashCan} from 'react-icons/fa6';
 
 function Gestioncategoria() {
   const [categorias, setCategorias] = useState([]);
@@ -123,8 +124,8 @@ function Gestioncategoria() {
                   <td>{categoria.id_Categoria}</td>
                   <td>{categoria.nombre_Categoria}</td>
                   <td>
-                    <Button variant="primary" onClick={() => openModal(categoria)}>Actualizar</Button>
-                    <Button variant="danger" onClick={() => handleDelete(categoria.id_Categoria)}>Eliminar</Button>
+                    <Button variant="primary" onClick={() => openModal(categoria)}><FaPencil/></Button>
+                    <Button variant="danger" onClick={() => handleDelete(categoria.id_Categoria)}><FaTrashCan/></Button>
                   </td>
                 </tr>
               ))}

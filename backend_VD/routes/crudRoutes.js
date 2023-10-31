@@ -461,7 +461,7 @@ router.post('/createusuarios', (req, res) => {
           res.status(200).json({ message: 'Registro actualizado con éxito' });
         }
       });
-    });
+    }); 
 
     //Ruta para actualizar un registro exitente por ID (Detalle_Compra)
 
