@@ -11,6 +11,23 @@ function Gestionmarca({rol}) {
   const [formData, setFormData] = useState({
     nombre_Categoria: '',
   });
+  
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const filteredMarca = marcas.filter((marca) => {
+    const nombre_Marca = marca.nombre_Marca.toLowerCase();
+    const search = searchQuery.toLowerCase();
+
+    return (
+      nombre_Marca.includes(search) ||
+      rol.includes(search) 
+    );
+  });
+
   const [warningMessage, setWarningMessage] = useState('');
 // Función para abrir el modal y pasar los datos del producto seleccionado
   const openModal = (marca) => {
@@ -111,6 +128,20 @@ function Gestionmarca({rol}) {
       <Card className="m-3">
         <Card.Body>
           <Card.Title className="mb-3">Listado de Marcas</Card.Title>
+
+          <Row className="mb-3">
+            <Col>
+              <FloatingLabel controlId="search" label="Buscar">
+                <Form.Control
+                  type="text"
+                  placeholder="Buscar"
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                />
+              </FloatingLabel>
+            </Col>
+          </Row>
+
           <Table striped bordered hover>
             <thead>
               <tr>
@@ -119,7 +150,7 @@ function Gestionmarca({rol}) {
               </tr>
             </thead>
             <tbody>
-              {marcas.map((marca) => (
+              {filteredMarca.map((marca) => (
                 <tr key={marca.id_Marca}>
                   <td>{marca.id_Marca}</td>
                   <td>{marca.nombre_Marca}</td>

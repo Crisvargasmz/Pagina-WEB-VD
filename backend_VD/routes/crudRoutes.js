@@ -364,16 +364,16 @@ router.post('/createcompras', (req, res) => {
 
 
 router.post('/createusuarios', (req, res) => {
-  const {nombre_Usuario,correo_Electronico,contrasena} = req.body
+  const {nombre_Usuario,correo_Electronico,contrasena, rol} = req.body
 
   // Verifica si se proporcionó el nombre de la categoría
-  if (!nombre_Usuario||!correo_Electronico||!contrasena) {
+  if (!nombre_Usuario||!correo_Electronico||!contrasena||!rol ) {
     return res.status(400).json({ error: 'Todos los campos son obligatorios' });
   }
 
   // Consulta SQL para insertar una nueva categoría
-  const sql = 'INSERT INTO usuarios (nombre_Usuario,correo_Electronico,contrasena) VALUES (?,?,?)';
-  const values = [nombre_Usuario,correo_Electronico,contrasena];
+  const sql = 'INSERT INTO usuarios (nombre_Usuario,correo_Electronico,contrasena, rol) VALUES (?,?,?,?)';
+  const values = [nombre_Usuario,correo_Electronico,contrasena,rol];
 
   // Ejecuta la consulta SQL
   db.query(sql, values, (err, result) => {

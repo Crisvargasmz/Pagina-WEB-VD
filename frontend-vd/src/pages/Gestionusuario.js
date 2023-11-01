@@ -10,8 +10,33 @@ function Gestionusuario({rol}) {
   const [formData, setFormData] = useState({
     nombre_Usuario: '',
     correo_Electronico: '',
-    contrasena: '',
+    contrasena: '',  
+
   });
+
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const filteredUsuario = usuarios.filter((usuario) => {
+    const nombre_Usuario = usuario.nombre_Usuario.toLowerCase();
+    const correo_Electronico = usuario.correo_Electronico.toLowerCase();
+    const contraseña = usuario.contrasena.toLowerCase();
+    const rol = usuario.rol.toLowerCase();
+    const search = searchQuery.toLowerCase();
+
+    return (
+      nombre_Usuario.includes(search) ||
+      correo_Electronico.includes(search) ||
+      contraseña.includes(search) ||
+      rol.includes(search) 
+    );
+  });
+
+
+
   // Función para abrir el modal y pasar los datos del producto seleccionado
   const openModal = (usuario) => {
     setSelectedUsuario(usuario);
@@ -89,6 +114,20 @@ function Gestionusuario({rol}) {
       <Card className="m-3">
         <Card.Body>
           <Card.Title className="mb-3">Listado de Usuarios</Card.Title>
+
+          <Row className="mb-3">
+            <Col>
+              <FloatingLabel controlId="search" label="Buscar">
+                <Form.Control
+                  type="text"
+                  placeholder="Buscar"
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                />
+              </FloatingLabel>
+            </Col>
+          </Row>
+
           <Table striped bordered hover>
             <thead>
               <tr>
@@ -99,7 +138,7 @@ function Gestionusuario({rol}) {
               </tr>
             </thead>
             <tbody>
-              {usuarios.map((usuario) => (
+              {filteredUsuario.map((usuario) => (
                 <tr key={usuario.id_Usuario}>
                   <td>{usuario.id_Usuario}</td>
                   <td>{usuario.nombre_Usuario}</td>
