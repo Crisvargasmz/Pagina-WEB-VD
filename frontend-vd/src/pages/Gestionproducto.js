@@ -208,17 +208,19 @@ function Gestionproducto({rol}) {
             </thead>
             <tbody>
               {filteredProducto.map((producto) => (
-                <tr className='centrado' key={producto.id_Producto}>
-                  <td>{producto.id_Producto}</td>
-                  <td>{producto.nombre_Producto}</td>
-                  <td>{producto.presentacion}</td>
-                  <td>{producto.imagen}</td>
-                  <td>{producto.descripcion}</td>
-                  <td>{producto.precio}</td>
-                  <td>{producto.cantidad}</td>
-                  <td>{marcas.find((marca) => marca.id_Marca === producto.id_Marca)?.nombre_Marca}</td>
-                  <td>{categorias.find((categoria) => categoria.id_Categoria === producto.id_Categoria)?.nombre_Categoria}</td>
-                  <td>
+                 <tr className='centrado' key={producto.id_Producto}>
+                 <td>{producto.id_Producto}</td>
+                 <td>{producto.nombre_Producto}</td>
+                 <td>{producto.presentacion}</td>
+                 <td>
+                   <img src={producto.imagen} alt="Imagen del producto" style={{ maxWidth: '100px' }} />
+                 </td>
+                 <td>{producto.descripcion}</td>
+                 <td>{producto.precio}</td>
+                 <td>{producto.cantidad}</td>
+                 <td>{marcas.find((marca) => marca.id_Marca === producto.id_Marca)?.nombre_Marca}</td>
+                 <td>{categorias.find((categoria) => categoria.id_Categoria === producto.id_Categoria)?.nombre_Categoria}</td>
+                 <td>
                     <Button className='actualizar' variant="primary" onClick={() => openModal(producto)}><FaPencil/></Button>
                     <Button className='eliminar' variant="danger" onClick={() => handleDelete(producto.id_Producto)}><FaTrashCan/></Button>
                   </td>
