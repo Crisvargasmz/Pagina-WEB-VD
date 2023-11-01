@@ -6,7 +6,7 @@ import { faStar as solidStar } from '@fortawesome/free-solid-svg-icons';
 import { faStar as regularStar } from '@fortawesome/free-regular-svg-icons';
 import { FaSistrix, FaPencil, FaTrashCan} from 'react-icons/fa6';
 
-function Gestioncomentario() {
+function Gestioncomentario({rol}) {
   const [comentarios, setComentarios] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedcomentario, setSelectedComentario] = useState({});
@@ -101,7 +101,7 @@ function Gestioncomentario() {
 
   return (
     <div>
-      <Header />
+      <Header rol={rol}/>
 
       <Card className="m-3">
         <Card.Body>

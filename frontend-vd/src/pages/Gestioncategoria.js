@@ -4,7 +4,7 @@ import { Table, Button, Container, Card, Row, Col, Form, Modal, FloatingLabel } 
 import Header from '../components/Header';
 import { FaSistrix, FaPencil, FaTrashCan} from 'react-icons/fa6';
 
-function Gestioncategoria() {
+function Gestioncategoria({rol}) {
   const [categorias, setCategorias] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedcategoria, setSelectedCategoria] = useState({});
@@ -99,7 +99,7 @@ function Gestioncategoria() {
 
   return (
     <div>
-      <Header />
+      <Header rol={rol}/>
 
         {/* Agregar un mensaje de advertencia si existe uno */}
         {warningMessage && (

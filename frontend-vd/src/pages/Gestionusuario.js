@@ -3,7 +3,7 @@ import { Table, Button, Container, Card, Row, Col, Form, Modal, FloatingLabel } 
 import Header from '../components/Header';
 import { FaSistrix, FaPencil, FaTrashCan} from 'react-icons/fa6';
 
-function Gestionusuario() {
+function Gestionusuario({rol}) {
   const [usuarios, setUsuarios] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedusuario, setSelectedUsuario] = useState({});
@@ -84,7 +84,7 @@ function Gestionusuario() {
 
   return (
     <div>
-      <Header />
+      <Header rol={rol}/>
 
       <Card className="m-3">
         <Card.Body>

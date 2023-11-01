@@ -4,7 +4,7 @@ import { Table, Button, Container, Card, Row, Col, Form, Modal, FloatingLabel } 
 import Header from '../components/Header';
 import { FaSistrix, FaPencil, FaTrashCan} from 'react-icons/fa6';
 
-function Gestionmarca() {
+function Gestionmarca({rol}) {
   const [marcas, setMarcas] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedmarca, setSelectedmarca] = useState({});
@@ -99,7 +99,7 @@ function Gestionmarca() {
 
   return (
     <div>
-      <Header />
+      <Header rol={rol}/>
 
         {/* Agregar un mensaje de advertencia si existe uno */}
         {warningMessage && (

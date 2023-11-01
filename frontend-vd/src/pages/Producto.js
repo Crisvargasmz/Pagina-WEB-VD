@@ -6,7 +6,7 @@ import { FaSistrix } from 'react-icons/fa6';
 import { FaSave, FaPlus } from 'react-icons/fa';
 import axios from 'axios';
 
-function Producto() {
+function Producto({rol}) {
   const [nombre_Producto, setNombre_Producto] = useState('');
   const [presentacion, setPresentacion] = useState('');
   const [descripcion, setDescripcion] = useState('');
@@ -225,7 +225,8 @@ function Producto() {
 
   return (
     <div>
-      <Header />
+      
+      <Header rol={rol}/>
 
       <Container>
         <Card className="mt-3">

@@ -3,7 +3,7 @@ import { Table, Button, Container, Card, Row, Col, Form, Modal, FloatingLabel } 
 import Header from '../components/Header';
 import { FaSistrix, FaPencil, FaTrashCan} from 'react-icons/fa6';
 
-function Gestionproducto() {
+function Gestionproducto({rol}) {
   const [productos, setProductos] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedproducto, setSelectedProducto] = useState({});
@@ -173,7 +173,7 @@ function Gestionproducto() {
 
   return (
     <div>
-      <Header />
+      <Header rol={rol}/>
 
       <Card className="m-3">
         <Card.Body>

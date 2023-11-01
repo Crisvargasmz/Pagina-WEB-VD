@@ -3,7 +3,7 @@ import { Form, Row, Col, Container, FloatingLabel, Card, Button } from 'react-bo
 import Header from '../components/Header';
 import '../styles/App.css';
 
-function Marca() {
+function Marca({rol}) {
 
   // Crear un estado para cada campo del formulario
   const [nombre_Marca, setNombre_Marca] = useState('');
@@ -43,7 +43,7 @@ function Marca() {
 
   return(
     <div>
-      <Header />
+      <Header rol={rol}/>
       
       <Container>
         <Card className="mt-3" >
