@@ -11,6 +11,24 @@ function Gestioncategoria({rol}) {
   const [formData, setFormData] = useState({
     nombre_Categoria: '',
   });
+
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const filteredCategorias = categorias.filter((categoria) => {
+    const nombre_Categoria = categoria.nombre_Categoria.toLowerCase();
+    const search = searchQuery.toLowerCase();
+
+    return (
+      nombre_Categoria.includes(search) ||
+      rol.includes(search) 
+    );
+  });
+
+  
   const [warningMessage, setWarningMessage] = useState('');
 // Función para abrir el modal y pasar los datos del producto seleccionado
   const openModal = (categoria) => {
@@ -111,6 +129,20 @@ function Gestioncategoria({rol}) {
       <Card className="m-3">
         <Card.Body>
           <Card.Title className="mb-3">Listado de Categorias</Card.Title>
+
+          <Row className="mb-3">
+            <Col>
+              <FloatingLabel controlId="search" label="Buscar">
+                <Form.Control
+                  type="text"
+                  placeholder="Buscar"
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                />
+              </FloatingLabel>
+            </Col>
+          </Row>
+
           <Table striped bordered hover>
             <thead>
               <tr>
@@ -119,7 +151,7 @@ function Gestioncategoria({rol}) {
               </tr>
             </thead>
             <tbody>
-              {categorias.map((categoria) => (
+              {filteredCategorias.map((categoria) => (
                 <tr key={categoria.id_Categoria}>
                   <td>{categoria.id_Categoria}</td>
                   <td>{categoria.nombre_Categoria}</td>

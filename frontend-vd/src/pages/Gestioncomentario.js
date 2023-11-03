@@ -6,6 +6,7 @@ import { faStar as solidStar } from '@fortawesome/free-solid-svg-icons';
 import { faStar as regularStar } from '@fortawesome/free-regular-svg-icons';
 import { FaSistrix, FaPencil, FaTrashCan} from 'react-icons/fa6';
 
+
 function Gestioncomentario({rol}) {
   const [comentarios, setComentarios] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -15,6 +16,32 @@ function Gestioncomentario({rol}) {
     contenido_Comentario: '',
     fecha_Comentario:'',
   });
+  const [usuarios, setUsuarios] = useState([]);
+  const [productos, setProductos] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+const filteredComentario = comentarios.filter((comentario) => {
+  const calificacion = comentario.calificacion ? comentario.calificacion.toString().toLowerCase() : '';
+  const fecha_Comentario = comentario.fecha_Comentario ? comentario.fecha_Comentario.toLowerCase() : '';
+  const contenido_Comentario = comentario.contenido_Comentario ? comentario.contenido_Comentario.toLowerCase() : '';
+  const usuario = usuarios.find((usuario) => usuario.id_Usuario === comentario.id_Usuario)?.nombre_Usuario ? usuarios.find((usuario) => usuario.id_Usuario === comentario.id_Usuario)?.nombre_Usuario.toLowerCase() : '';
+  const producto = productos.find((producto) => producto.id_Producto === comentario.id_Producto)?.nombre_Producto ? productos.find((producto) => producto.id_Producto === comentario.id_Producto)?.nombre_Producto.toLowerCase() : '';
+  const search = searchQuery.toLowerCase();
+
+  return (
+    calificacion.includes(search) ||
+    fecha_Comentario.includes(search) ||
+    contenido_Comentario.includes(search) ||
+    usuario.includes(search) ||
+    producto.includes(search) ||
+    rol.includes(search)
+  );
+});
+
 
  
 
@@ -106,6 +133,20 @@ function Gestioncomentario({rol}) {
       <Card className="m-3">
         <Card.Body>
           <Card.Title className="mb-3">Listado de comentarios</Card.Title>
+
+                 <Row className="mb-3">
+            <Col>
+              <FloatingLabel controlId="search" label="Buscar">
+                <Form.Control
+                  type="text"
+                  placeholder="Buscar"
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                />
+              </FloatingLabel>
+            </Col>
+          </Row>
+
           <Table striped bordered hover>
             <thead>
               <tr>
@@ -118,7 +159,7 @@ function Gestioncomentario({rol}) {
               </tr>
             </thead>
             <tbody>
-              {comentarios.map((comentario) => (
+              {filteredComentario.map((comentario) => (
                 <tr key={comentario.id_Comentario}>
                   <td>{comentario.id_Comentario}</td>
                   <td>{comentario.calificacion}</td>
