@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Container, Card, Row, Col, Form, Modal, FloatingLabel } from 'react-bootstrap';
+import { Table, Button,Card, Row, Col, Form, Modal, FloatingLabel } from 'react-bootstrap';
 import Header from '../components/Header';
 import { FaSistrix, FaPencil, FaTrashCan} from 'react-icons/fa6';
+import axios from 'axios';
 
 function Gestionproducto({rol}) {
   const [productos, setProductos] = useState([]);
@@ -17,6 +18,39 @@ function Gestionproducto({rol}) {
     id_Marca: '',
     id_Categoria: '',
   });
+
+  const [imageUrl, setImageUrl] = useState('');
+  const [imageFile, setImageFile] = useState(null); // Nuevo estado para el archivo de imagen
+  
+  const handleNewFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImageFile(file);
+      const formData = new FormData();
+      formData.append('nuevaImagen', file);
+  
+      try {
+        const response = await axios.post('http://localhost:5000/upload2', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+  
+        if (response.data.imageUrl) {
+          // Obtén la URL de la imagen cargada y puedes guardarla en tu estado o donde sea necesario.
+          const imageUrl = response.data.imageUrl;
+          setImageUrl(imageUrl);
+          alert('Carga de imagen exitosa');
+        } else {
+          alert('Error al cargar la nueva imagen');
+        }
+      } catch (error) {
+        console.error('Error al cargar la nueva imagen:', error);
+      }
+    }
+  };
+  
+
   const [marcas, setMarcas] = useState([]);
   const [categorias, setCategorias] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -105,22 +139,59 @@ function Gestionproducto({rol}) {
     loadCategorias();
   }, []);
 
-  const handleUpdate = () => {
-    fetch(`http://localhost:5000/crud/updateproducto/${selectedproducto.id_Producto}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(formData),
-    })
-      .then((response) => {
-        if (response.ok) {
-          setShowModal(false);
-          loadProducto();
-        }
-      })
-      .catch((error) => console.error('Error al actualizar el registro:', error));
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+  
+    const dataToSend = new FormData();
+    dataToSend.append('nombre_Producto', formData.nombre_Producto);
+    dataToSend.append('presentacion', formData.presentacion);
+    
+    // Si no se proporciona una nueva imagen, utiliza la imagen existente
+    dataToSend.append('imagen', imageUrl ? imageUrl : formData.imagen);
+    
+    dataToSend.append('descripcion', formData.descripcion);
+    dataToSend.append('precio', formData.precio);
+    dataToSend.append('cantidad', formData.cantidad);
+    dataToSend.append('id_Marca', formData.id_Marca);
+    dataToSend.append('id_Categoria', formData.id_Categoria);
+  
+    try {
+      const response = await axios.put(`http://localhost:5000/crud/updateproducto/${selectedproducto.id_Producto}`, dataToSend, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+  
+      if (response.data.message === 'Registro actualizado con éxito') {
+        alert('Actualización Exitosa');
+        // Restablece los campos
+        setFormData({
+          nombre_Producto: '',
+          presentacion: '',
+          imagen: '',
+          descripcion: '',
+          precio: '',
+          cantidad: '',
+          id_Marca: '',
+          id_Categoria: '',
+        });
+        setImageUrl('');
+        setShowModal(false);
+        loadProducto();
+      } else {
+        alert('Error al actualizar el producto');
+      }
+    } catch (error) {
+      console.error('Error en la solicitud:', error);
+      alert('Error en la solicitud al servidor');
+    }
   };
+  
+
+  
+  
+  
+  
 
   const handleDelete = (id_Producto) => {
     const confirmation = window.confirm('¿Seguro que deseas eliminar este producto?');
@@ -214,6 +285,7 @@ function Gestionproducto({rol}) {
                  <td>{producto.presentacion}</td>
                  <td>
                    <img src={producto.imagen} alt="Imagen del producto" style={{ maxWidth: '100px' }} />
+                   
                  </td>
                  <td>{producto.descripcion}</td>
                  <td>{producto.precio}</td>
@@ -263,17 +335,17 @@ function Gestionproducto({rol}) {
                       />
                     </FloatingLabel>
                   </Col>
-                  <Col sm="12" md="6" lg="4">
-                    <FloatingLabel controlId="imagen" label="Imagen">
+                  <Col sm="6" md="6" lg="6">
+                    <Form.Group controlId="updatedFile" className="mb-3">
+                      <Form.Label>Nueva Imagen</Form.Label>
                       <Form.Control
-                        type="text"
-                        placeholder="Ingrese la imagen"
-                        name="imagen"
-                        value={formData.imagen}
-                        onChange={handleFormChange}
+                        className="custom-file-input"
+                        type="file"
+                        accept=".jpg, .png, .jpeg"
+                        onChange={handleNewFileChange}
                       />
-                    </FloatingLabel>
-                  </Col>
+                    </Form.Group>
+                </Col>
                   <Col sm="12" md="6" lg="8">
                     <FloatingLabel controlId="descripcion" label="Descripción">
                       <Form.Control
