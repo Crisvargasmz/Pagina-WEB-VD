@@ -11,6 +11,24 @@ function Gestioncategoria({rol}) {
   const [formData, setFormData] = useState({
     nombre_Categoria: '',
   });
+
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const filteredCategorias = categorias.filter((categoria) => {
+    const nombre_Categoria = categoria.nombre_Categoria.toLowerCase();
+    const search = searchQuery.toLowerCase();
+
+    return (
+      nombre_Categoria.includes(search) ||
+      rol.includes(search) 
+    );
+  });
+
+  
   const [warningMessage, setWarningMessage] = useState('');
 // Función para abrir el modal y pasar los datos del producto seleccionado
   const openModal = (categoria) => {
@@ -119,7 +137,7 @@ function Gestioncategoria({rol}) {
               </tr>
             </thead>
             <tbody>
-              {categorias.map((categoria) => (
+              {filteredCategorias.map((categoria) => (
                 <tr key={categoria.id_Categoria}>
                   <td>{categoria.id_Categoria}</td>
                   <td>{categoria.nombre_Categoria}</td>
