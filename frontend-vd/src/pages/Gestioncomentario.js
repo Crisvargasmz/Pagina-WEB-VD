@@ -105,7 +105,7 @@ function Gestioncomentario({rol}) {
 
       <Card className="m-3">
         <Card.Body>
-          <Card.Title className="mb-3">Listado de comentarios</Card.Title>
+          <Card.Title className="mb-3 title ">Listado de comentarios</Card.Title>
           <Table striped bordered hover>
             <thead>
               <tr>

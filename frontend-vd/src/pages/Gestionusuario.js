@@ -113,7 +113,7 @@ function Gestionusuario({rol}) {
 
       <Card className="m-3">
         <Card.Body>
-          <Card.Title className="mb-3">Listado de Usuarios</Card.Title>
+          <Card.Title className="mb-3 title">Listado de Usuarios</Card.Title>
 
           <Row className="mb-3">
             <Col>

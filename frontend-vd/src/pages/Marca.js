@@ -48,7 +48,7 @@ function Marca({rol}) {
       <Container>
         <Card className="mt-3" >
           <Card.Body>
-            <Card.Title>Registro de Marca</Card.Title>
+            <Card.Title className="mb-3 title ">Registro de Marca</Card.Title>
             <Form className="mt-3" onSubmit={handleSubmit}>
               <Row className="g-3">
 

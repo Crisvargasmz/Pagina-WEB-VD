@@ -6,7 +6,7 @@ import { FaSistrix } from 'react-icons/fa6';
 import { FaSave, FaPlus } from 'react-icons/fa';
 import axios from 'axios';
 
-function Producto({rol}) {
+function Producto({ rol }) {
   const [nombre_Producto, setNombre_Producto] = useState('');
   const [presentacion, setPresentacion] = useState('');
   const [descripcion, setDescripcion] = useState('');
@@ -19,6 +19,8 @@ function Producto({rol}) {
 
   const [imageUrl, setImageUrl] = useState('');
   const [imageFile, setImageFile] = useState(null); // Nuevo estado para el archivo de imagen
+
+  
 
   const [marcas, setMarcas] = useState([]);
   const [categorias, setCategorias] = useState([]);
@@ -223,15 +225,17 @@ function Producto({rol}) {
     }
   };
 
+  
+
   return (
     <div>
-      
-      <Header rol={rol}/>
+
+      <Header rol={rol} />
 
       <Container>
         <Card className="mt-3">
           <Card.Body>
-            <Card.Title>Registro de Producto</Card.Title>
+            <Card.Title className="mt-3 title">Registro de Producto</Card.Title>
             <Form className="mt-3" onSubmit={handleSubmit}>
               <Row className="g-3">
                 <Col sm="6" md="6" lg="6">
@@ -256,21 +260,28 @@ function Producto({rol}) {
                 </Col>
                 <Col sm="6" md="6" lg="6">
                   <Form.Group controlId="selectedFile" className="mb-3">
+                    <Form.Label>Imagen</Form.Label>
                     <Form.Control
+                      className="custom-file-input" // Aplica la clase personalizada aquí
                       type="file"
                       accept=".jpg, .png, .jpeg"
-                      size="lg"
                       onChange={handleFileChange}
                     />
                   </Form.Group>
                 </Col>
-                <Col sm="12" md="6" lg="6">
+                <Col sm="6" md="6" lg="6">
                   <FloatingLabel controlId="descripcion" label="Descripción">
                     <Form.Control
-                      type="text"
+                      as="textarea"
+                      className="auto-expand-textarea" // Aplica la clase personalizada aquí
+                      style={{ minHeight: '100px' }} // Establece la altura inicial aquí
                       placeholder="Ingrese la descripción"
                       value={descripcion}
-                      onChange={(e) => setDescripcion(e.target.value)}
+                      onChange={(e) => {
+                        setDescripcion(e.target.value);
+                        e.target.style.height = 'auto'; // Restablece la altura a 'auto' para calcular la nueva altura
+                        e.target.style.height = `${e.target.scrollHeight}px`; // Ajusta la altura automáticamente
+                      }}
                     />
                   </FloatingLabel>
                 </Col>
@@ -324,10 +335,10 @@ function Producto({rol}) {
                       readOnly
                     />
                     <div className="button-container">
-                    <Button className="show-button" variant="primary" onClick={openCategoryModal}>
-                      <FaSistrix />
-                    </Button>
-                    <Button className="show-button1" variant="primary" onClick={openCateModal}>
+                      <Button className="show-button" variant="primary" onClick={openCategoryModal}>
+                        <FaSistrix />
+                      </Button>
+                      <Button className="show-button1" variant="primary" onClick={openCateModal}>
                         <FaPlus />
                       </Button>
                     </div>
@@ -395,7 +406,7 @@ function Producto({rol}) {
         </Modal.Body>
       </Modal>
 
-      
+
       <Modal show={showCateModal} onHide={closeCateModal}>
         <Modal.Header closeButton>
           <Modal.Title>Registro de Categoria</Modal.Title>
