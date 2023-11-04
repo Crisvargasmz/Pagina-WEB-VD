@@ -7,8 +7,9 @@ const app = express();
 const port = 5000;
 
 
-app.use(express.json());
+app.use(express.json({ limit: '50mb'}));
 
+//configuracion de la conexion a la base de datos
 const db = mysql.createConnection({
   host: 'localhost',
   user: 'Devloper',
@@ -51,12 +52,26 @@ app.post('/upload', upload.single('imagen'), (req, res) => {
 
   app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Configuración de CORS
+// configuracion de CORS
+app.use(cors());
+
+// importar y usar rutas CRUD
+const crudRoutes = require('./routes/crudRoutes.js')(db);
+app.use('/crud', crudRoutes);
+
+// Iniciar el servidor
 app.listen(port, () => {
   console.log(`Servidor backend funcionando en el puerto:${port}`);
 });
 
-app.use(cors());
+// Manejador de errores
+app.use((err, req, res, next) => {
+  if (err instanceof SyntaxError && 'body' in err) {
+    res.status(400).send({ error: 'Error en el análisis de JSON' });
+  } else {
+    next();
+  }
+});
 
-const crudRoutes = require('./routes/crudRoutes.js')(db);
-app.use('/crud', crudRoutes);
+
+
