@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const multer = require('multer');
+const upload = multer(); // Configura multer
 
 
 module.exports = (db) => {
@@ -569,35 +571,43 @@ router.post('/createusuarios', (req, res) => {
 
     // Ruta para actualizar un registro existente por ID (producto)
 
-    router.put('/updateproducto/:id', (req, res) => {
-      // Obtén el ID del registro a actualizar desde los parámetros de la URL
+    router.put('/updateproducto/:id', upload.single('nuevaImagen'), (req, res) => {
       const id = req.params.id;
-  
-      // Recibe los datos actualizados desde el cuerpo de la solicitud (req.body)
-      const {nombre_Producto,presentacion,imagen,descripcion,precio,cantidad,id_Marca,id_Categoria} = req.body;
-  
+      const {
+        nombre_Producto,
+        presentacion,
+        descripcion,
+        precio,
+        cantidad,
+        id_Marca,
+        id_Categoria,
+      } = req.body;
+      
       // Verifica si se proporcionaron los datos necesarios
       if (!nombre_Producto) {
         return res.status(400).json({ error: 'Todos los campos son obligatorios' });
       }
-  
-      // Realiza la consulta SQL para actualizar el registro por ID
+    
+      let nuevaImagen = req.body.imagen; // Mantén la imagen existente por defecto
+      
+      // Si se proporciona una nueva imagen, actualiza `nuevaImagen`
+      if (req.file) {
+        nuevaImagen = 'http://localhost:5000/' + req.file.path;
+      }
+    
       const sql = `
-  UPDATE productos
-  SET nombre_Producto = ?, presentacion = ?, imagen = ?, descripcion = ?, precio = ?, cantidad = ?, id_Marca = ?, id_Categoria = ?
-  WHERE id_Producto = ?
-`;
-
-  
-      const values = [nombre_Producto,presentacion,imagen,descripcion,precio,cantidad,id_Marca,id_Categoria,id];
-  
-      // Ejecuta la consulta
+        UPDATE productos
+        SET nombre_Producto = ?, presentacion = ?, imagen = ?, descripcion = ?, precio = ?, cantidad = ?, id_Marca = ?, id_Categoria = ?
+        WHERE id_Producto = ?
+      `;
+      
+      const values = [nombre_Producto, presentacion, nuevaImagen, descripcion, precio, cantidad, id_Marca, id_Categoria, id];
+      
       db.query(sql, values, (err, result) => {
         if (err) {
           console.error('Error al actualizar el registro:', err);
           res.status(500).json({ error: 'Error al actualizar el registro' });
         } else {
-          // Devuelve un mensaje de éxito
           res.status(200).json({ message: 'Registro actualizado con éxito' });
         }
       });

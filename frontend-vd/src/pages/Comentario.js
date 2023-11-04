@@ -68,7 +68,7 @@ function Comentario({rol}) {
       <Container>
         <Card className="mt-3">
           <Card.Body>
-            <Card.Title>Registro de Comentario</Card.Title>
+            <Card.Title className="mb-3 title ">Registro de Comentario</Card.Title>
             <Form className="mt-3" onSubmit={handleSubmit}>
               <Row className="g-3">
                 <Col sm="6" md="6" lg="6">
@@ -81,9 +81,14 @@ function Comentario({rol}) {
                   <FloatingLabel controlId="contenido_Comentario" label="Comentario">
                     <Form.Control
                       as="textarea"
+                      className="auto-expand-textarea" // Aplica la clase personalizada aquí
                       placeholder="Ingrese el comentario"
                       value={contenido_Comentario}
-                      onChange={(e) => setContenido_Comentario(e.target.value)}
+                      onChange={(e) => {
+                        setContenido_Comentario(e.target.value);
+                        e.target.style.height = 'auto'; // Restablece la altura a 'auto' para calcular la nueva altura
+                        e.target.style.height = `${e.target.scrollHeight}px`; // Ajusta la altura automáticamente
+                      }}
                     />
                   </FloatingLabel>
                 </Col>
@@ -148,6 +153,7 @@ function StarRating({ rating, onRatingChange }) {
   
     return (
       <div className="star-rating-container">
+        <div className="star-rating-title">Calificación</div>
         <div className="star-rating">{stars}</div>
       </div>
     );

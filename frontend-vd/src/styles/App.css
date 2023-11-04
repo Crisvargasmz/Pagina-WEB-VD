@@ -1,3 +1,4 @@
+/* Estilos generales */
 .navbar-color {
   background-color: #0e3ad8; /* Color de fondo personalizado */
 }
@@ -11,12 +12,13 @@
   text-align: center;
 }
 
-.product-button{
+.product-button {
   text-align: center;
   padding: 5px;
   padding-top: 3px;
 }
 
+/* Estilos para el botón de mostrar contraseña */
 .show-password-button {
   position: absolute;
   right: 10px;
@@ -25,22 +27,33 @@
   z-index: 1;
 }
 
+/* Estilos para el contenedor de calificación */
 .star-rating-container {
   display: flex;
-  justify-content: center;
+  flex-direction: column; /* Organiza los elementos verticalmente */
+  align-items: center; /* Alinea horizontalmente en el centro */
 }
 
-.Seleccion{
+/* Estilos para el título de calificación */
+.star-rating-title {
+  margin-bottom: 10px; /* Espacio entre el título y las estrellas */
+  font-weight: bold; /* Estilo adicional para el título si es necesario */
+}
+
+/* Estilos para la selección de categorías y marcas */
+.Seleccion {
   cursor: pointer;
   border-radius: 4px;
-  padding-left: 6px;
-  transition: all .1s;
-}
-.Seleccion:hover{
-  background-color: #0e3ad8;
-  color: #ffff;
+  padding: 6px 10px; /* Aumenta el espacio de selección */
+  transition: all 0.2s;
 }
 
+.Seleccion:hover {
+  background-color: #0e3ad8;
+  color: #fff;
+}
+
+/* Estilos para los botones de búsqueda y agregar */
 .show-button {
   position: absolute;
   right: 10px;
@@ -49,29 +62,59 @@
   z-index: 1;
 }
 
-.show-button1{
+.show-button1 {
   position: absolute;
   left: 430px;
   top: 50%;
   transform: translateY(-50%);
   z-index: 1;
-
-
 }
 
-.centrado{
+/* Estilos para el centro del contenido */
+.centrado {
   text-align: center;
 }
-.title{
+
+/* Estilos para el título del formulario */
+.title {
   text-align: center;
   border-bottom: 4px solid #0e3ad8;
   padding-bottom: 5px;
   font-weight: bold;
 }
-.actualizar{
-  margin-right: 5px;
 
+/* Estilos para los botones de actualización y eliminación */
+.actualizar {
+  margin-right: 5px;
 }
-.eliminar{
+
+.eliminar {
   margin-left: 5px;
+}
+
+/* Estilos específicos para el formulario de Producto */
+.form-section {
+  margin-bottom: 20px; /* Agrega espacio entre secciones */
+}
+
+.form-label {
+  font-weight: bold; /* Estilo para etiquetas de formulario */
+}
+
+.custom-file-input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f8f8f8;
+  cursor: pointer;
+}
+
+.custom-file-label::after {
+  content: "Seleccionar";
+}
+
+.auto-expand-textarea {
+  min-height: 60px; /* Establece una altura mínima */
+  overflow: hidden; /* Oculta el desbordamiento de contenido */
+  resize: none; /* Desactiva la redimensión manual del usuario */
 }

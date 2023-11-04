@@ -8,7 +8,7 @@ function About({rol}) {
   return(
     <div>
       <Header rol={rol}/>
-      <Link to="/">Ir a inicio</Link>
+      
     </div>
   );
 }

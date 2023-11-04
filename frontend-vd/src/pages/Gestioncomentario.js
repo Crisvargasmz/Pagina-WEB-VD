@@ -132,21 +132,7 @@ const filteredComentario = comentarios.filter((comentario) => {
 
       <Card className="m-3">
         <Card.Body>
-          <Card.Title className="mb-3">Listado de comentarios</Card.Title>
-
-                 <Row className="mb-3">
-            <Col>
-              <FloatingLabel controlId="search" label="Buscar">
-                <Form.Control
-                  type="text"
-                  placeholder="Buscar"
-                  value={searchQuery}
-                  onChange={handleSearchChange}
-                />
-              </FloatingLabel>
-            </Col>
-          </Row>
-
+          <Card.Title className="mb-3 title ">Listado de comentarios</Card.Title>
           <Table striped bordered hover>
             <thead>
               <tr>

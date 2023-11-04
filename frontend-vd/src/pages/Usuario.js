@@ -3,11 +3,11 @@ import { Table, Button, Container, Card, Row, Col, Form, Modal, FloatingLabel } 
 import Header from '../components/Header';
 import '../styles/App.css';
 
-function Usuario() {
+function Usuario({ rol }) {
   const [nombre_Usuario, setNombre_Usuario] = useState('');
   const [correo_Electronico, setCorreo_Electronico] = useState('');
   const [contrasena, setContrasena] = useState('');
-  const [rol,setRol] = useState('');
+  const [rolUser, setRolUser] = useState(''); // Corrección aquí
   const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -17,7 +17,7 @@ function Usuario() {
       nombre_Usuario,
       correo_Electronico,
       contrasena,
-      rol,
+      rol: rolUser, // Corrección aquí
     };
 
     try {
@@ -34,7 +34,7 @@ function Usuario() {
         setNombre_Usuario('');
         setCorreo_Electronico('');
         setContrasena('');
-        setRol('');
+        setRolUser(''); // Corrección aquí
       } else {
         alert('Error al registrar el usuario');
       }
@@ -46,12 +46,12 @@ function Usuario() {
 
   return (
     <div>
-      <Header rol={rol}/>
+      <Header rol={rol} />
 
       <Container>
         <Card className="mt-3">
           <Card.Body>
-            <Card.Title>Registro de Usuario</Card.Title>
+            <Card.Title className="mb-3 title ">Registro de Usuario</Card.Title>
             <Form className="mt-3" onSubmit={handleSubmit}>
               <Row className="g-3">
                 <Col sm="6" md="6" lg="6">
@@ -99,12 +99,12 @@ function Usuario() {
                     <Form.Control
                       type="text"
                       placeholder="Ingrese el rol"
-                      value={rol}
-                      onChange={(e) => setRol(e.target.value)}
+                      value={rolUser} // Corrección aquí
+                      onChange={(e) => setRolUser(e.target.value)} // Corrección aquí
                     />
                   </FloatingLabel>
                 </Col>
-          
+
               </Row>
               <div className="center-button">
                 <Button variant="primary" type="submit" className="mt-3" size="lg">
