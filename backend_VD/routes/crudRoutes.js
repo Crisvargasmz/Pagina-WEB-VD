@@ -9,6 +9,31 @@ module.exports = (db) => {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+router.get('/stock/:idProducto', (req, res) => {
+  const idProducto = req.params.idProducto;
+
+  // Realiza una consulta a la base de datos para obtener la cantidad de stock del producto
+  const stockQuery = 'SELECT cantidad FROM Productos WHERE id_Producto = ?';
+
+  db.query(stockQuery, [idProducto], (error, results) => {
+    if (error) {
+      return res.status(500).json({ error: 'Error al consultar el stock del producto' });
+    }
+
+    if (results.length === 0) {
+      return res.status(404).json({ error: 'Producto no encontrado' });
+    }
+
+    // Obtén la cantidad de stock del resultado de la consulta
+    const stock = results[0].cantidad;
+
+    res.json({ stock });
+  });
+});
+
+
+
 // Ruta para validar usuarios
 
   // Ruta para verificar las credenciales y obtener el rol del usuario
@@ -253,59 +278,112 @@ router.get('/nombremarcas', (req, res) => {
 
   //Ruta para insertar compras
 
-// Definir la ruta para insertar compra y detalle
+// Modificar la ruta /createcompras
 router.post('/createcompras', (req, res) => {
-  const { fecha_compra, hora_compra, estado, fecha_estimada, cantidad_Compra, precio_Compra, id_Producto } = req.body;
+  const {
+    fecha_compra,
+    hora_compra,
+    estado,
+    fecha_estimada,
+    cantidad_Compra,
+    precio_Compra,
+    id_Producto,
+  } = req.body;
 
-  if (!fecha_compra || !hora_compra || !estado || !fecha_estimada || !cantidad_Compra || !precio_Compra || !id_Producto) {
+  if (
+    !fecha_compra ||
+    !hora_compra ||
+    !estado ||
+    !fecha_estimada ||
+    !cantidad_Compra ||
+    !precio_Compra ||
+    !id_Producto
+  ) {
     return res.status(400).json({ error: 'Todos los campos son obligatorios' });
   }
 
-  const compraSql = 'INSERT INTO compras (fecha_compra, hora_compra, estado, fecha_estimada) VALUES (?,?,?,?)';
-  const compraValues = [fecha_compra, hora_compra, estado, fecha_estimada];
+  // Realiza una consulta para obtener la cantidad disponible del producto
+  const stockQuery = 'SELECT cantidad FROM Productos WHERE id_Producto = ?';
 
-  db.beginTransaction((err) => {
-    if (err) {
-      console.error('Error al iniciar la transacción:', err);
-      res.status(500).json({ error: 'Error al iniciar la transacción' });
-      return;
+  db.query(stockQuery, [id_Producto], (error, stockResult) => {
+    if (error) {
+      return res.status(500).json({ error: 'Error al consultar el stock del producto' });
     }
 
-    db.query(compraSql, compraValues, (err, compraResult) => {
+    if (stockResult.length === 0) {
+      return res.status(404).json({ error: 'Producto no encontrado' });
+    }
+
+    const stockDisponible = stockResult[0].cantidad;
+
+    if (cantidad_Compra > stockDisponible) {
+      return res.status(400).json({ error: 'No hay suficiente stock' });
+    }
+
+    // Iniciar la transacción
+    db.beginTransaction((err) => {
       if (err) {
-        db.rollback(() => {
-          console.error('Error al insertar compra:', err);
-          res.status(500).json({ error: 'Error al insertar compra' });
-        });
-      } else {
-        const idCompra = compraResult.insertId;
-
-        const detalleCompraSql = 'INSERT INTO detalle_compra (cantidad_Compra, precio_Compra, id_Producto, id_Compra) VALUES (?,?,?,?)';
-        const detalleCompraValues = [cantidad_Compra, precio_Compra, id_Producto, idCompra];
-
-        db.query(detalleCompraSql, detalleCompraValues, (err, detalleCompraResult) => {
-          if (err) {
-            db.rollback(() => {
-              console.error('Error al insertar detallecompra:', err);
-              res.status(500).json({ error: 'Error al insertar detallecompra' });
-            });
-          } else {
-            db.commit((err) => {
-              if (err) {
-                db.rollback(() => {
-                  console.error('Error al confirmar la transacción:', err);
-                  res.status(500).json({ error: 'Error al confirmar la transacción' });
-                });
-              } else {
-                res.status(201).json({ message: 'Compra y detallecompra insertados con éxito' });
-              }
-            });
-          }
-        });
+        console.error('Error al iniciar la transacción:', err);
+        return res.status(500).json({ error: 'Error al iniciar la transacción' });
       }
+
+      // Insertar la compra
+      const compraSql = 'INSERT INTO compras (fecha_compra, hora_compra, estado, fecha_estimada) VALUES (?,?,?,?)';
+      const compraValues = [fecha_compra, hora_compra, estado, fecha_estimada];
+
+      db.query(compraSql, compraValues, (err, compraResult) => {
+        if (err) {
+          db.rollback(() => {
+            console.error('Error al insertar compra:', err);
+            return res.status(500).json({ error: 'Error al insertar compra' });
+          });
+        } else {
+          const idCompra = compraResult.insertId;
+
+          // Insertar el detalle de compra
+          const detalleCompraSql =
+            'INSERT INTO detalle_compra (cantidad_Compra, precio_Compra, id_Producto, id_Compra) VALUES (?,?,?,?)';
+          const detalleCompraValues = [cantidad_Compra, precio_Compra, id_Producto, idCompra];
+
+          db.query(detalleCompraSql, detalleCompraValues, (err, detalleCompraResult) => {
+            if (err) {
+              db.rollback(() => {
+                console.error('Error al insertar detallecompra:', err);
+                return res.status(500).json({ error: 'Error al insertar detallecompra' });
+              });
+            } else {
+              // Actualizar el inventario
+              const nuevoStock = stockDisponible - cantidad_Compra;
+              const actualizarInventarioSql = 'UPDATE Productos SET cantidad = ? WHERE id_Producto = ?';
+
+              db.query(actualizarInventarioSql, [nuevoStock, id_Producto], (err) => {
+                if (err) {
+                  db.rollback(() => {
+                    console.error('Error al actualizar el inventario:', err);
+                    return res.status(500).json({ error: 'Error al actualizar el inventario' });
+                  });
+                } else {
+                  // Confirmar la transacción
+                  db.commit((err) => {
+                    if (err) {
+                      db.rollback(() => {
+                        console.error('Error al confirmar la transacción:', err);
+                        return res.status(500).json({ error: 'Error al confirmar la transacción' });
+                      });
+                    } else {
+                      res.status(201).json({ message: 'Compra y detallecompra insertados con éxito' });
+                    }
+                  });
+                }
+              });
+            }
+          });
+        }
+      });
     });
   });
 });
+
 
   
 
