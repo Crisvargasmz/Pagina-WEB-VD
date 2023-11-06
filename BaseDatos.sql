@@ -57,6 +57,7 @@ id_Detallecompra INT AUTO_INCREMENT PRIMARY KEY,
 cantidad_Compra INT,
 precio_Compra DECIMAL (12,4),
 id_Producto INT,
+total_Compra DECIMAL (12,2),
 CONSTRAINT FK_DetalleCompra_Producto FOREIGN KEY (id_Producto) REFERENCES Productos(id_Producto),
 id_Compra INT,
 CONSTRAINT FK_DetalleCompra_Compras FOREIGN KEY (id_Compra) REFERENCES Compras(id_Compra)
