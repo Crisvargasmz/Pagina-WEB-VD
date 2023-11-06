@@ -88,8 +88,16 @@ function Header({ rol }) {
                     <NavDropdown.Item>
                       <Link to="/Gestioncomentario" className="link-unstyled">Comentarios</Link>
                     </NavDropdown.Item>
-
                   </NavDropdown>
+
+                  <NavDropdown title="Detalle" id="detalle">
+
+                  <NavDropdown.Item>
+                      <Link to="/Detallecompra" className="link-unstyled">Detalle Compra</Link>
+                    </NavDropdown.Item>
+
+                    </NavDropdown>
+                    
 
                   <Nav.Link>
                     <Link to="/" className="link-unstyled">Cerrar sesión</Link>
@@ -145,9 +153,36 @@ function Header({ rol }) {
           </Offcanvas>
         </div>)}
 
-      {rol === 'ventas' && (
+      {rol === 'cliente' && (
         <div>
-          {/* Código para el rol 'ventas' */}
+        {/* Navbar principal */}
+        <Navbar className="navbar-color" variant="dark" expand="md">
+            <Container>
+              <Navbar.Brand href="#home">Variedades Duarte</Navbar.Brand>
+              <Navbar.Toggle
+                aria-controls="basic-navbar-nav"
+                style={{ display: 'none' }}
+                className="d-sm-none d-xs-none"
+              />
+              <Navbar.Collapse id="basic-navbar-nav">
+                <Nav className="ml-auto">
+
+                  <Nav.Link>
+                    <Link to="/about" className="link-unstyled">Informacion</Link>
+                  </Nav.Link>
+                  </Nav>
+              </Navbar.Collapse>
+              <Button
+                variant="outline-light"
+                onClick={toggleMenu}
+                className="d-md-none d-block"
+                aria-controls="basic-navbar-nav"
+                aria-expanded={showMenu ? 'true' : 'false'}
+              >
+                Menú
+              </Button>
+            </Container>
+          </Navbar>
         </div>
       )}
     </div>
