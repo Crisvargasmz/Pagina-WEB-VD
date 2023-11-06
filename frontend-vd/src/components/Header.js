@@ -19,7 +19,7 @@ function Header({ rol }) {
 
 
           {/* Navbar principal */}
-          <Navbar className="navbar-color" variant="dark" expand="md">
+          <Navbar className="navbar-color" variant="dark" expand="md" fixed='top'>
             <Container>
               <Navbar.Brand href="#home">Variedades Duarte</Navbar.Brand>
               <Navbar.Toggle
