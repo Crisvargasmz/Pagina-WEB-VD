@@ -13,6 +13,7 @@ import Gestionusuario from './pages/Gestionusuario';
 import Comentario from './pages/Comentario';
 import Gestioncomentario from './pages/Gestioncomentario';
 import Login from './pages/Login';
+import Detallecompra from './pages/Detallecompra';
 
 function App() {
 
@@ -34,6 +35,7 @@ const [userRol,setUserRol] = useState('');
         <Route path="/Gestionusuario" element={<Gestionusuario rol={userRol}/>} />
         <Route path="/Comentario" element={<Comentario rol={userRol}/>} />
         <Route path="/Gestioncomentario" element={<Gestioncomentario rol={userRol}/>} />
+        <Route path="/Detallecompra" element={<Detallecompra rol={userRol} />} />
       </Routes>
     </Router>
   );
