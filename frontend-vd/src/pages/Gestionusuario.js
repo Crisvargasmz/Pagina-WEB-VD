@@ -111,7 +111,7 @@ function Gestionusuario({rol}) {
     <div>
       <Header rol={rol}/>
 
-      <Card className="m-3">
+      <Card className="mt-5">
         <Card.Body>
           <Card.Title className="mb-3 title">Listado de Usuarios</Card.Title>
 
@@ -128,7 +128,7 @@ function Gestionusuario({rol}) {
             </Col>
           </Row>
 
-          <Table striped bordered hover>
+          <Table striped bordered hover responsive>
             <thead>
               <tr>
                 <th>ID</th>

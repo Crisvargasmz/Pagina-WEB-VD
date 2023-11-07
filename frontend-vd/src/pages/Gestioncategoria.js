@@ -126,10 +126,10 @@ function Gestioncategoria({rol}) {
         </Alert>
       )}
 
-      <Card className="m-3">
+      <Card className="mt-5">
         <Card.Body>
           <Card.Title className="mb-3 title ">Listado de Categorias</Card.Title>
-          <Table striped bordered hover>
+          <Table striped bordered hover responsive>
             <thead>
               <tr>
                 <th>ID</th>

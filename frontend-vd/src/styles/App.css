@@ -1,6 +1,6 @@
 /* Estilos generales */
 .navbar-color {
-  background-color: #0e3ad8; /* Color de fondo personalizado */
+  background-color: hwb(206 4% 10%); /* Color de fondo personalizado */
 }
 
 .link-unstyled {

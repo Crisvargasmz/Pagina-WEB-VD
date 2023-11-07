@@ -254,7 +254,7 @@ function Gestionproducto({ rol }) {
     <div>
       <Header rol={rol} />
 
-      <Card className="m-3">
+      <Card className="mt-5">
         <Card.Body>
           <Card.Title className="mb-3 title ">Listado de Productos</Card.Title>
 
@@ -271,7 +271,7 @@ function Gestionproducto({ rol }) {
             </Col>
           </Row>
 
-          <Table striped bordered hover>
+          <Table striped bordered hover responsive>
             <thead>
               <tr className='centrado'>
                 <th>ID</th>
