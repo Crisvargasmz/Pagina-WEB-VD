@@ -14,6 +14,7 @@ import Comentario from './pages/Comentario';
 import Gestioncomentario from './pages/Gestioncomentario';
 import Login from './pages/Login';
 import Detallecompra from './pages/Detallecompra';
+import Catalogo from './pages/Catalogo';
 
 function App() {
 
@@ -36,6 +37,7 @@ const [userRol,setUserRol] = useState('');
         <Route path="/Comentario" element={<Comentario rol={userRol}/>} />
         <Route path="/Gestioncomentario" element={<Gestioncomentario rol={userRol}/>} />
         <Route path="/Detallecompra" element={<Detallecompra rol={userRol} />} />
+        <Route path="/Catalogo" element={<Catalogo rol={userRol} />} />
       </Routes>
     </Router>
   );
