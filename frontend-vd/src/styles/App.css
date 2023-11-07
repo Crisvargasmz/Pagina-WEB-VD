@@ -118,3 +118,11 @@
   overflow: hidden; /* Oculta el desbordamiento de contenido */
   resize: none; /* Desactiva la redimensión manual del usuario */
 }
+
+.image-card {
+  width: 200px; /* El ancho deseado */
+  height: 200px; /* La altura deseada */
+  object-fit: cover; /* Para asegurarse de que las imágenes se ajusten correctamente */
+  display: block;
+  margin: 0 auto; /* Esto centrará horizontalmente la imagen */
+}

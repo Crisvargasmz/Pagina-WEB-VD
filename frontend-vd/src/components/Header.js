@@ -97,6 +97,15 @@ function Header({ rol }) {
                     </NavDropdown.Item>
 
                     </NavDropdown>
+
+
+                  <NavDropdown title="Catalogo" id="catalogo">
+
+                    <NavDropdown.Item>
+                      <Link to="/Catalogo" className="link-unstyled">Catalogo</Link>
+                    </NavDropdown.Item>
+
+                  </NavDropdown>
                     
 
                   <Nav.Link>
