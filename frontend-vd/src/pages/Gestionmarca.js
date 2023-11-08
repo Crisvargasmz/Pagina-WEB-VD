@@ -125,7 +125,7 @@ function Gestionmarca({rol}) {
         </Alert>
       )}
 
-      <Card className="mt-5">
+      <Card className="global-margin-top">
         <Card.Body>
           <Card.Title className="mb-3 title ">Listado de Marcas</Card.Title>
 

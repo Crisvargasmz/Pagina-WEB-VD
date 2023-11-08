@@ -49,7 +49,7 @@ function Usuario({ rol }) {
       <Header rol={rol} />
 
       <Container>
-        <Card className="mt-3">
+        <Card className="global-margin-top">
           <Card.Body>
             <Card.Title className="mb-3 title ">Registro de Usuario</Card.Title>
             <Form className="mt-3" onSubmit={handleSubmit}>

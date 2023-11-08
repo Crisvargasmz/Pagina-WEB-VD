@@ -111,7 +111,7 @@ function Gestionusuario({rol}) {
     <div>
       <Header rol={rol}/>
 
-      <Card className="mt-5">
+      <Card className="global-margin-top">
         <Card.Body>
           <Card.Title className="mb-3 title">Listado de Usuarios</Card.Title>
 

@@ -130,7 +130,7 @@ const filteredComentario = comentarios.filter((comentario) => {
     <div>
       <Header rol={rol}/>
 
-      <Card className="mt-5">
+      <Card className="global-margin-top">
         <Card.Body>
           <Card.Title className="mb-3 title ">Listado de comentarios</Card.Title>
           <Table striped bordered hover responsive>
