@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Container, Card, Row, Col, Form, Modal, FloatingLabel } from 'react-bootstrap';
+import { Button, Container, Card, Row, Col, Form, Modal, FloatingLabel } from 'react-bootstrap';
 import Header from '../components/Header';
 import '../styles/App.css';
 import { FaSistrix } from 'react-icons/fa6';
-import { FaSave, FaPlus } from 'react-icons/fa';
+import {FaPlus } from 'react-icons/fa';
 import axios from 'axios';
 
 function Producto({ rol }) {
@@ -18,16 +18,17 @@ function Producto({ rol }) {
   });
 
   const [imageUrl, setImageUrl] = useState('');
-  const [imageFile, setImageFile] = useState(null); // Nuevo estado para el archivo de imagen
+  const [setImageFile] = useState(null); // Nuevo estado para el archivo de imagen
 
   
 
   const [marcas, setMarcas] = useState([]);
   const [categorias, setCategorias] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const [selectedBrand, setSelectedBrand] = useState(null);
+  const [selectedMarcas, setSelectedMarcas] = useState(null);
   const [showCategoryModal, setShowCategoryModal] = useState(false);
-  const [showBrandModal, setShowBrandModal] = useState(false);
+  const [showMarcasModal, setShowMarcasModal] = useState(false);
+
   const [showMarcaModal, setShowMarcaModal] = useState(false);
   const [showCateModal, setShowCateModal] = useState(false);
 
@@ -79,6 +80,14 @@ function Producto({ rol }) {
     setShowCategoryModal(false);
   };
 
+  const openBrandModal = () => {
+    setShowMarcasModal(true);
+  };
+
+  const closeBrandModal = () => {
+    setShowMarcasModal(false);
+  };
+
   const selectCategory = (category) => {
     setSelectedCategory(category);
     setFormData({
@@ -88,16 +97,8 @@ function Producto({ rol }) {
     closeCategoryModal();
   };
 
-  const openBrandModal = () => {
-    setShowBrandModal(true);
-  };
-
-  const closeBrandModal = () => {
-    setShowBrandModal(false);
-  };
-
-  const selectBrand = (brand) => {
-    setSelectedBrand(brand);
+ const selectedMarca = (brand) => {
+    setSelectedMarcas(brand);
     setFormData({
       ...formData,
       id_Marca: brand.id_Marca,
@@ -155,7 +156,7 @@ function Producto({ rol }) {
           id_Categoria: '',
         });
         setSelectedCategory(null);
-        setSelectedBrand(null);
+        setSelectedMarcas(null);
       } else {
         alert('Error al registrar producto');
       }
@@ -311,7 +312,7 @@ function Producto({ rol }) {
                       type="text"
                       placeholder="Marca seleccionada"
                       name="marca"
-                      value={selectedBrand ? selectedBrand.nombre_Marca : ''}
+                      value={selectedMarcas ? selectedMarcas.nombre_Marca : ''}
                       readOnly
                     />
                     <div className="button-container">
@@ -370,13 +371,13 @@ function Producto({ rol }) {
         </Modal.Body>
       </Modal>
 
-      <Modal show={showBrandModal} onHide={closeBrandModal}>
+      <Modal show={showMarcasModal} onHide={closeBrandModal}>
         <Modal.Header closeButton>
           <Modal.Title>Seleccionar Marca</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {marcas.map((brand) => (
-            <div className="Seleccion" key={brand.id_Marca} onClick={() => selectBrand(brand)}>
+            <div className="Seleccion" key={brand.id_Marca} onClick={() => selectedMarca(brand)}>
               {brand.nombre_Marca}
             </div>
           ))}
@@ -398,7 +399,7 @@ function Producto({ rol }) {
               />
             </FloatingLabel>
             <div className="center-button">
-              <Button variant="primary" type="submit" className="mt-3">
+              <Button variant="primary" type="submit" className="mt-3" onClick={closeMarcaModal}>
                 Registrar
               </Button>
             </div>
@@ -422,7 +423,7 @@ function Producto({ rol }) {
               />
             </FloatingLabel>
             <div className="center-button">
-              <Button variant="primary" type="submit" className="mt-3">
+              <Button variant="primary" type="submit" className="mt-3" onClick={closeCateModal}>
                 Registrar
               </Button>
             </div>
