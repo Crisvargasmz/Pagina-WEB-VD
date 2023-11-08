@@ -6,13 +6,8 @@ const path = require('path');
 const app = express();
 const port = 5000;
 
-<<<<<<< HEAD
 
 app.use(express.json({ limit: '50mb'}));
-=======
-app.use(express.json({ limit: '50mb'}));
-
->>>>>>> 75be19bb6deb8c2959d18c4f8b95d15219443543
 
 //configuracion de la conexion a la base de datos
 const db = mysql.createConnection({
