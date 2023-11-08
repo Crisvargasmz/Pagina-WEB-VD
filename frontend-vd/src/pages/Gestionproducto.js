@@ -254,7 +254,7 @@ function Gestionproducto({ rol }) {
     <div>
       <Header rol={rol} />
 
-      <Card className="mt-5">
+      <Card className="mt-11">
         <Card.Body>
           <Card.Title className="mb-3 title ">Listado de Productos</Card.Title>
 
@@ -292,7 +292,7 @@ function Gestionproducto({ rol }) {
                   <td>{producto.nombre_Producto}</td>
                   <td>{producto.presentacion}</td>
                   <td>
-                    <img src={producto.imagen} alt="Imagen del producto" style={{ maxWidth: '100px' }} />
+                    <img src={producto.imagen} alt="Imagen del producto" style={{ maxWidth: '80px' }} />
 
                   </td>
                   <td>{producto.descripcion}</td>
