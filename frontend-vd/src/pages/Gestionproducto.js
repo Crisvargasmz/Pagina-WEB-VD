@@ -292,7 +292,7 @@ function Gestionproducto({ rol }) {
                   <td>{producto.nombre_Producto}</td>
                   <td>{producto.presentacion}</td>
                   <td>
-                    <img src={producto.imagen} alt="Imagen del producto" style={{ maxWidth: '100px' }} />
+                    <img src={producto.imagen} alt="Imagen del producto" style={{ maxWidth: '80px' }} />
 
                   </td>
                   <td>{producto.descripcion}</td>
