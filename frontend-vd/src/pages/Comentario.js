@@ -66,7 +66,7 @@ function Comentario({rol}) {
       <Header rol={rol}/>
 
       <Container>
-        <Card className="mt-3">
+        <Card className="global-margin-top">
           <Card.Body>
             <Card.Title className="mb-3 title ">Registro de Comentario</Card.Title>
             <Form className="mt-3" onSubmit={handleSubmit}>
