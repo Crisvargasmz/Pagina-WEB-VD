@@ -106,6 +106,15 @@ function Header({ rol }) {
                     </NavDropdown.Item>
 
                   </NavDropdown>
+
+                  
+                  <NavDropdown title="Estadisticas" id="estadistica">
+
+                    <NavDropdown.Item>
+                      <Link to="/Estadistica" className="link-unstyled">Estadisticas</Link>
+                    </NavDropdown.Item>
+
+                  </NavDropdown>
                     
 
                   <Nav.Link>

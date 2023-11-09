@@ -15,6 +15,7 @@ import Gestioncomentario from './pages/Gestioncomentario';
 import Login from './pages/Login';
 import Detallecompra from './pages/Detallecompra';
 import Catalogo from './pages/Catalogo';
+import Estadistica from './pages/Estadistica';
 
 function App() {
 
@@ -38,6 +39,7 @@ const [userRol,setUserRol] = useState('');
         <Route path="/Gestioncomentario" element={<Gestioncomentario rol={userRol}/>} />
         <Route path="/Detallecompra" element={<Detallecompra rol={userRol} />} />
         <Route path="/Catalogo" element={<Catalogo rol={userRol} />} />
+        <Route path="/Estadistica" element={<Estadistica rol={userRol} />} />
       </Routes>
     </Router>
   );
