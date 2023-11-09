@@ -281,109 +281,38 @@ router.get('/nombremarcas', (req, res) => {
 
 // Modificar la ruta /createcompras
 router.post('/createcompras', (req, res) => {
-  const {
-    fecha_compra,
-    hora_compra,
-    estado,
-    fecha_estimada,
-    cantidad_Compra,
-    precio_Compra,
-    id_Producto,
-  } = req.body;
+  const { estado, fecha_Estimada, detalle,precio_Compra} = req.body;
+  const fecha_Compra = new Date();
+  const hora_Compra = new Date();
 
-  if (
-    !fecha_compra ||
-    !hora_compra ||
-    !estado ||
-    !fecha_estimada ||
-    !cantidad_Compra ||
-    !precio_Compra ||
-    !id_Producto
-  ) {
-    return res.status(400).json({ error: 'Todos los campos son obligatorios' });
-  }
-
-  // Realiza una consulta para obtener la cantidad disponible del producto
-  const stockQuery = 'SELECT cantidad FROM Productos WHERE id_Producto = ?';
-
-  db.query(stockQuery, [id_Producto], (error, stockResult) => {
-    if (error) {
-      return res.status(500).json({ error: 'Error al consultar el stock del producto' });
-    }
-
-    if (stockResult.length === 0) {
-      return res.status(404).json({ error: 'Producto no encontrado' });
-    }
-
-    const stockDisponible = stockResult[0].cantidad;
-
-    if (cantidad_Compra > stockDisponible) {
-      return res.status(400).json({ error: 'No hay suficiente stock' });
-    }
-
-    // Iniciar la transacción
-    db.beginTransaction((err) => {
+    // Insertar la compra
+    const sqlCompra = 'INSERT INTO compras ( fecha_Compra, hora_Compra, estado, fecha_Estimada) VALUES (?, ?, ?, ?)';
+    db.query(sqlCompra, [fecha_Compra, hora_Compra, estado, fecha_Estimada], (err, result) => {
       if (err) {
-        console.error('Error al iniciar la transacción:', err);
-        return res.status(500).json({ error: 'Error al iniciar la transacción' });
+        console.error('Error al insertar venta:', err);
+        return res.status(500).json({ error: 'Error al insertar venta' });
       }
 
-      // Insertar la compra
-      const compraSql = 'INSERT INTO compras (fecha_compra, hora_compra, estado, fecha_estimada) VALUES (?,?,?,?)';
-      const compraValues = [fecha_compra, hora_compra, estado, fecha_estimada];
+        const idCompra = result.insertId;
 
-      db.query(compraSql, compraValues, (err, compraResult) => {
-        if (err) {
-          db.rollback(() => {
-            console.error('Error al insertar compra:', err);
-            return res.status(500).json({ error: 'Error al insertar compra' });
-          });
-        } else {
-          const idCompra = compraResult.insertId;
-
-          // Insertar el detalle de compra
-          const detalleCompraSql =
-            'INSERT INTO detalle_compra (cantidad_Compra, precio_Compra, id_Producto, id_Compra) VALUES (?,?,?,?)';
-          const detalleCompraValues = [cantidad_Compra, precio_Compra, id_Producto, idCompra];
-
-          db.query(detalleCompraSql, detalleCompraValues, (err, detalleCompraResult) => {
-            if (err) {
-              db.rollback(() => {
-                console.error('Error al insertar detallecompra:', err);
-                return res.status(500).json({ error: 'Error al insertar detallecompra' });
-              });
-            } else {
-              // Actualizar el inventario
-              const nuevoStock = stockDisponible - cantidad_Compra;
-              const actualizarInventarioSql = 'UPDATE Productos SET cantidad = ? WHERE id_Producto = ?';
-
-              db.query(actualizarInventarioSql, [nuevoStock, id_Producto], (err) => {
-                if (err) {
-                  db.rollback(() => {
-                    console.error('Error al actualizar el inventario:', err);
-                    return res.status(500).json({ error: 'Error al actualizar el inventario' });
-                  });
-                } else {
-                  // Confirmar la transacción
-                  db.commit((err) => {
-                    if (err) {
-                      db.rollback(() => {
-                        console.error('Error al confirmar la transacción:', err);
-                        return res.status(500).json({ error: 'Error al confirmar la transacción' });
-                      });
-                    } else {
-                      res.status(201).json({ message: 'Compra y detallecompra insertados con éxito' });
-                    }
-                  });
-                }
-              });
-            }
-          });
-        }
+        // Insertar el detalle de compra
+        const sqlDetalle = 'INSERT INTO detalle_compra (cantidad_Compra,precio_Compra,id_Producto,id_Compra) VALUES ?';
+        const values = detalle.map((item) => [item.cantidad_Compra,precio_Compra,item.id_Producto,idCompra]);
+        db.query(sqlDetalle, [values], (err, result) => {
+          if (err) {
+            console.error('Error al insertar detalle de venta:', err);
+            return res.status(500).json({ error: 'Error al insertar detalle de venta' });
+          }
+  
+          // Devolver respuesta exitosa
+          res.status(201).json({ message: 'Venta y detalle de venta agregados con éxito' });
+        });
       });
     });
-  });
-});
+  
+
+
+
 
 
   
@@ -445,28 +374,23 @@ router.post('/createcompras', (req, res) => {
 
 
 router.post('/createusuarios', (req, res) => {
-  const {nombre_Usuario,correo_Electronico,contrasena, rol} = req.body
+  const { nombre_Usuario, correo_Electronico, contrasena, rol } = req.body;
 
-  // Verifica si se proporcionó el nombre de la categoría
-  if (!nombre_Usuario||!correo_Electronico||!contrasena||!rol ) {
-    return res.status(400).json({ error: 'Todos los campos son obligatorios' });
-  }
+  // Llama al procedimiento almacenado
+  const sql = 'CALL InsertarUsuario(?, ?, ?, ?)';
+  const values = [nombre_Usuario, correo_Electronico, contrasena, rol];
 
-  // Consulta SQL para insertar una nueva categoría
-  const sql = 'INSERT INTO usuarios (nombre_Usuario,correo_Electronico,contrasena, rol) VALUES (?,?,?,?)';
-  const values = [nombre_Usuario,correo_Electronico,contrasena,rol];
-
-  // Ejecuta la consulta SQL
   db.query(sql, values, (err, result) => {
     if (err) {
       console.error('Error al insertar Usuario:', err);
       res.status(500).json({ error: 'Error al insertar Usuario' });
     } else {
-      // Devuelve una respuesta exitosa
-      res.status(201).json({ message: 'usuario insertado con éxito' });
+      // Devuelve la respuesta del procedimiento almacenado
+      res.status(201).json({ message: result[0][0].message });
     }
   });
 });
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
