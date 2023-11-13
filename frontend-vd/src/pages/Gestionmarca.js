@@ -155,8 +155,8 @@ function Gestionmarca({rol}) {
                   <td>{marca.id_Marca}</td>
                   <td>{marca.nombre_Marca}</td>
                   <td>
-                    <Button variant="primary" onClick={() => openModal(marca)}><FaPencil/></Button>
-                    <Button variant="danger" onClick={() => handleDelete(marca.id_Marca)}><FaTrashCan/></Button>
+                    <Button className='actualizar' variant="primary" onClick={() => openModal(marca)}><FaPencil/></Button>
+                    <Button className='eliminar' variant="danger" onClick={() => handleDelete(marca.id_Marca)}><FaTrashCan/></Button>
                   </td>
                 </tr>
               ))}

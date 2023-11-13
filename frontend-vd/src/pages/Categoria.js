@@ -12,6 +12,11 @@ function Categoria({rol}) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!nombre_Categoria) {
+      alert('Por favor, completa todos los campos');
+      return;
+    }
+
     // Crear un objeto con los datos del formulario
     const formData = {
       nombre_Categoria,

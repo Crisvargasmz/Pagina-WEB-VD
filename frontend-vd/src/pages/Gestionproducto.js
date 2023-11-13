@@ -283,6 +283,7 @@ function Gestionproducto({ rol }) {
                 <th>Cantidad</th>
                 <th>Marca</th>
                 <th>Categoría</th>
+                <th>Acciones</th>
               </tr>
             </thead>
             <tbody>
@@ -296,7 +297,7 @@ function Gestionproducto({ rol }) {
 
                   </td>
                   <td>{producto.descripcion}</td>
-                  <td>{producto.precio}</td>
+                  <td>C${producto.precio.toFixed(2)}</td>
                   <td>{producto.cantidad}</td>
                   <td>{marcas.find((marca) => marca.id_Marca === producto.id_Marca)?.nombre_Marca}</td>
                   <td>{categorias.find((categoria) => categoria.id_Categoria === producto.id_Categoria)?.nombre_Categoria}</td>
@@ -321,7 +322,7 @@ function Gestionproducto({ rol }) {
               <Card.Title>Registro de producto</Card.Title>
               <Form className="mt-3">
                 <Row className="g-3">
-                  <Col sm="6" md="6" lg="4">
+                  <Col sm="6" md="6" lg="6">
                     <FloatingLabel controlId="nombre_Producto" label="Nombre">
                       <Form.Control
                         type="text"
@@ -332,7 +333,7 @@ function Gestionproducto({ rol }) {
                       />
                     </FloatingLabel>
                   </Col>
-                  <Col sm="6" md="6" lg="4">
+                  <Col sm="6" md="6" lg="6">
                     <FloatingLabel controlId="presentacion" label="Presentación">
                       <Form.Control
                         type="text"
@@ -354,29 +355,38 @@ function Gestionproducto({ rol }) {
                       />
                     </Form.Group>
                   </Col>
-                  <Col sm="12" md="6" lg="8">
+                  <Col sm="12" md="6" lg="12">
                     <FloatingLabel controlId="descripcion" label="Descripción">
                       <Form.Control
-                        type="text"
+                      as="textarea"
+                       className="auto-expand-textarea" // Aplica la clase personalizada aquí
+                       style={{ minHeight: '100px' }} // Establece la altura inicial aquí
                         placeholder="Ingrese la descripción"
                         name="descripcion"
                         value={formData.descripcion}
-                        onChange={handleFormChange}
+                        onChange={(e) => {
+                          handleFormChange(e);
+                          e.target.style.height = 'auto'; // Restablece la altura a 'auto' para calcular la nueva altura
+                          e.target.style.height = `${e.target.scrollHeight}px`; // Ajusta la altura automáticamente
+                        }}
                       />
                     </FloatingLabel>
                   </Col>
-                  <Col sm="12" md="6" lg="4">
-                    <FloatingLabel controlId="precio" label="Precio">
-                      <Form.Control
-                        type="number"
-                        placeholder="Ingrese el precio"
-                        name="precio"
-                        value={formData.precio}
-                        onChange={handleFormChange}
-                      />
+                  <Col sm="12" md="6" lg="6">
+                    <FloatingLabel controlId="precio" >
+                      <div className="input-group">
+                        <span className="input-group-text">C$</span>
+                        <Form.Control
+                          className="input-size"
+                          type="number"
+                          placeholder="Ingrese el precio"
+                          value={formData.precio}
+                          onChange={handleFormChange}
+                        />
+                      </div>
                     </FloatingLabel>
                   </Col>
-                  <Col sm="12" md="6" lg="4">
+                  <Col sm="12" md="6" lg="6">
                     <FloatingLabel controlId="cantidad" label="Cantidad">
                       <Form.Control
                         type="number"
@@ -387,7 +397,7 @@ function Gestionproducto({ rol }) {
                       />
                     </FloatingLabel>
                   </Col>
-                  <Col sm="12" md="6" lg="4">
+                  <Col sm="12" md="6" lg="6">
                     <FloatingLabel controlId="categoria" label="Categoría">
                       <Form.Control
                         type="text"
@@ -401,7 +411,7 @@ function Gestionproducto({ rol }) {
                       </Button>
                     </FloatingLabel>
                   </Col>
-                  <Col sm="12" md="6" lg="4">
+                  <Col sm="12" md="6" lg="6">
                     <FloatingLabel controlId="marca" label="Marca">
                       <Form.Control
                         type="text"

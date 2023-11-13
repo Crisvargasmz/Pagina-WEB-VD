@@ -18,17 +18,16 @@ function Header({ rol }) {
         <div>
 
 
-          {/* Navbar principal */}
-          <Navbar className="navbar-color" variant="dark" expand="md" fixed='top'>
-            <Container>
-              <Navbar.Brand href="#home">Variedades Duarte</Navbar.Brand>
-              <Navbar.Toggle
-                aria-controls="basic-navbar-nav"
-                style={{ display: 'none' }}
-                className="d-sm-none d-xs-none"
-              />
-              <Navbar.Collapse id="basic-navbar-nav">
-                <Nav className="ml-auto">
+<Navbar className="navbar-color" variant="dark" expand="md" fixed='top'>
+      <Container>
+        <Link to="/home" className="navbar-brand">Variedades Duarte</Link>
+        <Navbar.Toggle
+          aria-controls="basic-navbar-nav"
+          style={{ display: 'none' }}
+          className="d-sm-none d-xs-none"
+        />
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="ml-auto">
 
                   <Nav.Link>
                     <Link to="/about" className="link-unstyled">Informacion</Link>

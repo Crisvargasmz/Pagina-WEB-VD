@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Col, Container, Card, Badge, Form, FloatingLabel } from 'react-bootstrap';
+import { Row, Col, Container, Card, Badge, Form, FloatingLabel, Button } from 'react-bootstrap';
 import Header from '../components/Header';
 import '../styles/App.css';
+import { FaComments } from 'react-icons/fa6';
 
 
 function Catalogo({ rol }) {
@@ -94,8 +95,11 @@ function Catalogo({ rol }) {
                     </Badge>
                   </div>
                 </Card.Body>
+                <Button>
+                <FaComments />
+                </Button>
                 <Card.Body>
-                <Card.Link href="/producto" className="btn btn-primary">
+                <Card.Link href="/producto" className="button button-primary">
                       Agregar
                     </Card.Link>
                 </Card.Body>

@@ -70,6 +70,11 @@
   z-index: 1;
 }
 
+.show-button-add{
+  width: 56px; /* Establece el ancho del botón  */
+  height: 56px; /* Establece la altura del botón */
+}
+
 /* Estilos para el centro del contenido */
 .centrado {
   text-align: center;
@@ -171,7 +176,7 @@
 }
 
 /* Estilos para el precio */
-.product-card .badge.bg-success {
+.product-card  {
   text-align: center; /* Centra el precio */
   font-size: 1.5rem; /* Tamaño de letra más grande para el precio */
   color: black; /* Color de texto negro */
@@ -192,11 +197,13 @@
   text-align: center;
 }
 
-.product-card .btn {
+.product-card .button {
   display: block;
   margin: 0 auto;
   color: white;
 }
+
+
 
 .global-margin-top {
   margin-top: 4rem;
@@ -219,4 +226,18 @@ text-align: center;
   width: 100%;
   
 
+}
+
+.input-size{
+  min-height: 57px; /* Establece una altura mínima */
+  overflow: hidden; /* Oculta el desbordamiento de contenido */
+  resize: none; 
+
+
+}
+
+.input-align{
+align-items:end;
+
+  
 }

@@ -154,8 +154,8 @@ const filteredComentario = comentarios.filter((comentario) => {
                   <td>{comentario.id_Usuario}</td>                 
                   <td>{comentario.id_Producto}</td>
                   <td>
-                    <Button variant="primary" onClick={() => openModal(comentario)}><FaPencil/></Button>
-                    <Button variant="danger" onClick={() => handleDelete(comentario.id_Comentario)}><FaTrashCan/></Button>
+                    <Button className='actualizar' variant="primary" onClick={() => openModal(comentario)}><FaPencil/></Button>
+                    <Button className='eliminar' variant="danger" onClick={() => handleDelete(comentario.id_Comentario)}><FaTrashCan/></Button>
                   </td>
                 </tr>
               ))}

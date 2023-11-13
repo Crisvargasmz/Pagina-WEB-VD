@@ -145,8 +145,8 @@ function Gestionusuario({rol}) {
                   <td>{usuario.correo_Electronico}</td>
                   <td>{usuario.contrasena}</td>
                   <td>
-                    <Button variant="primary" onClick={() => openModal(usuario)}><FaPencil/></Button>
-                    <Button variant="danger" onClick={() => handleDelete(usuario.id_Usuario)}><FaTrashCan/></Button>
+                    <Button className='actualizar' variant="primary" onClick={() => openModal(usuario)}><FaPencil/></Button>
+                    <Button className='eliminar' variant="danger" onClick={() => handleDelete(usuario.id_Usuario)}><FaTrashCan/></Button>
                   </td>
                 </tr>
               ))}

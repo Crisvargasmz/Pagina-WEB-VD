@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Form, Row, Col, Container, FloatingLabel, Card, Button, Alert, Modal } from 'react-bootstrap';
 import Header from '../components/Header';
-import { FaTrashAlt, FaPlus } from 'react-icons/fa';
+import {FaSearch, FaTrashAlt, FaPlus } from 'react-icons/fa';
 
 function Detallecompra({ rol }) {
   const [productos, setProductos] = useState([]);
@@ -153,16 +153,6 @@ function Detallecompra({ rol }) {
                   </FloatingLabel>
                 </Col>
                 <Col sm="6" md="6" lg="12">
-                  <FloatingLabel controlId="cantidad_Compra" label="Cantidad de Compra">
-                    <Form.Control
-                      type="number"
-                      placeholder="Ingrese la cantidad de compra"
-                      value={cantidad_Compra}
-                      onChange={(e) => setCantidadCompra(e.target.value)}
-                    />
-                  </FloatingLabel>
-                </Col>
-                <Col sm="6" md="6" lg="12">
                   <FloatingLabel controlId="precio_Compra" label="Precio de Compra">
                     <Form.Control
                       type="number"
@@ -173,10 +163,10 @@ function Detallecompra({ rol }) {
                     />
                   </FloatingLabel>
                 </Col>
-
                 <Col sm="12" md="4" lg="4">
                   <FloatingLabel controlId="producto" label="Producto">
                     <Form.Control
+                    className='input-align'
                       type="text"
                       placeholder="Seleccionar Producto"
                       name="producto"
@@ -184,15 +174,27 @@ function Detallecompra({ rol }) {
                       readOnly
                     />
                     <div className="button-container">
-                      <Button className="search-button" variant="outline-primary" onClick={openProductoModal}>
-                        <FaPlus />
+                      <Button className="show-button" variant="outline-primary" onClick={openProductoModal}>
+                        <FaSearch  />
                       </Button>
                     </div>
                   </FloatingLabel>
                 </Col>
 
+                <Col sm="12" md="4" lg="4">
+                  <FloatingLabel controlId="cantidad_Compra" label="Cantidad del producto seleccionado">
+                    <Form.Control
+                      type="number"
+                      placeholder="Ingrese la cantidad de compra"
+                      value={cantidad_Compra}
+                      onChange={(e) => setCantidadCompra(e.target.value)}
+                    />
+                  </FloatingLabel>
+                </Col>
+                
+
                 <Col sm="12" md="2" lg="2" className="d-flex align-items-center">
-                  <Button onClick={AgregarDetalleProducto} variant="outline-success" size="lg">
+                  <Button className='show-button-add' onClick={AgregarDetalleProducto} variant="outline-success" size="lg">
                     <FaPlus />
                   </Button>
                 </Col>
@@ -240,7 +242,7 @@ function Detallecompra({ rol }) {
 
               <div className="center-button">
                 <Button variant="primary" onClick={registrarVenta} className="mt-3" size="lg">
-                  Registrar Compra y Detalle
+                  Registrar Compra
                 </Button>
               </div>
             </Form>

@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Alert } from 'react-bootstrap';
 import { Table, Button, Container, Card, Row, Col, Form, Modal, FloatingLabel } from 'react-bootstrap';
 import Header from '../components/Header';
-import { FaSistrix, FaPencil, FaTrashCan} from 'react-icons/fa6';
+import { FaSistrix, FaPencil, FaTrashCan } from 'react-icons/fa6';
 
-function Gestioncategoria({rol}) {
+function Gestioncategoria({ rol }) {
   const [categorias, setCategorias] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedcategoria, setSelectedCategoria] = useState({});
@@ -24,13 +24,13 @@ function Gestioncategoria({rol}) {
 
     return (
       nombre_Categoria.includes(search) ||
-      rol.includes(search) 
+      rol.includes(search)
     );
   });
 
-  
+
   const [warningMessage, setWarningMessage] = useState('');
-// Función para abrir el modal y pasar los datos del producto seleccionado
+  // Función para abrir el modal y pasar los datos del producto seleccionado
   const openModal = (categoria) => {
     setSelectedCategoria(categoria);
 
@@ -117,10 +117,10 @@ function Gestioncategoria({rol}) {
 
   return (
     <div>
-      <Header rol={rol}/>
+      <Header rol={rol} />
 
-        {/* Agregar un mensaje de advertencia si existe uno */}
-        {warningMessage && (
+      {/* Agregar un mensaje de advertencia si existe uno */}
+      {warningMessage && (
         <Alert variant="warning" onClose={() => setWarningMessage('')} dismissible>
           {warningMessage}
         </Alert>
@@ -129,6 +129,19 @@ function Gestioncategoria({rol}) {
       <Card className="global-margin-top">
         <Card.Body>
           <Card.Title className="mb-3 title ">Listado de Categorias</Card.Title>
+
+          <Row className="mb-3">
+            <Col>
+              <FloatingLabel controlId="search" label="Buscar">
+                <Form.Control
+                  type="text"
+                  placeholder="Buscar"
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                />
+              </FloatingLabel>
+            </Col>
+          </Row>
           <Table striped bordered hover responsive>
             <thead>
               <tr>
@@ -142,8 +155,8 @@ function Gestioncategoria({rol}) {
                   <td>{categoria.id_Categoria}</td>
                   <td>{categoria.nombre_Categoria}</td>
                   <td>
-                    <Button variant="primary" onClick={() => openModal(categoria)}><FaPencil/></Button>
-                    <Button variant="danger" onClick={() => handleDelete(categoria.id_Categoria)}><FaTrashCan/></Button>
+                    <Button className='actualizar' variant="primary" onClick={() => openModal(categoria)}><FaPencil /></Button>
+                    <Button className='eliminar' variant="danger" onClick={() => handleDelete(categoria.id_Categoria)}><FaTrashCan /></Button>
                   </td>
                 </tr>
               ))}

@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Button, Container, Card, Row, Col, Form, Modal, FloatingLabel } from 'react-bootstrap';
 import Header from '../components/Header';
 import '../styles/App.css';
-import { FaSistrix } from 'react-icons/fa6';
-import {FaPlus } from 'react-icons/fa';
+import { FaSistrix} from 'react-icons/fa6';
+import { FaPlus } from 'react-icons/fa';
 import axios from 'axios';
 
 function Producto({ rol }) {
@@ -18,9 +18,9 @@ function Producto({ rol }) {
   });
 
   const [imageUrl, setImageUrl] = useState('');
-  const [setImageFile] = useState(null); // Nuevo estado para el archivo de imagen
+  const [imageFile,setImageFile] = useState(null); // Nuevo estado para el archivo de imagen
 
-  
+
 
   const [marcas, setMarcas] = useState([]);
   const [categorias, setCategorias] = useState([]);
@@ -97,7 +97,7 @@ function Producto({ rol }) {
     closeCategoryModal();
   };
 
- const selectedMarca = (brand) => {
+  const selectedMarca = (brand) => {
     setSelectedMarcas(brand);
     setFormData({
       ...formData,
@@ -125,10 +125,16 @@ function Producto({ rol }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Validar campos vacíos
+    if (!nombre_Producto || !presentacion || !imageUrl || !descripcion || !precio || !cantidad || !formData.id_Marca || !formData.id_Categoria) {
+      alert('Por favor, completa todos los campos');
+      return;
+    }
+
     const dataToSend = new FormData();
     dataToSend.append('nombre_Producto', nombre_Producto);
     dataToSend.append('presentacion', presentacion);
-    dataToSend.append('imagen', imageUrl); // Usar imageUrl en lugar de imageFile
+    dataToSend.append('imagen', imageUrl);
     dataToSend.append('descripcion', descripcion);
     dataToSend.append('precio', precio);
     dataToSend.append('cantidad', cantidad);
@@ -145,7 +151,7 @@ function Producto({ rol }) {
       if (response.data.message === 'producto insertado con éxito') {
         alert('Registro Exitoso');
         setImageUrl('');
-        setImageFile(null); // Restablece el estado imageFile
+        setImageFile(null);
         setNombre_Producto('');
         setPresentacion('');
         setDescripcion('');
@@ -166,8 +172,14 @@ function Producto({ rol }) {
     }
   };
 
+
   const handleSubmitmarca = async (e) => {
     e.preventDefault();
+
+    if (!nombre_Marca) {
+      alert('Por favor, completa todos los campos');
+      return;
+    }
 
     const formData = {
       nombre_Marca,
@@ -200,6 +212,12 @@ function Producto({ rol }) {
   const handleSubmitcategoria = async (e) => {
     e.preventDefault();
 
+      // Validar campos vacíos
+  if (!nombre_Categoria) {
+    alert('Por favor, completa todos los campos');
+    return;
+  }
+
     const formData = {
       nombre_Categoria,
     };
@@ -226,7 +244,7 @@ function Producto({ rol }) {
     }
   };
 
-  
+
 
   return (
     <div>
@@ -287,13 +305,17 @@ function Producto({ rol }) {
                   </FloatingLabel>
                 </Col>
                 <Col sm="12" md="6" lg="6">
-                  <FloatingLabel controlId="precio" label="Precio">
-                    <Form.Control
-                      type="number"
-                      placeholder="Ingrese el precio"
-                      value={precio}
-                      onChange={(e) => setPrecio(e.target.value)}
-                    />
+                  <FloatingLabel controlId="precio" >
+                    <div className="input-group">
+                      <span className="input-group-text">C$</span>
+                      <Form.Control
+                      className="input-size"
+                        type="number"
+                        placeholder="Ingrese el precio"
+                        value={precio}
+                        onChange={(e) => setPrecio(e.target.value)}
+                      />
+                    </div>
                   </FloatingLabel>
                 </Col>
                 <Col sm="12" md="6" lg="6">
