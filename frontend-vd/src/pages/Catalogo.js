@@ -109,6 +109,7 @@ function Catalogo({ rol }) {
         </Row>
       </Container>
     </div>
+    
   );
 }
 export default Catalogo;
