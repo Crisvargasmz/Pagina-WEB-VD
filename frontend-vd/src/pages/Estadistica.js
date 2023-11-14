@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';  // Importa 'jspdf-autotable'
-
 import Header from '../components/Header'; 
 import Chart from 'chart.js/auto';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
+import html2canvas from 'html2canvas';
 
 function Estadisticas({ rol }) {
   const [compras, setCompras] = useState([]);
@@ -85,6 +85,30 @@ function Estadisticas({ rol }) {
       .catch((error) => console.error('Error al obtener los detalles de compra:', error));
   };
 
+    // Definición de la función generarReporteAlmacenImg como una función asíncrona
+const generarReporteAlmacenImg = async () => {
+  try {
+    // Utiliza html2canvas para capturar el contenido del elemento con el ID 'myChart' y obtener un objeto canvas
+    const canvas = await html2canvas(document.getElementById('myChart'));
+    // Crea un nuevo objeto jsPDF para trabajar con documentos PDF
+    const pdf = new jsPDF();
+    // Convierte el objeto canvas a una URL de datos en formato PNG
+    const imgData = canvas.toDataURL('image/png');
+    // Añade un texto al documento PDF
+    pdf.text("Reporte de Estado de Almacén", 20, 10);
+    // Añade la imagen capturada del gráfico al documento PDF, con ajustes de coordenadas y tamaño
+    pdf.addImage(imgData, 'PNG', 10, 20, 100, 100);
+    // Guarda el documento PDF con un nombre específico
+    pdf.save("reporte_almacen_con_grafico.pdf");
+  } catch (error) {
+    // Captura y maneja cualquier error que pueda ocurrir durante la ejecución del bloque try
+    console.error('Error al generar el reporte con imagen:', error);
+  }
+};
+
+
+
+
   return (
     <div>
       <Header rol={ rol } />  
@@ -105,6 +129,22 @@ function Estadisticas({ rol }) {
               </Card.Footer>
             </Card>
           </Col>
+          
+          <Col sm="6" md="6" lg="4">
+            <Card>
+              <Card.Body>
+                <Card.Title>Estado del almacen</Card.Title>
+              </Card.Body>
+
+              <Card.Body>
+                <Button onClick={generarReporteAlmacenImg}>
+                  Generar reporte con imagen
+                </Button>
+              </Card.Body>
+
+            </Card>
+          </Col>
+
         </Row>
       </Container>
     </div>
