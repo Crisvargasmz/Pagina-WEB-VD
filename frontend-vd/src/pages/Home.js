@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Col, Container, Card, Badge, Form, FloatingLabel } from 'react-bootstrap';
+import { Row, Col, Container, Card, Badge, Form, FloatingLabel, Button } from 'react-bootstrap';
 import Header from '../components/Header';
 import '../styles/App.css';
+import { FaComments } from 'react-icons/fa6';
 
-function Home({rol}) {
+
+function Catalogo({ rol }) {
   const [productos, setProductos] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [marcas, setMarcas] = useState([]);
@@ -93,6 +95,9 @@ function Home({rol}) {
                     </Badge>
                   </div>
                 </Card.Body>
+                <Button>
+                <FaComments />
+                </Button>
                 <Card.Body>
                 <Card.Link href="/producto" className="btn btn-primary">
                       Agregar
@@ -104,7 +109,7 @@ function Home({rol}) {
         </Row>
       </Container>
     </div>
+    
   );
 }
-
-export default Home;
+export default Catalogo;
