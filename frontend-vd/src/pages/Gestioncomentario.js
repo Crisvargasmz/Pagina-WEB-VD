@@ -142,6 +142,7 @@ const filteredComentario = comentarios.filter((comentario) => {
                 <th>Comentario</th>
                 <th>Usuario</th>
                 <th>Producto</th>
+                <th>Acciones</th>
               </tr>
             </thead>
             <tbody>
@@ -151,11 +152,13 @@ const filteredComentario = comentarios.filter((comentario) => {
                   <td>{comentario.calificacion}</td>
                   <td>{formatDateForInput(comentario.fecha_Comentario)}</td>
                   <td>{comentario.contenido_Comentario}</td>
-                  <td>{comentario.id_Usuario}</td>                 
-                  <td>{comentario.id_Producto}</td>
+                  <td>{comentario.nombre_Usuario}</td>                 
+                  <td>{comentario.nombre_Producto}</td>
                   <td>
+                    <div className='button-container'>
                     <Button className='actualizar' variant="primary" onClick={() => openModal(comentario)}><FaPencil/></Button>
                     <Button className='eliminar' variant="danger" onClick={() => handleDelete(comentario.id_Comentario)}><FaTrashCan/></Button>
+                  </div>
                   </td>
                 </tr>
               ))}
@@ -205,7 +208,7 @@ const filteredComentario = comentarios.filter((comentario) => {
           <Button variant="secondary" onClick={() => setShowModal(false)}>
             Cerrar
           </Button>
-          <Button variant="primary" onClick={handleUpdate}>
+          <Button variant="primary" className='button-color' onClick={handleUpdate}>
             Actualizar
           </Button>
         </Modal.Footer>

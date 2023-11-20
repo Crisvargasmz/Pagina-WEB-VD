@@ -8,16 +8,16 @@ import { faStar as solidStar } from '@fortawesome/free-solid-svg-icons';
 import { faStar as regularStar } from '@fortawesome/free-regular-svg-icons';
 
 
-function Catalogo({ rol }) {
+function Catalogo({ rol,id_Usuario}) {
   const [productos, setProductos] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [marcas, setMarcas] = useState([]);
   const [categorias, setCategorias] = useState([]);
   const [calificacion, setCalificacion] = useState(0);
   const [contenido_Comentario, setContenido_Comentario] = useState('');
-  const [id_Usuario, setId_Usuario] = useState('');
   const [id_Producto, setId_Producto] = useState('');
   const [showcomentarioModal, setShowcomentarioModal] = useState(false);
+  const [selectedProductId, setSelectedProductId] = useState(null);
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
@@ -40,6 +40,25 @@ function Catalogo({ rol }) {
     );
   });
 
+  const cleanSelectedProductId = () => {
+   
+  };
+
+  const opencomentarioModal = (id_Producto,id_Usuario) => {
+    setSelectedProductId(id_Producto);
+    const Get_id_Usuario = (id_Usuario);
+    console.log('id_Usuario:', Get_id_Usuario);
+    console.log('id_produco', id_Producto);
+    setShowcomentarioModal(true);
+  };
+
+  const closecomentarioModal = () => {
+    cleanSelectedProductId();
+    setShowcomentarioModal(false);
+
+  };
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -60,7 +79,7 @@ function Catalogo({ rol }) {
       fecha_Comentario: currentDate,
       contenido_Comentario,
       id_Usuario,
-      id_Producto,
+      id_Producto: selectedProductId,
     };
 
     try {
@@ -79,6 +98,7 @@ function Catalogo({ rol }) {
         // Reiniciar los campos del formulario
         setCalificacion(0);
         setContenido_Comentario('');
+        setId_Producto('');
       } else {
         alert('Error al registrar comentario');
       }
@@ -88,13 +108,6 @@ function Catalogo({ rol }) {
     }
   };
 
-  const opencomentarioModal = () => {
-    setShowcomentarioModal(true);
-  };
-
-  const closecomentarioModal = () => {
-    setShowcomentarioModal(false);
-  };
 
 
   useEffect(() => {
@@ -129,7 +142,7 @@ function Catalogo({ rol }) {
 
       <Container className="margen-contenedor">
 
-        <Row className="global-margin-top">
+        <Row className="margin-top-search">
           <Col sm="6" md="6" lg="4">
             <FloatingLabel className="search-styles" controlId="search" label="Buscar">
               <Form.Control
@@ -160,11 +173,11 @@ function Catalogo({ rol }) {
                     </Badge>
                   </div>
                 </Card.Body>
-                <Button className='variant-primary' onClick={opencomentarioModal}>
+                <Button className='variant-primary button-color' onClick={() => opencomentarioModal(producto.id_Producto,id_Usuario)}>
                 <FaComments/>
                 </Button>
                 <Card.Body>
-                <Card.Link href="/producto" className="btn btn-primary">
+                <Card.Link href="/producto" className="btn btn-primary button-color">
                       Agregar
                     </Card.Link>
                 </Card.Body>
@@ -175,39 +188,42 @@ function Catalogo({ rol }) {
         
       </Container>
       <Modal show={showcomentarioModal} onHide={closecomentarioModal}>
-        <Modal.Header closeButton>
-          <Modal.Title>Comentario</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form onSubmit={handleSubmit}>
-          <Col sm="6" md="6" lg="6">
-                  <FloatingLabel controlId="calificacion" label="">
-                    <StarRating rating={calificacion} onRatingChange={setCalificacion} />
-                  </FloatingLabel>
-                </Col>
-                <Col sm="12" md="6" lg="6">
-                  <FloatingLabel controlId="contenido_Comentario" label="Comentario">
-                    <Form.Control
-                      as="textarea"
-                      className="auto-expand-textarea" // Aplica la clase personalizada aquí
-                      placeholder="Ingrese el comentario"
-                      value={contenido_Comentario}
-                      onChange={(e) => {
-                        setContenido_Comentario(e.target.value);
-                        e.target.style.height = 'auto'; // Restablece la altura a 'auto' para calcular la nueva altura
-                        e.target.style.height = `${e.target.scrollHeight}px`; // Ajusta la altura automáticamente
-                      }}
-                    />
-                  </FloatingLabel>
-                </Col>
-            <div className="center-button">
-              <Button variant="primary" type="submit" className="mt-3" onClick={closecomentarioModal}>
-                Registrar
-              </Button>
-            </div>
-          </Form>
-        </Modal.Body>
-      </Modal>
+  <Modal.Header closeButton>
+    <Modal.Title>Comentario</Modal.Title>
+  </Modal.Header>
+  <Modal.Body>
+    <Form onSubmit={handleSubmit}>
+      <div className="centered-inputs">
+        <Col sm="6" md="6" lg="6" className="mb-3">
+          <FloatingLabel controlId="calificacion" label="">
+            <StarRating rating={calificacion} onRatingChange={setCalificacion} />
+          </FloatingLabel>
+        </Col>
+        <Col sm="12" md="6" lg="12" className="mb-3">
+          <FloatingLabel controlId="contenido_Comentario" label="Comentario">
+            <Form.Control
+              as="textarea"
+              className="auto-expand-textarea"
+              placeholder="Ingrese el comentario"
+              value={contenido_Comentario}  
+              onChange={(e) => {
+                setContenido_Comentario(e.target.value);
+                e.target.style.height = 'auto';
+                e.target.style.height = `${e.target.scrollHeight}px`;
+              }}
+            />
+          </FloatingLabel>
+        </Col>
+        <div className="center-button">
+          <Button variant="primary" type="submit" className="mt-3" onClick={closecomentarioModal}>
+            Registrar
+          </Button>
+        </div>
+      </div>
+    </Form>
+  </Modal.Body>
+</Modal>
+
     </div>
 
     

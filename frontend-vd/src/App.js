@@ -16,16 +16,18 @@ import Login from './pages/Login';
 import Detallecompra from './pages/Detallecompra';
 import Catalogo from './pages/Catalogo';
 import Estadistica from './pages/Estadistica';
+import GestionDetalle from './pages/GestionDetallecompra';
 
 function App() {
 
 const [userRol,setUserRol] = useState('');
+const [id_Usuario, setId_Usuario] = useState(''); 
 
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Login rol={userRol} setRol={setUserRol} />} />
-        <Route path="/Home" element={<Home rol={userRol} />} />
+        <Route path="/" element={<Login rol={userRol} setRol={setUserRol} setId_Usuario={setId_Usuario} />} />
+        <Route path="/Home" element={<Home rol={userRol} id_Usuario={id_Usuario} />} />
         <Route path="/about" element={<About rol={userRol} />} />
         <Route path="/Producto" element={<Producto rol={userRol} />} />
         <Route path="/Gestionproducto" element={<Gestionproducto rol={userRol}/>} />
@@ -38,8 +40,9 @@ const [userRol,setUserRol] = useState('');
         <Route path="/Comentario" element={<Comentario rol={userRol}/>} />
         <Route path="/Gestioncomentario" element={<Gestioncomentario rol={userRol}/>} />
         <Route path="/Detallecompra" element={<Detallecompra rol={userRol} />} />
-        <Route path="/Catalogo" element={<Catalogo rol={userRol} />} />
+        <Route path="/Catalogo" element={<Catalogo rol={userRol} id_Usuario={id_Usuario} />} />
         <Route path="/Estadistica" element={<Estadistica rol={userRol} />} />
+        <Route path="/GestionDetallecompra" element={<GestionDetalle rol={userRol} />} />
       </Routes>
     </Router>
   );

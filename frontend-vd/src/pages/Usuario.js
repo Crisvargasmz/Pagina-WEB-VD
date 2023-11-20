@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { Table, Button, Container, Card, Row, Col, Form, Modal, FloatingLabel } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
+import { Button, Container, Card, Row, Col, Form, FloatingLabel } from 'react-bootstrap';
 import Header from '../components/Header';
 import '../styles/App.css';
 
 function Usuario({ rol }) {
+  const navigate = useNavigate();
   const [nombre_Usuario, setNombre_Usuario] = useState('');
   const [correo_Electronico, setCorreo_Electronico] = useState('');
   const [contrasena, setContrasena] = useState('');
-  const [rolUser, setRolUser] = useState(''); // Corrección aquí
+  const [rolUser, setRolUser] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -17,7 +19,7 @@ function Usuario({ rol }) {
       nombre_Usuario,
       correo_Electronico,
       contrasena,
-      rol: rolUser, // Corrección aquí
+      rol: 'cliente',
     };
 
     try {
@@ -34,7 +36,9 @@ function Usuario({ rol }) {
         setNombre_Usuario('');
         setCorreo_Electronico('');
         setContrasena('');
-        setRolUser(''); // Corrección aquí
+        setRolUser('');
+        // Redirigir a la pantalla de inicio de sesión después del registro exitoso
+        navigate('/');
       } else {
         alert('Error al registrar el usuario');
       }
@@ -94,20 +98,9 @@ function Usuario({ rol }) {
                   </FloatingLabel>
                 </Col>
 
-                <Col sm="6" md="6" lg="12">
-                  <FloatingLabel controlId="rol" label="Rol">
-                    <Form.Control
-                      type="text"
-                      placeholder="Ingrese el rol"
-                      value={rolUser} // Corrección aquí
-                      onChange={(e) => setRolUser(e.target.value)} // Corrección aquí
-                    />
-                  </FloatingLabel>
-                </Col>
-
               </Row>
               <div className="center-button">
-                <Button variant="primary" type="submit" className="mt-3" size="lg">
+                <Button variant="primary" type="submit" className="mt-3 button-color" size="lg">
                   Registrar
                 </Button>
               </div>

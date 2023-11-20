@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Form, Row, Col, Container, FloatingLabel, Card, Button, Alert, Modal } from 'react-bootstrap';
 import Header from '../components/Header';
-import {FaSearch, FaTrashAlt, FaPlus } from 'react-icons/fa';
+import { FaSearch, FaTrashAlt, FaPlus } from 'react-icons/fa';
 
 function Detallecompra({ rol }) {
   const [productos, setProductos] = useState([]);
@@ -18,6 +18,14 @@ function Detallecompra({ rol }) {
     total_Compra: '',
     id_Compra: '',
   });
+
+  function formatearNumeroConComas(numero) {
+    // Aplica toFixed para limitar los decimales a dos
+    const numeroFormateado = Number(numero).toFixed(2);
+    
+    // Usa una expresión regular para agregar comas
+    return numeroFormateado.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
 
   const [selectedProducto, setSelectedProducto] = useState(null);
   const [detallesVenta, setDetallesVenta] = useState([]);
@@ -82,13 +90,12 @@ function Detallecompra({ rol }) {
 
   const registrarVenta = () => {
     const { fecha_compra, hora_compra } = getCurrentTime(); // Obtener fecha y hora actuales
-    if (estado && fecha_Estimada && detallesVenta.length > 0 &&  precio_Compra) {
+    if (estado && fecha_Estimada && detallesVenta.length > 0) {
       const data = {
         fecha_compra: fecha_compra,
         hora_compra: hora_compra,
         estado: estado,
         fecha_Estimada: fecha_Estimada,
-        precio_Compra: precio_Compra,
         detalle: detallesVenta,
       };
       fetch('http://localhost:5000/crud/createcompras', {
@@ -120,14 +127,14 @@ function Detallecompra({ rol }) {
       alert('Asegúrese de completar la información necesaria para registrar la venta.');
     }
   };
-  
+
 
   return (
     <div>
       <Header rol={rol} />
 
       <Container>
-        <Card className="global-margin-top">
+        <Card className="global-margin-top-compra">
           <Card.Body>
             <Card.Title className="mb-3 title">Detalle de Compra</Card.Title>
 
@@ -152,21 +159,10 @@ function Detallecompra({ rol }) {
                     />
                   </FloatingLabel>
                 </Col>
-                <Col sm="6" md="6" lg="12">
-                  <FloatingLabel controlId="precio_Compra" label="Precio de Compra">
-                    <Form.Control
-                      type="number"
-                      step="0.01"
-                      placeholder="Ingrese el precio de compra"
-                      value={precio_Compra}
-                      onChange={(e) => setPrecioCompra(e.target.value)}
-                    />
-                  </FloatingLabel>
-                </Col>
                 <Col sm="12" md="4" lg="4">
                   <FloatingLabel controlId="producto" label="Producto">
                     <Form.Control
-                    className='input-align'
+                      className='input-align'
                       type="text"
                       placeholder="Seleccionar Producto"
                       name="producto"
@@ -174,8 +170,8 @@ function Detallecompra({ rol }) {
                       readOnly
                     />
                     <div className="button-container">
-                      <Button className="show-button" variant="outline-primary" onClick={openProductoModal}>
-                        <FaSearch  />
+                      <Button className="show-button-search" variant="outline-primary" onClick={openProductoModal}>
+                        <FaSearch />
                       </Button>
                     </div>
                   </FloatingLabel>
@@ -191,16 +187,16 @@ function Detallecompra({ rol }) {
                     />
                   </FloatingLabel>
                 </Col>
-                
 
-                <Col sm="12" md="2" lg="2" className="d-flex align-items-center">
+
+                <Col sm="12" md="2" lg="2" className="">
                   <Button className='show-button-add' onClick={AgregarDetalleProducto} variant="outline-success" size="lg">
                     <FaPlus />
                   </Button>
                 </Col>
 
-                <Col sm="12" md="1" lg="12">
-                  <Card className="global-margin-top">
+                <Col sm="12" md="1" lg="12" className='container-top'>
+                  <Card className="global-margin-top-compra">
                     <Card.Body>
                       <Card.Title className="mt-3 title">Detalle de productos</Card.Title>
                       <Table striped bordered hover responsive>
@@ -219,9 +215,9 @@ function Detallecompra({ rol }) {
                             <tr key={detalle.idProducto}>
                               <td>{detalle.id_Producto}</td>
                               <td>{detalle.nombre_Producto}</td>
-                              <td>{detalle.precio}</td>
+                              <td>C${formatearNumeroConComas(detalle.precio)}</td>
                               <td>{detalle.cantidad_Compra}</td>
-                              <td>{detalle.cantidad_Compra * detalle.precio}</td>
+                              <td>C${formatearNumeroConComas(detalle.cantidad_Compra * detalle.precio)}</td>
                               <td className="align-button">
                                 <Button
                                   size="sm"
@@ -241,7 +237,7 @@ function Detallecompra({ rol }) {
               </Row>
 
               <div className="center-button">
-                <Button variant="primary" onClick={registrarVenta} className="mt-3" size="lg">
+                <Button variant="primary" onClick={registrarVenta} className="mt-3 button-color" size="lg">
                   Registrar Compra
                 </Button>
               </div>

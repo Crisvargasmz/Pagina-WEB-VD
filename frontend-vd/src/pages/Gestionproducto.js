@@ -80,6 +80,15 @@ function Gestionproducto({ rol }) {
     );
   });
 
+
+  function formatearNumeroConComas(numero) {
+    // Aplica toFixed para limitar los decimales a dos
+    const numeroFormateado = Number(numero).toFixed(2);
+    
+    // Usa una expresión regular para agregar comas
+    return numeroFormateado.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+
   const openModal = (producto) => {
     setSelectedProducto(producto);
 
@@ -271,7 +280,8 @@ function Gestionproducto({ rol }) {
             </Col>
           </Row>
 
-          <Table striped bordered hover responsive>
+          <div className="table-responsive">
+          <Table striped bordered hover>
             <thead>
               <tr className='centrado'>
                 <th>ID</th>
@@ -297,18 +307,25 @@ function Gestionproducto({ rol }) {
 
                   </td>
                   <td>{producto.descripcion}</td>
-                  <td>C${producto.precio.toFixed(2)}</td>
+                  <td>C${formatearNumeroConComas(producto.precio)}</td>
                   <td>{producto.cantidad}</td>
                   <td>{marcas.find((marca) => marca.id_Marca === producto.id_Marca)?.nombre_Marca}</td>
                   <td>{categorias.find((categoria) => categoria.id_Categoria === producto.id_Categoria)?.nombre_Categoria}</td>
                   <td>
-                    <Button className='actualizar' variant="primary" onClick={() => openModal(producto)}><FaPencil /></Button>
-                    <Button className='eliminar' variant="danger" onClick={() => handleDelete(producto.id_Producto)}><FaTrashCan /></Button>
+                  <div className="button-container">
+    <Button className='actualizar' variant="primary" onClick={() => openModal(producto)}>
+      <FaPencil />
+    </Button>
+    <Button className='eliminar' variant="danger" onClick={() => handleDelete(producto.id_Producto)}>
+      <FaTrashCan />
+    </Button>
+  </div>
                   </td>
-                </tr>
+                </tr> 
               ))}
             </tbody>
           </Table>
+          </div>
         </Card.Body>
       </Card>
 
@@ -434,7 +451,7 @@ function Gestionproducto({ rol }) {
           <Button variant="secondary" onClick={() => setShowModal(false)}>
             Cerrar
           </Button>
-          <Button variant="primary" onClick={handleUpdate}>
+          <Button variant="primary" className='button-color' onClick={handleUpdate}>
             Actualizar
           </Button>
         </Modal.Footer>

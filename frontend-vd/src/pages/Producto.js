@@ -20,8 +20,9 @@ function Producto({ rol }) {
   const [imageUrl, setImageUrl] = useState('');
   const [imageFile,setImageFile] = useState(null); // Nuevo estado para el archivo de imagen
 
-
-
+  const [searchQueryMarca, setSearchQueryMarca] = useState('');
+  const [searchQueryCate, setSearchQueryCate] = useState('');
+  
   const [marcas, setMarcas] = useState([]);
   const [categorias, setCategorias] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -53,6 +54,8 @@ function Producto({ rol }) {
     loadMarcas();
   }, []);
 
+  
+
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -77,6 +80,7 @@ function Producto({ rol }) {
   };
 
   const closeCategoryModal = () => {
+    setSearchQueryCate('');
     setShowCategoryModal(false);
   };
 
@@ -85,7 +89,9 @@ function Producto({ rol }) {
   };
 
   const closeBrandModal = () => {
+    setSearchQueryMarca('');
     setShowMarcasModal(false);
+
   };
 
   const selectCategory = (category) => {
@@ -111,6 +117,7 @@ function Producto({ rol }) {
   };
 
   const closeMarcaModal = () => {
+    
     setShowMarcaModal(false);
   };
 
@@ -244,6 +251,26 @@ function Producto({ rol }) {
     }
   };
 
+  const handleSearchChangeMarca = (e) => {
+    setSearchQueryMarca(e.target.value);
+  };
+
+  const handleSearchChangeCate = (e) => {
+    setSearchQueryCate(e.target.value);
+  };
+
+  const filteredMarca = marcas.filter((marca) => {
+    const nombre_Marca = marca.nombre_Marca.toLowerCase();
+    const search = searchQueryMarca.toLowerCase();
+    return nombre_Marca.includes(search);
+  });
+
+  const filteredCategorias = categorias.filter((categoria) => {
+    const nombre_Categoria = categoria.nombre_Categoria.toLowerCase();
+    const search = searchQueryCate.toLowerCase();
+    return nombre_Categoria.includes(search);
+  });
+
 
 
   return (
@@ -371,7 +398,7 @@ function Producto({ rol }) {
 
 
               <div className="center-button">
-                <Button variant="primary" type="submit" className="mt-3" size="lg">
+                <Button variant="primary" type="submit" className="mt-3 button-color" size="lg">
                   Registrar
                 </Button>
               </div>
@@ -381,30 +408,54 @@ function Producto({ rol }) {
       </Container>
 
       <Modal show={showCategoryModal} onHide={closeCategoryModal}>
-        <Modal.Header closeButton>
-          <Modal.Title>Seleccionar Categoría</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {categorias.map((category) => (
-            <div className="Seleccion" key={category.id_Categoria} onClick={() => selectCategory(category)}>
-              {category.nombre_Categoria}
-            </div>
-          ))}
-        </Modal.Body>
-      </Modal>
+  <Modal.Header closeButton>
+    <Modal.Title>Seleccionar Categoría</Modal.Title>
+  </Modal.Header>
+  <Row className="mt-3">
+      <Col className='search-input'>
+        <FloatingLabel controlId="search" label="Buscar">
+          <Form.Control
+            type="text"
+            placeholder="Buscar"
+            value={searchQueryCate}
+            onChange={handleSearchChangeCate}
+          />
+        </FloatingLabel>
+      </Col>
+    </Row>
+  <Modal.Body>
+    {filteredCategorias.map((category) => (
+      <div className="Seleccion" key={category.id_Categoria} onClick={() => selectCategory(category)}>
+        {category.nombre_Categoria}
+      </div>
+    ))}
+  </Modal.Body>
+</Modal>
 
-      <Modal show={showMarcasModal} onHide={closeBrandModal}>
-        <Modal.Header closeButton>
-          <Modal.Title>Seleccionar Marca</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {marcas.map((brand) => (
-            <div className="Seleccion" key={brand.id_Marca} onClick={() => selectedMarca(brand)}>
-              {brand.nombre_Marca}
-            </div>
-          ))}
-        </Modal.Body>
-      </Modal>
+<Modal show={showMarcasModal} onHide={closeBrandModal}>
+  <Modal.Header closeButton>
+    <Modal.Title>Seleccionar Marca</Modal.Title>
+  </Modal.Header>
+  <Row className="mt-3">
+      <Col className='search-input'>
+        <FloatingLabel controlId="search" label="Buscar">
+          <Form.Control
+            type="text"
+            placeholder="Buscar"
+            value={searchQueryMarca}
+            onChange={handleSearchChangeMarca}
+          />
+        </FloatingLabel>
+      </Col>
+    </Row>  
+  <Modal.Body>
+    {filteredMarca.map((brand) => (
+      <div className="Seleccion" key={brand.id_Marca} onClick={() => selectedMarca(brand)}>
+        {brand.nombre_Marca}
+      </div>
+    ))}
+  </Modal.Body>
+</Modal>
 
       <Modal show={showMarcaModal} onHide={closeMarcaModal}>
         <Modal.Header closeButton>

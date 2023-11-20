@@ -23,8 +23,7 @@ function Gestionmarca({rol}) {
     const search = searchQuery.toLowerCase();
 
     return (
-      nombre_Marca.includes(search) ||
-      rol.includes(search) 
+      nombre_Marca.includes(search)
     );
   });
 
@@ -147,6 +146,7 @@ function Gestionmarca({rol}) {
               <tr>
                 <th>ID</th>
                 <th>Nombre</th>
+                <th>Acciones</th>
               </tr>
             </thead>
             <tbody>
@@ -195,7 +195,7 @@ function Gestionmarca({rol}) {
           <Button variant="secondary" onClick={() => setShowModal(false)}>
             Cerrar
           </Button>
-          <Button variant="primary" onClick={handleUpdate}>
+          <Button variant="primary" className='button-color' onClick={handleUpdate}>
             Actualizar
           </Button>
         </Modal.Footer>

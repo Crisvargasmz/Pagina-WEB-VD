@@ -135,6 +135,7 @@ function Gestionusuario({rol}) {
                 <th>Nombre</th>
                 <th>Correo</th>
                 <th>Contraseña</th>
+                <th>Acciones</th>
               </tr>
             </thead>
             <tbody>
@@ -145,8 +146,10 @@ function Gestionusuario({rol}) {
                   <td>{usuario.correo_Electronico}</td>
                   <td>{usuario.contrasena}</td>
                   <td>
+                    <div className='button-container'>
                     <Button className='actualizar' variant="primary" onClick={() => openModal(usuario)}><FaPencil/></Button>
                     <Button className='eliminar' variant="danger" onClick={() => handleDelete(usuario.id_Usuario)}><FaTrashCan/></Button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -207,7 +210,7 @@ function Gestionusuario({rol}) {
           <Button variant="secondary" onClick={() => setShowModal(false)}>
             Cerrar
           </Button>
-          <Button variant="primary" onClick={handleUpdate}>
+          <Button variant="primary" className='button-color' onClick={handleUpdate}>
             Actualizar
           </Button>
         </Modal.Footer>

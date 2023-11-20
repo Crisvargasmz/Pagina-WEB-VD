@@ -23,8 +23,7 @@ function Gestioncategoria({ rol }) {
     const search = searchQuery.toLowerCase();
 
     return (
-      nombre_Categoria.includes(search) ||
-      rol.includes(search)
+      nombre_Categoria.includes(search) 
     );
   });
 
@@ -147,6 +146,7 @@ function Gestioncategoria({ rol }) {
               <tr>
                 <th>ID</th>
                 <th>Nombre</th>
+                <th>Acciones</th>
               </tr>
             </thead>
             <tbody>
@@ -195,7 +195,7 @@ function Gestioncategoria({ rol }) {
           <Button variant="secondary" onClick={() => setShowModal(false)}>
             Cerrar
           </Button>
-          <Button variant="primary" onClick={handleUpdate}>
+          <Button variant="primary" className='button-color' onClick={handleUpdate}>
             Actualizar
           </Button>
         </Modal.Footer>

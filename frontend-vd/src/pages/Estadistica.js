@@ -25,7 +25,7 @@ function Estadisticas({ rol }) {
         myChart.destroy();
       }
 
-      const nombresProductos = compras.map((compra) => compra.id_Producto);
+      const nombresProductos = compras.map((compra) => compra.nombre_Producto);
       const totalcompra = compras.map((compra) => compra.total_Compra);
 
       const almacen = new Chart(ctx, {
@@ -59,32 +59,33 @@ function Estadisticas({ rol }) {
         console.log('Detalles de compra obtenidos:', detallesCompra);
   
         const doc = new jsPDF();
+        doc.text('Reporte de Detalles de Compra', 20, 10);
   
-        doc.text("Reporte de Detalles de Compra", 20, 10);
-  
-        const headers = ['ID Detalle Compra', 'Cantidad', 'Precio Compra', 'ID Producto', 'Total Compra'];
+        const headers = ['Producto','Precio', 'Precio Compra', 'Stock', 'Cantidad Compra', 'Total Compra'];
         const data = detallesCompra.map((detalleCompra) => [
-          detalleCompra.id_Detallecompra,
+          detalleCompra.nombre_Producto,
+          `C$ ${detalleCompra.precio.toFixed(2)}`, // Agrega el signo de córdoba y formatea a dos decimales
+        `C$ ${detalleCompra.precio_Compra.toFixed(2)}`, // Agrega el signo de córdoba y formatea a dos decimales
+          detalleCompra.cantidad,
           detalleCompra.cantidad_Compra,
-          detalleCompra.precio_Compra,
-          detalleCompra.id_Producto,
-          detalleCompra.total_Compra
+          `C$ ${detalleCompra.total_Compra.toFixed(2)}`, // Agrega el signo de córdoba y formatea a dos decimales
         ]);
   
+        // Agrega la tabla de detalles al documento PDF
         doc.autoTable({
           startY: 20,
           head: [headers],
           body: data,
           theme: 'striped',
-          margin: { top: 15 }
+          margin: { top: 15 },
         });
   
-        doc.save("reporte_compras.pdf");
+        doc.save('reporte_compras.pdf');
         console.log('Documento PDF generado y descargado.');
       })
       .catch((error) => console.error('Error al obtener los detalles de compra:', error));
   };
-
+  
     // Definición de la función generarReporteAlmacenImg como una función asíncrona
 const generarReporteAlmacenImg = async () => {
   try {
@@ -95,11 +96,11 @@ const generarReporteAlmacenImg = async () => {
     // Convierte el objeto canvas a una URL de datos en formato PNG
     const imgData = canvas.toDataURL('image/png');
     // Añade un texto al documento PDF
-    pdf.text("Reporte de Estado de Almacén", 20, 10);
+    pdf.text("Reporte de las compras", 20, 10);
     // Añade la imagen capturada del gráfico al documento PDF, con ajustes de coordenadas y tamaño
     pdf.addImage(imgData, 'PNG', 10, 20, 100, 100);
     // Guarda el documento PDF con un nombre específico
-    pdf.save("reporte_almacen_con_grafico.pdf");
+    pdf.save("reporte_compras.pdf");
   } catch (error) {
     // Captura y maneja cualquier error que pueda ocurrir durante la ejecución del bloque try
     console.error('Error al generar el reporte con imagen:', error);
@@ -114,37 +115,24 @@ const generarReporteAlmacenImg = async () => {
       <Header rol={ rol } />  
 
       <Container>
-        <Row className="global-margin-top">
+        <Row className="global-margin-top-history">
           <Col md={6}>
             <Card>
               <Card.Body>
-                <Card.Title className="text-center">Estado del Almacén</Card.Title>
+                <Card.Title className="text-center">Estados de las compras</Card.Title>
                 <canvas id="myChart" height="300"></canvas>
               </Card.Body>
 
               <Card.Footer className="text-center">
-                <Button variant="primary" onClick={generarReporteCompras}>
+                <Button variant="primary" className='buttom-right button-color' onClick={generarReporteCompras}>
                   Generar Reporte
+                </Button>
+                <Button className='buttom-left button-color' onClick={generarReporteAlmacenImg}>
+                  Generar reporte con imagen
                 </Button>
               </Card.Footer>
             </Card>
           </Col>
-          
-          <Col sm="6" md="6" lg="4">
-            <Card>
-              <Card.Body>
-                <Card.Title>Estado del almacen</Card.Title>
-              </Card.Body>
-
-              <Card.Body>
-                <Button onClick={generarReporteAlmacenImg}>
-                  Generar reporte con imagen
-                </Button>
-              </Card.Body>
-
-            </Card>
-          </Col>
-
         </Row>
       </Container>
     </div>

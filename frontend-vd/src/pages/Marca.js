@@ -69,7 +69,7 @@ function Marca({rol}) {
                 </Col>
               </Row>
               <div className="center-button">
-                <Button variant="primary" type="submit" className="mt-3" size="lg">
+                <Button variant="primary" type="submit" className="mt-3 button-color" size="lg">
                   Registrar
                 </Button>
               </div>
