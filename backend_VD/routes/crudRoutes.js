@@ -40,27 +40,31 @@ router.get('/stock/:idProducto', (req, res) => {
   // Ruta para verificar las credenciales y obtener el rol del usuario
   router.post('/login', (req, res) => {
     const { nombre_Usuario, contrasena } = req.body;
-
+  
     if (!nombre_Usuario || !contrasena) {
       return res.status(400).json({ error: 'Nombre de usuario y contraseña son obligatorios' });
     }
-
+  
     // Realizar la consulta para verificar las credenciales en la base de datos
-    const sql = `SELECT rol FROM usuarios WHERE nombre_Usuario = ? AND contrasena = ?`;
+    const sql = `SELECT id_Usuario, rol FROM usuarios WHERE nombre_Usuario = ? AND contrasena = ?`;
     db.query(sql, [nombre_Usuario, contrasena], (err, result) => {
       if (err) {
         console.error('Error al verificar credenciales:', err);
         return res.status(500).json({ error: 'Error al verificar credenciales' });
       }
-
+  
       if (result.length === 1) {
-        const { rol } = result[0];
-        res.json({ rol }); // Devolver el rol si las credenciales son correctas
+        const { id_Usuario, rol } = result[0];
+        console.log('Server Response:', { id_Usuario, rol });
+        res.json({ id_Usuario, rol });
       } else {
+        console.log('Credenciales incorrectas');
         res.status(401).json({ error: 'Credenciales incorrectas' });
       }
+      
     });
   });
+  
 
 
 
@@ -114,9 +118,13 @@ router.get('/nombremarcas', (req, res) => {
   //Ruta para consultar comentarios
 
   router.get('/readcomentarios', (req, res) => {
+    const sql = `
+        SELECT Comentarios.*, Productos.nombre_Producto, Usuarios.nombre_Usuario
+        FROM Comentarios
+        INNER JOIN Productos ON Comentarios.id_Producto = Productos.id_Producto
+        INNER JOIN Usuarios ON Comentarios.id_Usuario = Usuarios.id_Usuario;
+    `;
 
-    const sql = 'SELECT * FROM comentarios';
-  
     db.query(sql, (err, result) => {
         if (err) {
             console.error('Error al leer registros:', err);
@@ -125,7 +133,8 @@ router.get('/nombremarcas', (req, res) => {
             res.status(200).json(result);
         }
     });
-  });
+});
+
 
   //Ruta para consultar compras
 
@@ -144,21 +153,20 @@ router.get('/nombremarcas', (req, res) => {
   });
 
     //Ruta para consultar Detalle compra
-
-  router.get('/readDetalleCompras', (req, res) => {
-
-    const sql = 'SELECT * FROM detalle_compra';
-  
-    db.query(sql, (err, result) => {
+    router.get('/readDetalleCompras', (req, res) => {
+      const sql = 'SELECT detalle_compra.*, productos.nombre_Producto, productos.precio, productos.cantidad, compras.estado FROM detalle_compra INNER JOIN productos ON detalle_compra.id_Producto = productos.id_Producto INNER JOIN compras ON detalle_compra.id_Compra = compras.id_Compra';
+    
+      db.query(sql, (err, result) => {
         if (err) {
-            console.error('Error al leer registros:', err);
-            res.status(500).json({ error: 'Error al leer registros' });
+          console.error('Error al leer registros:', err);
+          res.status(500).json({ error: 'Error al leer registros' });
         } else {
-            res.status(200).json(result);
+          res.status(200).json(result);
         }
+      });
     });
-  });
-
+    
+    
   //Ruta para consultar marcas
 
   router.get('/readmarcas', (req, res) => {
