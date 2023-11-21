@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Container, Card, Row, Col, Form, Modal, FloatingLabel } from 'react-bootstrap';
+import { Table, Button, Card, Row, Col, Form, Modal, FloatingLabel } from 'react-bootstrap';
 import Header from '../components/Header';
-import { FaSistrix, FaPencil, FaTrashCan} from 'react-icons/fa6';
+import { FaPencil, FaTrashCan} from 'react-icons/fa6';
 
 function Gestionusuario({rol}) {
   const [usuarios, setUsuarios] = useState([]);

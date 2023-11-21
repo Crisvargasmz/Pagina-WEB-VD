@@ -15,7 +15,6 @@ function Catalogo({ rol,id_Usuario}) {
   const [categorias, setCategorias] = useState([]);
   const [calificacion, setCalificacion] = useState(0);
   const [contenido_Comentario, setContenido_Comentario] = useState('');
-  const [id_Producto, setId_Producto] = useState('');
   const [showcomentarioModal, setShowcomentarioModal] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState(null);
 
@@ -98,7 +97,6 @@ function Catalogo({ rol,id_Usuario}) {
         // Reiniciar los campos del formulario
         setCalificacion(0);
         setContenido_Comentario('');
-        setId_Producto('');
       } else {
         alert('Error al registrar comentario');
       }

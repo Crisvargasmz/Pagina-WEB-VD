@@ -301,6 +301,12 @@ function Producto({ rol }) {
     setNombre_Categoria(nuevoNombre);
   };
 
+  const handleNombrePresentacionChange = (e) => {
+    // Validar que solo se ingresen letras
+    const nuevoNombre = e.target.value.replace(/[^a-zA-Z ],[^0-9],/g, '',); // Solo permite letras y espacios
+    setPresentacion(nuevoNombre);
+  };
+
 
 
 
@@ -332,7 +338,7 @@ function Producto({ rol }) {
                       type="text"
                       placeholder="Ingrese la presentación"
                       value={presentacion}
-                      onChange={(e) => setPresentacion(e.target.value)}
+                      onChange={handleNombrePresentacionChange}
                     />
                   </FloatingLabel>
                 </Col>
