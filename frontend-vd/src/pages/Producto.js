@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, Container, Card, Row, Col, Form, Modal, FloatingLabel } from 'react-bootstrap';
 import Header from '../components/Header';
 import '../styles/App.css';
-import { FaSistrix} from 'react-icons/fa6';
+import { FaSistrix } from 'react-icons/fa6';
 import { FaPlus } from 'react-icons/fa';
 import axios from 'axios';
 
@@ -18,11 +18,11 @@ function Producto({ rol }) {
   });
 
   const [imageUrl, setImageUrl] = useState('');
-  const [imageFile,setImageFile] = useState(null); // Nuevo estado para el archivo de imagen
+  const [imageFile, setImageFile] = useState(null); // Nuevo estado para el archivo de imagen
 
   const [searchQueryMarca, setSearchQueryMarca] = useState('');
   const [searchQueryCate, setSearchQueryCate] = useState('');
-  
+
   const [marcas, setMarcas] = useState([]);
   const [categorias, setCategorias] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -54,7 +54,7 @@ function Producto({ rol }) {
     loadMarcas();
   }, []);
 
-  
+
 
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
@@ -117,7 +117,7 @@ function Producto({ rol }) {
   };
 
   const closeMarcaModal = () => {
-    
+
     setShowMarcaModal(false);
   };
 
@@ -219,11 +219,11 @@ function Producto({ rol }) {
   const handleSubmitcategoria = async (e) => {
     e.preventDefault();
 
-      // Validar campos vacíos
-  if (!nombre_Categoria) {
-    alert('Por favor, completa todos los campos');
-    return;
-  }
+    // Validar campos vacíos
+    if (!nombre_Categoria) {
+      alert('Por favor, completa todos los campos');
+      return;
+    }
 
     const formData = {
       nombre_Categoria,
@@ -271,6 +271,38 @@ function Producto({ rol }) {
     return nombre_Categoria.includes(search);
   });
 
+  const handlePrecioChange = (e) => {
+    // Validar que solo se ingresen números no negativos
+    const nuevoPrecio = e.target.value.replace(/[^0-9.]/g, ''); // Eliminar caracteres no numéricos, excepto el punto para decimales
+    setPrecio(nuevoPrecio);
+  };
+
+  const handleCantidadChange = (e) => {
+    // Validar que solo se ingresen números no negativos
+    const nuevaCantidad = e.target.value.replace(/[^0-9]/g, ''); // Eliminar caracteres no numéricos
+    setCantidad(nuevaCantidad);
+  };
+
+  const handleNombreChange = (e) => {
+    // Validar que solo se ingresen letras
+    const nuevoNombre = e.target.value.replace(/[^a-zA-Z ]/g, ''); // Solo permite letras y espacios
+    setNombre_Producto(nuevoNombre);
+  };
+
+  const handleNombreMarcaChange = (e) => {
+    // Validar que solo se ingresen letras
+    const nuevoNombre = e.target.value.replace(/[^a-zA-Z ]/g, ''); // Solo permite letras y espacios
+    setNombre_Marca(nuevoNombre);
+  };
+
+  const handleNombreCategoriaChange = (e) => {
+    // Validar que solo se ingresen letras
+    const nuevoNombre = e.target.value.replace(/[^a-zA-Z ]/g, ''); // Solo permite letras y espacios
+    setNombre_Categoria(nuevoNombre);
+  };
+
+
+
 
 
   return (
@@ -290,7 +322,7 @@ function Producto({ rol }) {
                       type="text"
                       placeholder="Ingrese el nombre"
                       value={nombre_Producto}
-                      onChange={(e) => setNombre_Producto(e.target.value)}
+                      onChange={handleNombreChange}
                     />
                   </FloatingLabel>
                 </Col>
@@ -332,15 +364,15 @@ function Producto({ rol }) {
                   </FloatingLabel>
                 </Col>
                 <Col sm="12" md="6" lg="6">
-                  <FloatingLabel controlId="precio" >
+                  <FloatingLabel controlId="precio" label="">
                     <div className="input-group">
                       <span className="input-group-text">C$</span>
                       <Form.Control
-                      className="input-size"
-                        type="number"
+                        className="input-size"
+                        type="text" // Mantenido como tipo texto para permitir decimales
                         placeholder="Ingrese el precio"
                         value={precio}
-                        onChange={(e) => setPrecio(e.target.value)}
+                        onChange={handlePrecioChange}
                       />
                     </div>
                   </FloatingLabel>
@@ -348,10 +380,10 @@ function Producto({ rol }) {
                 <Col sm="12" md="6" lg="6">
                   <FloatingLabel controlId="cantidad" label="Cantidad">
                     <Form.Control
-                      type="number"
+                      type="text" // Mantenido como tipo texto para permitir solo números enteros
                       placeholder="Ingrese la cantidad"
                       value={cantidad}
-                      onChange={(e) => setCantidad(e.target.value)}
+                      onChange={handleCantidadChange}
                     />
                   </FloatingLabel>
                 </Col>
@@ -408,54 +440,54 @@ function Producto({ rol }) {
       </Container>
 
       <Modal show={showCategoryModal} onHide={closeCategoryModal}>
-  <Modal.Header closeButton>
-    <Modal.Title>Seleccionar Categoría</Modal.Title>
-  </Modal.Header>
-  <Row className="mt-3">
-      <Col className='search-input'>
-        <FloatingLabel controlId="search" label="Buscar">
-          <Form.Control
-            type="text"
-            placeholder="Buscar"
-            value={searchQueryCate}
-            onChange={handleSearchChangeCate}
-          />
-        </FloatingLabel>
-      </Col>
-    </Row>
-  <Modal.Body>
-    {filteredCategorias.map((category) => (
-      <div className="Seleccion" key={category.id_Categoria} onClick={() => selectCategory(category)}>
-        {category.nombre_Categoria}
-      </div>
-    ))}
-  </Modal.Body>
-</Modal>
+        <Modal.Header closeButton>
+          <Modal.Title>Seleccionar Categoría</Modal.Title>
+        </Modal.Header>
+        <Row className="mt-3">
+          <Col className='search-input'>
+            <FloatingLabel controlId="search" label="Buscar">
+              <Form.Control
+                type="text"
+                placeholder="Buscar"
+                value={searchQueryCate}
+                onChange={handleSearchChangeCate}
+              />
+            </FloatingLabel>
+          </Col>
+        </Row>
+        <Modal.Body>
+          {filteredCategorias.map((category) => (
+            <div className="Seleccion" key={category.id_Categoria} onClick={() => selectCategory(category)}>
+              {category.nombre_Categoria}
+            </div>
+          ))}
+        </Modal.Body>
+      </Modal>
 
-<Modal show={showMarcasModal} onHide={closeBrandModal}>
-  <Modal.Header closeButton>
-    <Modal.Title>Seleccionar Marca</Modal.Title>
-  </Modal.Header>
-  <Row className="mt-3">
-      <Col className='search-input'>
-        <FloatingLabel controlId="search" label="Buscar">
-          <Form.Control
-            type="text"
-            placeholder="Buscar"
-            value={searchQueryMarca}
-            onChange={handleSearchChangeMarca}
-          />
-        </FloatingLabel>
-      </Col>
-    </Row>  
-  <Modal.Body>
-    {filteredMarca.map((brand) => (
-      <div className="Seleccion" key={brand.id_Marca} onClick={() => selectedMarca(brand)}>
-        {brand.nombre_Marca}
-      </div>
-    ))}
-  </Modal.Body>
-</Modal>
+      <Modal show={showMarcasModal} onHide={closeBrandModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Seleccionar Marca</Modal.Title>
+        </Modal.Header>
+        <Row className="mt-3">
+          <Col className='search-input'>
+            <FloatingLabel controlId="search" label="Buscar">
+              <Form.Control
+                type="text"
+                placeholder="Buscar"
+                value={searchQueryMarca}
+                onChange={handleSearchChangeMarca}
+              />
+            </FloatingLabel>
+          </Col>
+        </Row>
+        <Modal.Body>
+          {filteredMarca.map((brand) => (
+            <div className="Seleccion" key={brand.id_Marca} onClick={() => selectedMarca(brand)}>
+              {brand.nombre_Marca}
+            </div>
+          ))}
+        </Modal.Body>
+      </Modal>
 
       <Modal show={showMarcaModal} onHide={closeMarcaModal}>
         <Modal.Header closeButton>
@@ -468,7 +500,7 @@ function Producto({ rol }) {
                 type="text"
                 placeholder="Ingrese el nombre de la marca"
                 value={nombre_Marca}
-                onChange={(e) => setNombre_Marca(e.target.value)}
+                onChange={handleNombreMarcaChange}
               />
             </FloatingLabel>
             <div className="center-button">
@@ -492,7 +524,7 @@ function Producto({ rol }) {
                 type="text"
                 placeholder="Ingrese el nombre de la Categoria"
                 value={nombre_Categoria}
-                onChange={(e) => setNombre_Categoria(e.target.value)}
+                onChange={handleNombreCategoriaChange}
               />
             </FloatingLabel>
             <div className="center-button">

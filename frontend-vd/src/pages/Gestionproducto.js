@@ -30,7 +30,7 @@ function Gestionproducto({ rol }) {
       formData.append('nuevaImagen', file);
 
       try {
-        const response = await axios.post('http://localhost:5000/upload2', formData, {
+        const response = await axios.post('http://localhost:5000/upload', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
@@ -84,7 +84,7 @@ function Gestionproducto({ rol }) {
   function formatearNumeroConComas(numero) {
     // Aplica toFixed para limitar los decimales a dos
     const numeroFormateado = Number(numero).toFixed(2);
-    
+
     // Usa una expresión regular para agregar comas
     return numeroFormateado.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
@@ -116,18 +116,19 @@ function Gestionproducto({ rol }) {
   const handleFormChange = (e) => {
     const { name, value } = e.target;
 
-    if (name === 'id_Categoria' || name === 'id_Marca') {
+    if (name === 'id_Categoria' || name === 'id_Marca' || (name === 'cantidad' || name === 'precio') && !isNaN(value)) {
       setFormData({
         ...formData,
         [name]: value,
       });
-    } else {
+    } else if (name !== 'cantidad' && name !== 'precio') {
       setFormData({
         ...formData,
         [name]: value,
       });
     }
   };
+
 
   const loadProducto = () => {
     fetch('http://localhost:5000/crud/readproducto')
@@ -259,6 +260,7 @@ function Gestionproducto({ rol }) {
     closeBrandModal();
   };
 
+
   return (
     <div>
       <Header rol={rol} />
@@ -281,50 +283,50 @@ function Gestionproducto({ rol }) {
           </Row>
 
           <div className="table-responsive">
-          <Table striped bordered hover>
-            <thead>
-              <tr className='centrado'>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Presentación</th>
-                <th>Imagen</th>
-                <th>Descripción</th>
-                <th>Precio</th>
-                <th>Cantidad</th>
-                <th>Marca</th>
-                <th>Categoría</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredProducto.map((producto) => (
-                <tr className='centrado' key={producto.id_Producto}>
-                  <td>{producto.id_Producto}</td>
-                  <td>{producto.nombre_Producto}</td>
-                  <td>{producto.presentacion}</td>
-                  <td>
-                    <img src={producto.imagen} alt="Imagen del producto" style={{ maxWidth: '80px' }} />
+            <Table striped bordered hover>
+              <thead>
+                <tr className='centrado'>
+                  <th>ID</th>
+                  <th>Nombre</th>
+                  <th>Presentación</th>
+                  <th>Imagen</th>
+                  <th>Descripción</th>
+                  <th>Precio</th>
+                  <th>Cantidad</th>
+                  <th>Marca</th>
+                  <th>Categoría</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredProducto.map((producto) => (
+                  <tr className='centrado' key={producto.id_Producto}>
+                    <td>{producto.id_Producto}</td>
+                    <td>{producto.nombre_Producto}</td>
+                    <td>{producto.presentacion}</td>
+                    <td>
+                      <img src={producto.imagen} alt="Imagen del producto" style={{ maxWidth: '80px' }} />
 
-                  </td>
-                  <td>{producto.descripcion}</td>
-                  <td>C${formatearNumeroConComas(producto.precio)}</td>
-                  <td>{producto.cantidad}</td>
-                  <td>{marcas.find((marca) => marca.id_Marca === producto.id_Marca)?.nombre_Marca}</td>
-                  <td>{categorias.find((categoria) => categoria.id_Categoria === producto.id_Categoria)?.nombre_Categoria}</td>
-                  <td>
-                  <div className="button-container">
-    <Button className='actualizar' variant="primary" onClick={() => openModal(producto)}>
-      <FaPencil />
-    </Button>
-    <Button className='eliminar' variant="danger" onClick={() => handleDelete(producto.id_Producto)}>
-      <FaTrashCan />
-    </Button>
-  </div>
-                  </td>
-                </tr> 
-              ))}
-            </tbody>
-          </Table>
+                    </td>
+                    <td>{producto.descripcion}</td>
+                    <td>C${formatearNumeroConComas(producto.precio)}</td>
+                    <td>{producto.cantidad}</td>
+                    <td>{marcas.find((marca) => marca.id_Marca === producto.id_Marca)?.nombre_Marca}</td>
+                    <td>{categorias.find((categoria) => categoria.id_Categoria === producto.id_Categoria)?.nombre_Categoria}</td>
+                    <td>
+                      <div className="button-container">
+                        <Button className='actualizar' variant="primary" onClick={() => openModal(producto)}>
+                          <FaPencil />
+                        </Button>
+                        <Button className='eliminar' variant="danger" onClick={() => handleDelete(producto.id_Producto)}>
+                          <FaTrashCan />
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
           </div>
         </Card.Body>
       </Card>
@@ -347,6 +349,12 @@ function Gestionproducto({ rol }) {
                         name="nombre_Producto"
                         value={formData.nombre_Producto}
                         onChange={handleFormChange}
+                        onKeyDown={(e) => {
+                          // Permitir solo caracteres no numéricos
+                          if ((e.key >= '0' && e.key <= '9') || e.key === 'Backspace' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+                            e.preventDefault();
+                          }
+                        }}
                       />
                     </FloatingLabel>
                   </Col>
@@ -358,6 +366,12 @@ function Gestionproducto({ rol }) {
                         name="presentacion"
                         value={formData.presentacion}
                         onChange={handleFormChange}
+                        onKeyDown={(e) => {
+                          // Permitir solo caracteres no numéricos
+                          if ((e.key >= '0' && e.key <= '9') || e.key === 'Backspace' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+                            e.preventDefault();
+                          }
+                        }}
                       />
                     </FloatingLabel>
                   </Col>
@@ -375,9 +389,9 @@ function Gestionproducto({ rol }) {
                   <Col sm="12" md="6" lg="12">
                     <FloatingLabel controlId="descripcion" label="Descripción">
                       <Form.Control
-                      as="textarea"
-                       className="auto-expand-textarea" // Aplica la clase personalizada aquí
-                       style={{ minHeight: '100px' }} // Establece la altura inicial aquí
+                        as="textarea"
+                        className="auto-expand-textarea" // Aplica la clase personalizada aquí
+                        style={{ minHeight: '100px' }} // Establece la altura inicial aquí
                         placeholder="Ingrese la descripción"
                         name="descripcion"
                         value={formData.descripcion}
@@ -390,30 +404,61 @@ function Gestionproducto({ rol }) {
                     </FloatingLabel>
                   </Col>
                   <Col sm="12" md="6" lg="6">
-                    <FloatingLabel controlId="precio" >
-                      <div className="input-group">
-                        <span className="input-group-text">C$</span>
-                        <Form.Control
-                          className="input-size"
-                          type="number"
-                          placeholder="Ingrese el precio"
-                          value={formData.precio}
-                          onChange={handleFormChange}
-                        />
-                      </div>
-                    </FloatingLabel>
-                  </Col>
-                  <Col sm="12" md="6" lg="6">
                     <FloatingLabel controlId="cantidad" label="Cantidad">
                       <Form.Control
-                        type="number"
+                        type="text"
                         placeholder="Ingrese la cantidad"
                         name="cantidad"
                         value={formData.cantidad}
                         onChange={handleFormChange}
+                        onKeyDown={(e) => {
+                          // Permitir solo números (0-9), retroceso y teclas de flecha
+                          if (
+                            !(
+                              (e.key >= '0' && e.key <= '9') ||
+                              e.key === 'Backspace' ||
+                              e.key === 'ArrowLeft' ||
+                              e.key === 'ArrowRight'
+                            )
+                          ) {
+                            e.preventDefault();
+                          }
+                        }}
                       />
                     </FloatingLabel>
                   </Col>
+                  <Col sm="12" md="6" lg="6">
+                    <FloatingLabel controlId="precio">
+                      <div className="input-group">
+                        <span className="input-group-text">C$</span>
+                        <Form.Control
+                          className="input-size"
+                          type="text"
+                          value={formData.precio}
+                          onChange={(e) => {
+                            setFormData({
+                              ...formData,
+                              precio: e.target.value,
+                            });
+                          }}
+                          onKeyDown={(e) => {
+                            // Permitir solo números (0-9), retroceso y teclas de flecha
+                            if (
+                              !(
+                                (e.key >= '0' && e.key <= '9') ||
+                                e.key === 'Backspace' ||
+                                e.key === 'ArrowLeft' ||
+                                e.key === 'ArrowRight'
+                              )
+                            ) {
+                              e.preventDefault();
+                            }
+                          }}
+                        />
+                      </div>
+                    </FloatingLabel>
+                  </Col>
+
                   <Col sm="12" md="6" lg="6">
                     <FloatingLabel controlId="categoria" label="Categoría">
                       <Form.Control

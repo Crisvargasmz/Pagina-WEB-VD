@@ -46,6 +46,13 @@ function Marca({rol}) {
     }
   };
 
+  const handleNombreMarcaChange = (e) => {
+    // Validar que solo se ingresen letras
+    const nuevoNombre = e.target.value.replace(/[^a-zA-Z ]/g, ''); // Solo permite letras y espacios
+    setNombre_Marca(nuevoNombre);
+  };
+
+
   return(
     <div>
       <Header rol={rol}/>
@@ -63,7 +70,7 @@ function Marca({rol}) {
                       type="text"
                       placeholder="Ingrese el nombre"
                       value={nombre_Marca}
-                      onChange={(e) => setNombre_Marca(e.target.value)}
+                      onChange={handleNombreMarcaChange}
                     />
                   </FloatingLabel>
                 </Col>

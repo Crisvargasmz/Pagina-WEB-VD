@@ -69,6 +69,8 @@ function GestionDetalle({ rol }) {
     loadDetalle();
   }, []);
 
+  
+
 
   return (
     <div>

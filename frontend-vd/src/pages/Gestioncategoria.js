@@ -183,6 +183,12 @@ function Gestioncategoria({ rol }) {
                         name="nombre_Categoria"
                         value={formData.nombre_Categoria}
                         onChange={handleFormChange}
+                        onKeyDown={(e) => {
+                          // Permitir solo caracteres no numéricos
+                          if ((e.key >= '0' && e.key <= '9') || e.key === 'Backspace' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+                            e.preventDefault();
+                          }
+                        }}
                       />
                     </FloatingLabel>
                   </Col>

@@ -129,6 +129,20 @@ function Detallecompra({ rol }) {
   };
 
 
+  const handleNEstadoChange = (e) => {
+    // Validar que solo se ingresen letras
+    const nuevoNombre = e.target.value.replace(/[^a-zA-Z ]/g, ''); // Solo permite letras y espacios
+    setEstado(nuevoNombre);
+  };
+
+  const handleCantidadChange = (e) => {
+    // Validar que solo se ingresen números no negativos
+    const nuevaCantidad = e.target.value.replace(/[^0-9]/g, ''); // Eliminar caracteres no numéricos
+    setCantidadCompra(nuevaCantidad);
+  };
+
+
+
   return (
     <div>
       <Header rol={rol} />
@@ -146,7 +160,7 @@ function Detallecompra({ rol }) {
                       type="text"
                       placeholder="Ingrese el estado"
                       value={estado}
-                      onChange={(e) => setEstado(e.target.value)}
+                      onChange={handleNEstadoChange}
                     />
                   </FloatingLabel>
                 </Col>
@@ -180,10 +194,10 @@ function Detallecompra({ rol }) {
                 <Col sm="12" md="4" lg="4">
                   <FloatingLabel controlId="cantidad_Compra" label="Cantidad del producto seleccionado">
                     <Form.Control
-                      type="number"
+                      type="text"
                       placeholder="Ingrese la cantidad de compra"
                       value={cantidad_Compra}
-                      onChange={(e) => setCantidadCompra(e.target.value)}
+                      onChange={handleCantidadChange}
                     />
                   </FloatingLabel>
                 </Col>

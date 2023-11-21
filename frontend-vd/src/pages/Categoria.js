@@ -46,6 +46,13 @@ function Categoria({rol}) {
     }
   };
 
+  const handleNombreCategoriaChange = (e) => {
+    // Validar que solo se ingresen letras
+    const nuevoNombre = e.target.value.replace(/[^a-zA-Z ]/g, ''); // Solo permite letras y espacios
+    setNombre_Categoria(nuevoNombre);
+  };
+
+
   return(
     <div>
       <Header rol={rol}/>
@@ -63,7 +70,7 @@ function Categoria({rol}) {
                       type="text"
                       placeholder="Ingrese el nombre"
                       value={nombre_Categoria}
-                      onChange={(e) => setNombre_Categoria(e.target.value)}
+                      onChange={handleNombreCategoriaChange}
                     />
                   </FloatingLabel>
                 </Col>

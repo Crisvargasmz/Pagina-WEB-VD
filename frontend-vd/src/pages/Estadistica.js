@@ -114,13 +114,15 @@ const generarReporteAlmacenImg = async () => {
     <div>
       <Header rol={ rol } />  
 
-      <Container>
+      <Container className="mt-8"> {/* Add margin-top to the Container */}
         <Row className="global-margin-top-history">
           <Col md={6}>
             <Card>
               <Card.Body>
                 <Card.Title className="text-center">Estados de las compras</Card.Title>
-                <canvas id="myChart" height="300"></canvas>
+                <div style={{ margin: '20px 0' }}> {/* Add margin to the canvas */}
+                  <canvas id="myChart" height="200"></canvas> {/* Adjust height as needed */}
+                </div>
               </Card.Body>
 
               <Card.Footer className="text-center">
@@ -136,6 +138,7 @@ const generarReporteAlmacenImg = async () => {
         </Row>
       </Container>
     </div>
+
   );
 }
 

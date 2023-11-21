@@ -113,6 +113,8 @@ function Gestionmarca({rol}) {
     }
   };
 
+  
+
   return (
     <div>
       <Header rol={rol}/>
@@ -183,6 +185,12 @@ function Gestionmarca({rol}) {
                         name="nombre_Marca"
                         value={formData.nombre_Marca}
                         onChange={handleFormChange}
+                        onKeyDown={(e) => {
+                          // Permitir solo caracteres no numéricos
+                          if ((e.key >= '0' && e.key <= '9') || e.key === 'Backspace' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+                            e.preventDefault();
+                          }
+                        }}
                       />
                     </FloatingLabel>
                   </Col>
