@@ -4,7 +4,7 @@ import { Button, Container, Card, Row, Col, Form, FloatingLabel } from 'react-bo
 import Header from '../components/Header';
 import '../styles/App.css';
 
-function Usuario({ rol }) {
+function RegistroUsuario(rol) {
   const navigate = useNavigate();
   const [nombre_Usuario, setNombre_Usuario] = useState('');
   const [correo_Electronico, setCorreo_Electronico] = useState('');
@@ -125,4 +125,4 @@ function Usuario({ rol }) {
   );
 }
 
-export default Usuario;
+export default RegistroUsuario;

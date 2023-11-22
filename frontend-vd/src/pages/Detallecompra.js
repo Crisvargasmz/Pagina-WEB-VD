@@ -42,6 +42,7 @@ function Detallecompra({ rol }) {
   };
 
   const closeProductoModal = () => {
+    setSearchQueryProducto('');
     setShowProductoModal(false);
   };
 
@@ -140,6 +141,19 @@ function Detallecompra({ rol }) {
     const nuevaCantidad = e.target.value.replace(/[^0-9]/g, ''); // Eliminar caracteres no numéricos
     setCantidadCompra(nuevaCantidad);
   };
+
+
+  const [searchQueryProducto, setSearchQueryProducto] = useState('');
+
+  const handleSearchChangeProducto = (e) => {
+    setSearchQueryProducto(e.target.value);
+  };
+
+  const filteredProductos = productos.filter((producto) => {
+    const nombre_Producto = producto.nombre_Producto.toLowerCase();
+    const search = searchQueryProducto.toLowerCase();
+    return nombre_Producto.includes(search);
+  });
 
 
 
@@ -264,8 +278,26 @@ function Detallecompra({ rol }) {
         <Modal.Header closeButton>
           <Modal.Title>Seleccionar Producto</Modal.Title>
         </Modal.Header>
+        <Row className="mt-3">
+          <Col className='search-input'>
+            <FloatingLabel controlId="search" label="Buscar">
+              <Form.Control
+                type="text"
+                placeholder="Buscar"
+                value={searchQueryProducto}
+                onChange={handleSearchChangeProducto}
+                onKeyDown={(e) => {
+                  // Permitir solo letras, números y espacios
+                  if (!((e.key >= 'a' && e.key <= 'z') || (e.key >= 'A' && e.key <= 'Z') || (e.key >= '0' && e.key <= '9') || e.key === ' ')) {
+                    e.preventDefault();
+                  }
+                }}  
+              />
+            </FloatingLabel>
+          </Col>
+        </Row>
         <Modal.Body>
-          {productos.map((producto) => (
+          {filteredProductos.map((producto) => (
             <div className="Seleccion" key={producto.id_Producto} onClick={() => selectProducto(producto)}>
               {producto.nombre_Producto}
             </div>

@@ -196,6 +196,12 @@ const filteredComentario = comentarios.filter((comentario) => {
                         name="contenido_Comentario"
                         value={formData.contenido_Comentario}
                         onChange={handleFormChange}
+                        onKeyDown={(e) => {
+                          // Permitir solo letras, números y espacios
+                          if (!((e.key >= 'a' && e.key <= 'z') || (e.key >= 'A' && e.key <= 'Z') || (e.key >= '0' && e.key <= '9') || e.key === ' ')) {
+                            e.preventDefault();
+                          }
+                        }}
                       />
                     </FloatingLabel>
                   </Col>

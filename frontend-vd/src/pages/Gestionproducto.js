@@ -350,8 +350,8 @@ function Gestionproducto({ rol }) {
                         value={formData.nombre_Producto}
                         onChange={handleFormChange}
                         onKeyDown={(e) => {
-                          // Permitir solo caracteres no numéricos
-                          if ((e.key >= '0' && e.key <= '9') || e.key === 'Backspace' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+                          // Permitir solo letras, números y espacios
+                          if (!((e.key >= 'a' && e.key <= 'z') || (e.key >= 'A' && e.key <= 'Z') || (e.key >= '0' && e.key <= '9') || e.key === ' ')) {
                             e.preventDefault();
                           }
                         }}
@@ -367,8 +367,8 @@ function Gestionproducto({ rol }) {
                         value={formData.presentacion}
                         onChange={handleFormChange}
                         onKeyDown={(e) => {
-                          // Permitir solo caracteres no numéricos
-                          if ((e.key >= '0' && e.key <= '9') || e.key === 'Backspace' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+                          // Permitir solo letras, números y espacios
+                          if (!((e.key >= 'a' && e.key <= 'z') || (e.key >= 'A' && e.key <= 'Z') || (e.key >= '0' && e.key <= '9') || e.key === ' ')) {
                             e.preventDefault();
                           }
                         }}
@@ -399,6 +399,12 @@ function Gestionproducto({ rol }) {
                           handleFormChange(e);
                           e.target.style.height = 'auto'; // Restablece la altura a 'auto' para calcular la nueva altura
                           e.target.style.height = `${e.target.scrollHeight}px`; // Ajusta la altura automáticamente
+                        }}
+                        onKeyDown={(e) => {
+                          // Permitir solo letras, números y espacios
+                          if (!((e.key >= 'a' && e.key <= 'z') || (e.key >= 'A' && e.key <= 'Z') || (e.key >= '0' && e.key <= '9') || e.key === ' ')) {
+                            e.preventDefault();
+                          }
                         }}
                       />
                     </FloatingLabel>

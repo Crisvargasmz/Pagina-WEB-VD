@@ -148,6 +148,12 @@ function Catalogo({ rol,id_Usuario}) {
                 placeholder="Buscar"
                 value={searchQuery}
                 onChange={handleSearchChange}
+                onKeyDown={(e) => {
+                  // Permitir solo letras y números, y algunas teclas de control
+                  if (!((e.key >= 'a' && e.key <= 'z') || (e.key >= 'A' && e.key <= 'Z') || (e.key >= '0' && e.key <= '9') || e.key === 'Backspace' || e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'Delete')) {
+                    e.preventDefault();
+                  }
+                }}
               />
             </FloatingLabel>
           </Col>
@@ -209,11 +215,17 @@ function Catalogo({ rol,id_Usuario}) {
                 e.target.style.height = 'auto';
                 e.target.style.height = `${e.target.scrollHeight}px`;
               }}
+              onKeyDown={(e) => {
+                // Permitir solo letras y números, y algunas teclas de control
+                if (!((e.key >= 'a' && e.key <= 'z') || (e.key >= 'A' && e.key <= 'Z') || (e.key >= '0' && e.key <= '9') || e.key === 'Backspace' || e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'Delete')) {
+                  e.preventDefault();
+                }
+              }}
             />
           </FloatingLabel>
         </Col>
         <div className="center-button">
-          <Button variant="primary" type="submit" className="mt-3" onClick={closecomentarioModal}>
+          <Button variant="primary" type="submit" className="mt-3 button-color" onClick={closecomentarioModal}>
             Registrar
           </Button>
         </div>

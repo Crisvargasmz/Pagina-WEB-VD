@@ -301,11 +301,18 @@ function Producto({ rol }) {
     setNombre_Categoria(nuevoNombre);
   };
 
-  const handleNombrePresentacionChange = (e) => {
-    // Validar que solo se ingresen letras
-    const nuevoNombre = e.target.value.replace(/[^a-zA-Z ],[^0-9],/g, '',); // Solo permite letras y espacios
-    setPresentacion(nuevoNombre);
+
+  const handleNombrePresentacionChange = (event) => {
+    // Validar que solo se ingresen letras, números y espacios
+    const inputValue = event.target.value;
+    const regex = /^[a-zA-Z0-9\s]*$/;
+  
+    if (regex.test(inputValue) || inputValue === '') {
+      setPresentacion(inputValue);
+    }
   };
+  
+
 
 
 
@@ -339,6 +346,7 @@ function Producto({ rol }) {
                       placeholder="Ingrese la presentación"
                       value={presentacion}
                       onChange={handleNombrePresentacionChange}
+                      
                     />
                   </FloatingLabel>
                 </Col>
@@ -354,21 +362,27 @@ function Producto({ rol }) {
                   </Form.Group>
                 </Col>
                 <Col sm="6" md="6" lg="6">
-                  <FloatingLabel controlId="descripcion" label="Descripción">
-                    <Form.Control
-                      as="textarea"
-                      className="auto-expand-textarea" // Aplica la clase personalizada aquí
-                      style={{ minHeight: '100px' }} // Establece la altura inicial aquí
-                      placeholder="Ingrese la descripción"
-                      value={descripcion}
-                      onChange={(e) => {
-                        setDescripcion(e.target.value);
-                        e.target.style.height = 'auto'; // Restablece la altura a 'auto' para calcular la nueva altura
-                        e.target.style.height = `${e.target.scrollHeight}px`; // Ajusta la altura automáticamente
-                      }}
-                    />
-                  </FloatingLabel>
-                </Col>
+  <FloatingLabel controlId="descripcion" label="Descripción">
+    <Form.Control
+      as="textarea"
+      className="auto-expand-textarea" // Aplica la clase personalizada aquí
+      style={{ minHeight: '100px' }} // Establece la altura inicial aquí
+      placeholder="Ingrese la descripción"
+      value={descripcion}
+      onChange={(e) => {
+        setDescripcion(e.target.value);
+        e.target.style.height = 'auto'; // Restablece la altura a 'auto' para calcular la nueva altura
+        e.target.style.height = `${e.target.scrollHeight}px`; // Ajusta la altura automáticamente
+      }}
+      onKeyDown={(e) => {
+        // Permitir solo letras, números y espacios
+        if (!((e.key >= 'a' && e.key <= 'z') || (e.key >= 'A' && e.key <= 'Z') || (e.key >= '0' && e.key <= '9') || e.key === ' ')) {
+          e.preventDefault();
+        }
+      }}
+    />
+  </FloatingLabel>
+</Col>
                 <Col sm="12" md="6" lg="6">
                   <FloatingLabel controlId="precio" label="">
                     <div className="input-group">
@@ -457,6 +471,12 @@ function Producto({ rol }) {
                 placeholder="Buscar"
                 value={searchQueryCate}
                 onChange={handleSearchChangeCate}
+                onKeyDown={(e) => {
+                  // Permitir solo letras, números y espacios
+                  if (!((e.key >= 'a' && e.key <= 'z') || (e.key >= 'A' && e.key <= 'Z') || (e.key >= '0' && e.key <= '9') || e.key === ' ')) {
+                    e.preventDefault();
+                  }
+                }}
               />
             </FloatingLabel>
           </Col>
@@ -482,6 +502,12 @@ function Producto({ rol }) {
                 placeholder="Buscar"
                 value={searchQueryMarca}
                 onChange={handleSearchChangeMarca}
+                onKeyDown={(e) => {
+                  // Permitir solo letras, números y espacios
+                  if (!((e.key >= 'a' && e.key <= 'z') || (e.key >= 'A' && e.key <= 'Z') || (e.key >= '0' && e.key <= '9') || e.key === ' ')) {
+                    e.preventDefault();
+                  }
+                }}
               />
             </FloatingLabel>
           </Col>
@@ -507,6 +533,12 @@ function Producto({ rol }) {
                 placeholder="Ingrese el nombre de la marca"
                 value={nombre_Marca}
                 onChange={handleNombreMarcaChange}
+                onKeyDown={(e) => {
+                  // Permitir solo letras, números y espacios
+                  if (!((e.key >= 'a' && e.key <= 'z') || (e.key >= 'A' && e.key <= 'Z') || (e.key >= '0' && e.key <= '9') || e.key === ' ')) {
+                    e.preventDefault();
+                  }
+                }}
               />
             </FloatingLabel>
             <div className="center-button">
@@ -531,6 +563,12 @@ function Producto({ rol }) {
                 placeholder="Ingrese el nombre de la Categoria"
                 value={nombre_Categoria}
                 onChange={handleNombreCategoriaChange}
+                onKeyDown={(e) => {
+                  // Permitir solo letras, números y espacios
+                  if (!((e.key >= 'a' && e.key <= 'z') || (e.key >= 'A' && e.key <= 'Z') || (e.key >= '0' && e.key <= '9') || e.key === ' ')) {
+                    e.preventDefault();
+                  }
+                }}
               />
             </FloatingLabel>
             <div className="center-button">

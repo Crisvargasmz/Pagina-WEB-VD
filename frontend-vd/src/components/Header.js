@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Navbar, Nav, Offcanvas, Button, NavDropdown, Container } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import logo from '../Logo/logo.png'
+import logo from '../Logo/logo.png';
+import { FaRightFromBracket } from 'react-icons/fa6';
 
 function Header({ rol }) {
   const [showMenu, setShowMenu] = useState(false);
@@ -10,6 +11,12 @@ function Header({ rol }) {
   const toggleMenu = () => {
     setShowMenu(!showMenu);
   };
+
+  const cerrarSesion = () => {
+    // Eliminar el rol del localStorage al cerrar sesión
+    localStorage.removeItem('userRol');
+  };
+
 
   return (
     <div>
@@ -110,7 +117,7 @@ function Header({ rol }) {
 
 
                   <Nav.Link>
-                    <Link to="/" className="link-unstyled">Cerrar sesión</Link>
+                    <Link to="/" onClick={cerrarSesion} className="link-unstyled"><FaRightFromBracket /></Link>
                   </Nav.Link>
 
 
@@ -214,10 +221,9 @@ function Header({ rol }) {
 
                 </NavDropdown>
 
-
                 <Nav.Link>
-                  <Link to="/" className="link-unstyled">Cerrar sesión</Link>
-                </Nav.Link>
+                    <Link to="/" onClick={cerrarSesion} className="link-unstyled"><FaRightFromBracket /></Link>
+                  </Nav.Link>
               </Nav>
             </Offcanvas.Body>
           </Offcanvas>
@@ -243,9 +249,8 @@ function Header({ rol }) {
                   </Nav.Link>
 
                   <Nav.Link>
-                    <Link to="/" className="link-unstyled">Cerrar sesión</Link>
+                    <Link to="/" onClick={cerrarSesion} className="link-unstyled"><FaRightFromBracket /></Link>
                   </Nav.Link>
-
                 </Nav>
               </Navbar.Collapse>
               <Button
@@ -270,8 +275,8 @@ function Header({ rol }) {
                   <Link to="/about" className="link-unstyled">Informacion</Link>
                 </Nav.Link>
                 <Nav.Link>
-                  <Link to="/" className="link-unstyled">Cerrar sesión</Link>
-                </Nav.Link>
+                    <Link to="/" onClick={cerrarSesion} className="link-unstyled"><FaRightFromBracket /></Link>
+                  </Nav.Link>
               </Nav>
             </Offcanvas.Body>
           </Offcanvas>
