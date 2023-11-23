@@ -5,6 +5,9 @@ import '../styles/App.css';
 import { FaSistrix } from 'react-icons/fa6';
 import { FaPlus } from 'react-icons/fa';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 function Producto({ rol }) {
   const [nombre_Producto, setNombre_Producto] = useState('');
@@ -15,6 +18,31 @@ function Producto({ rol }) {
   const [formData, setFormData] = useState({
     id_Marca: '',
     id_Categoria: '',
+  });
+
+  const notifySuccess = (message) => {
+    toast.success(message, {
+      position: toast.POSITION.TOP_CENTER,
+      autoClose: 800, // Auto cerrar después de 3 segundos
+    });
+  };
+
+  const notifyError = (message) => {
+    toast.error(message, {
+      position: toast.POSITION.TOP_CENTER,
+      autoClose: 800,
+    });
+  };
+
+
+  const [formErrors, setFormErrors] = useState({
+    nombre_Producto: '',
+    presentacion: '',
+    descripcion: '',
+    precio: '',
+    cantidad: '',
+    marca: '',
+    categoria: '',
   });
 
   const [imageUrl, setImageUrl] = useState('');
@@ -58,22 +86,29 @@ function Producto({ rol }) {
 
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
-    if (file) {
-      setImageFile(file); // Actualiza el estado imageFile
-      const formData = new FormData();
-      formData.append('imagen', file);
+    if (!file) {
+      setFormErrors({ ...formErrors, imagen: 'Campo obligatorio' });
+      return;
+    }
 
-      try {
-        const response = await axios.post('http://localhost:5000/upload', formData);
-        if (response.data.imageUrl) {
-          setImageUrl(response.data.imageUrl);
-        }
-      } catch (error) {
-        console.error('Error al cargar la imagen:', error);
-        // Manejar el error de carga de la imagen
+    setImageFile(file);
+
+    const formData = new FormData();
+    formData.append('imagen', file);
+
+    try {
+      const response = await axios.post('http://localhost:5000/upload', formData);
+      if (response.data.imageUrl) {
+        setImageUrl(response.data.imageUrl);
+        setFormErrors({ ...formErrors, imagen: '' }); // Limpiar el error si la imagen se carga correctamente
       }
+    } catch (error) {
+      console.error('Error al cargar la imagen:', error);
+      // Manejar el error de carga de la imagen
+      setFormErrors({ ...formErrors, imagen: 'Error al cargar la imagen' });
     }
   };
+
 
   const openCategoryModal = () => {
     setShowCategoryModal(true);
@@ -133,8 +168,46 @@ function Producto({ rol }) {
     e.preventDefault();
 
     // Validar campos vacíos
-    if (!nombre_Producto || !presentacion || !imageUrl || !descripcion || !precio || !cantidad || !formData.id_Marca || !formData.id_Categoria) {
-      alert('Por favor, completa todos los campos');
+    const errors = {};
+
+    if (!nombre_Producto) {
+      errors.nombre_Producto = 'Ingrese un nombre';
+    }
+
+    if (!presentacion) {
+      errors.presentacion = 'Campo obligatorio';
+    }
+
+    if (!imageUrl) {
+      errors.imagen = 'Seleccione una imagen';
+    }
+
+    if (!descripcion) {
+
+     errors.descripcion = 'Campo obligatorio' 
+    }
+
+    if (!precio) {
+      errors.precio = 'Ingrese el precio';
+    }
+
+    if (!cantidad) {
+      errors.cantidad = 'Ingrese la cantidad';
+    }
+
+    if (!formData.id_Marca) {
+      errors.marca = 'Seleccione una marca';
+    }
+
+    if (!formData.id_Categoria) {
+      errors.categoria = 'Seleccione una categoría';
+    }
+
+    // Actualizar el estado de los errores
+    setFormErrors(errors);
+
+    // Si hay errores, detener el envío del formulario
+    if (Object.values(errors).some((error) => error !== '')) {
       return;
     }
 
@@ -156,7 +229,7 @@ function Producto({ rol }) {
       });
 
       if (response.data.message === 'producto insertado con éxito') {
-        alert('Registro Exitoso');
+        notifySuccess('Registro Exitoso');
         setImageUrl('');
         setImageFile(null);
         setNombre_Producto('');
@@ -171,13 +244,14 @@ function Producto({ rol }) {
         setSelectedCategory(null);
         setSelectedMarcas(null);
       } else {
-        alert('Error al registrar producto');
+        notifyError('Error al registrar producto');
       }
     } catch (error) {
       console.error('Error en la solicitud:', error);
       alert('Error en la solicitud al servidor');
     }
   };
+
 
 
   const handleSubmitmarca = async (e) => {
@@ -202,7 +276,7 @@ function Producto({ rol }) {
       });
 
       if (response.ok) {
-        alert('Registro exitoso');
+        notifySuccess('Registro exitoso');
         loadMarcas();
         setNombre_Marca('');
       } else {
@@ -210,7 +284,7 @@ function Producto({ rol }) {
       }
     } catch (error) {
       console.error('Error en la solicitud:', error);
-      alert('Error en la solicitud al servidor');
+      notifyError('Error en la solicitud al servidor');
     }
   };
 
@@ -239,7 +313,7 @@ function Producto({ rol }) {
       });
 
       if (response.ok) {
-        alert('Registro exitoso');
+       notifySuccess('Registro exitoso');
         loadCategorias();
         setNombre_Categoria('');
       } else {
@@ -247,7 +321,7 @@ function Producto({ rol }) {
       }
     } catch (error) {
       console.error('Error en la solicitud:', error);
-      alert('Error en la solicitud al servidor');
+      notifyError('Error en la solicitud al servidor');
     }
   };
 
@@ -275,30 +349,56 @@ function Producto({ rol }) {
     // Validar que solo se ingresen números no negativos
     const nuevoPrecio = e.target.value.replace(/[^0-9.]/g, ''); // Eliminar caracteres no numéricos, excepto el punto para decimales
     setPrecio(nuevoPrecio);
+    if (!nuevoPrecio) {
+      setFormErrors({ ...formErrors, precio: 'Campo obligatorio' });
+    } else {
+      setFormErrors({ ...formErrors, precio: '' });
+    }
   };
 
   const handleCantidadChange = (e) => {
     // Validar que solo se ingresen números no negativos
     const nuevaCantidad = e.target.value.replace(/[^0-9]/g, ''); // Eliminar caracteres no numéricos
     setCantidad(nuevaCantidad);
+    if (!nuevaCantidad) {
+      setFormErrors({ ...formErrors, cantidad: 'Campo obligatorio' });
+    } else {
+      setFormErrors({ ...formErrors, cantidad: '' });
+    }
   };
 
   const handleNombreChange = (e) => {
     // Validar que solo se ingresen letras
     const nuevoNombre = e.target.value.replace(/[^a-zA-Z ]/g, ''); // Solo permite letras y espacios
     setNombre_Producto(nuevoNombre);
+    if (!nuevoNombre) {
+      setFormErrors({ ...formErrors, nombre_Producto: 'Campo obligatorio' });
+    } else {
+      setFormErrors({ ...formErrors, nombre_Producto: '' });
+    }
+
   };
 
   const handleNombreMarcaChange = (e) => {
     // Validar que solo se ingresen letras
     const nuevoNombre = e.target.value.replace(/[^a-zA-Z ]/g, ''); // Solo permite letras y espacios
     setNombre_Marca(nuevoNombre);
+    if (!nuevoNombre) {
+      setFormErrors({ ...formErrors, nombre_Marca: 'Campo obligatorio' });
+    } else {
+      setFormErrors({ ...formErrors, nombre_Marca: '' });
+    }
   };
 
   const handleNombreCategoriaChange = (e) => {
     // Validar que solo se ingresen letras
     const nuevoNombre = e.target.value.replace(/[^a-zA-Z ]/g, ''); // Solo permite letras y espacios
     setNombre_Categoria(nuevoNombre);
+    if (!nuevoNombre) {
+      setFormErrors({ ...formErrors, nombre_Categoria: 'Campo obligatorio' });
+    } else {
+      setFormErrors({ ...formErrors, nombre_Categoria: '' });
+    }
   };
 
 
@@ -306,12 +406,21 @@ function Producto({ rol }) {
     // Validar que solo se ingresen letras, números y espacios
     const inputValue = event.target.value;
     const regex = /^[a-zA-Z0-9\s]*$/;
-  
+
     if (regex.test(inputValue) || inputValue === '') {
       setPresentacion(inputValue);
+
+      // Limpiar el error si la entrada es válida
+      setFormErrors({ ...formErrors, presentacion: '' });
+    } else {
+      // Mostrar un mensaje de error si la entrada no es válida
+      setFormErrors({ ...formErrors, presentacion: 'Solo se permiten letras, números y espacios' });
     }
   };
-  
+
+
+
+
 
 
 
@@ -320,6 +429,8 @@ function Producto({ rol }) {
 
   return (
     <div>
+
+  <ToastContainer/>
 
       <Header rol={rol} />
 
@@ -338,6 +449,7 @@ function Producto({ rol }) {
                       onChange={handleNombreChange}
                     />
                   </FloatingLabel>
+                  {formErrors.nombre_Producto && <div className="error-message">{formErrors.nombre_Producto}</div>}
                 </Col>
                 <Col sm="6" md="6" lg="6">
                   <FloatingLabel controlId="presentacion" label="Presentación">
@@ -346,9 +458,11 @@ function Producto({ rol }) {
                       placeholder="Ingrese la presentación"
                       value={presentacion}
                       onChange={handleNombrePresentacionChange}
-                      
+
                     />
                   </FloatingLabel>
+                  {formErrors.presentacion && <div className="error-message">{formErrors.presentacion}</div>}
+
                 </Col>
                 <Col sm="6" md="6" lg="6">
                   <Form.Group controlId="selectedFile" className="mb-3">
@@ -359,30 +473,36 @@ function Producto({ rol }) {
                       accept=".jpg, .png, .jpeg"
                       onChange={handleFileChange}
                     />
+                    {formErrors.imagen && (
+                      <div className="error-message">
+                        {formErrors.imagen}
+                      </div>
+                    )}
                   </Form.Group>
                 </Col>
                 <Col sm="6" md="6" lg="6">
-  <FloatingLabel controlId="descripcion" label="Descripción">
-    <Form.Control
-      as="textarea"
-      className="auto-expand-textarea" // Aplica la clase personalizada aquí
-      style={{ minHeight: '100px' }} // Establece la altura inicial aquí
-      placeholder="Ingrese la descripción"
-      value={descripcion}
-      onChange={(e) => {
-        setDescripcion(e.target.value);
-        e.target.style.height = 'auto'; // Restablece la altura a 'auto' para calcular la nueva altura
-        e.target.style.height = `${e.target.scrollHeight}px`; // Ajusta la altura automáticamente
-      }}
-      onKeyDown={(e) => {
-        // Permitir solo letras, números y espacios
-        if (!((e.key >= 'a' && e.key <= 'z') || (e.key >= 'A' && e.key <= 'Z') || (e.key >= '0' && e.key <= '9') || e.key === ' ')) {
-          e.preventDefault();
-        }
-      }}
-    />
-  </FloatingLabel>
-</Col>
+                  <FloatingLabel controlId="descripcion" label="Descripción">
+                    <Form.Control
+                      as="textarea"
+                      className="auto-expand-textarea" // Aplica la clase personalizada aquí
+                      style={{ minHeight: '100px' }} // Establece la altura inicial aquí
+                      placeholder="Ingrese la descripción"
+                      value={descripcion}
+                      onChange={(e) => {
+                        setDescripcion(e.target.value);
+                        e.target.style.height = 'auto'; // Restablece la altura a 'auto' para calcular la nueva altura
+                        e.target.style.height = `${e.target.scrollHeight}px`; // Ajusta la altura automáticamente
+                      }}
+                      onKeyDown={(e) => {
+                        // Permitir solo letras, números y espacios
+                        if (!((e.key >= 'a' && e.key <= 'z') || (e.key >= 'A' && e.key <= 'Z') || (e.key >= '0' && e.key <= '9') || e.key === ' ')) {
+                          e.preventDefault();
+                        }
+                      }}
+                    />
+                  </FloatingLabel>
+                  {formErrors.descripcion && <div className="error-message">{formErrors.descripcion}</div>}
+                </Col>
                 <Col sm="12" md="6" lg="6">
                   <FloatingLabel controlId="precio" label="">
                     <div className="input-group">
@@ -396,6 +516,8 @@ function Producto({ rol }) {
                       />
                     </div>
                   </FloatingLabel>
+                  {formErrors.precio && <div className="error-message">{formErrors.precio}</div>}
+
                 </Col>
                 <Col sm="12" md="6" lg="6">
                   <FloatingLabel controlId="cantidad" label="Cantidad">
@@ -406,6 +528,7 @@ function Producto({ rol }) {
                       onChange={handleCantidadChange}
                     />
                   </FloatingLabel>
+                  {formErrors.cantidad && <div className="error-message">{formErrors.cantidad}</div>}
                 </Col>
                 <Col sm="12" md="6" lg="6">
                   <FloatingLabel controlId="marca" label="Marca">
@@ -415,6 +538,7 @@ function Producto({ rol }) {
                       name="marca"
                       value={selectedMarcas ? selectedMarcas.nombre_Marca : ''}
                       readOnly
+                      
                     />
                     <div className="button-container">
                       <Button className="show-button" variant="primary" onClick={openBrandModal}>
@@ -425,6 +549,7 @@ function Producto({ rol }) {
                       </Button>
                     </div>
                   </FloatingLabel>
+                  {formErrors.marca && <div className="error-message">{formErrors.marca}</div>}
                 </Col>
 
                 <Col sm="12" md="6" lg="6">
@@ -436,6 +561,8 @@ function Producto({ rol }) {
                       value={selectedCategory ? selectedCategory.nombre_Categoria : ''}
                       readOnly
                     />
+                      
+
                     <div className="button-container">
                       <Button className="show-button" variant="primary" onClick={openCategoryModal}>
                         <FaSistrix />
@@ -445,6 +572,7 @@ function Producto({ rol }) {
                       </Button>
                     </div>
                   </FloatingLabel>
+                  {formErrors.categoria && <div className="error-message">{formErrors.categoria}</div>}
                 </Col>
               </Row>
 
@@ -522,6 +650,7 @@ function Producto({ rol }) {
       </Modal>
 
       <Modal show={showMarcaModal} onHide={closeMarcaModal}>
+      <ToastContainer/>
         <Modal.Header closeButton>
           <Modal.Title>Registro de Marca</Modal.Title>
         </Modal.Header>
@@ -542,7 +671,7 @@ function Producto({ rol }) {
               />
             </FloatingLabel>
             <div className="center-button">
-              <Button variant="primary" type="submit" className="mt-3" onClick={closeMarcaModal}>
+              <Button variant="primary" type="submit" className="mt-3 button-color" onClick={closeMarcaModal}>
                 Registrar
               </Button>
             </div>
@@ -552,6 +681,7 @@ function Producto({ rol }) {
 
 
       <Modal show={showCateModal} onHide={closeCateModal}>
+      <ToastContainer/>
         <Modal.Header closeButton>
           <Modal.Title>Registro de Categoria</Modal.Title>
         </Modal.Header>
@@ -572,7 +702,7 @@ function Producto({ rol }) {
               />
             </FloatingLabel>
             <div className="center-button">
-              <Button variant="primary" type="submit" className="mt-3" onClick={closeCateModal}>
+              <Button variant="primary" type="submit" className="mt-3 button-color" onClick={closeCateModal}>
                 Registrar
               </Button>
             </div>

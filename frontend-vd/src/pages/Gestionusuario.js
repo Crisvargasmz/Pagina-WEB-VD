@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Table, Button, Card, Row, Col, Form, Modal, FloatingLabel } from 'react-bootstrap';
 import Header from '../components/Header';
 import { FaPencil, FaTrashCan} from 'react-icons/fa6';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Gestionusuario({rol}) {
   const [usuarios, setUsuarios] = useState([]);
@@ -13,6 +15,25 @@ function Gestionusuario({rol}) {
     contrasena: '',  
 
   });
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+const [deleteUserId, setDeleteUserId] = useState(null);
+
+
+  const notifySuccess = (message) => {
+    toast.success(message, {
+      position: toast.POSITION.TOP_CENTER,
+      autoClose: 800, // Auto cerrar después de 3 segundos
+    });
+  };
+
+  const notifyError = (message) => {
+    toast.error(message, {
+      position: toast.POSITION.TOP_CENTER,
+      autoClose: 800,
+    });
+  };
+
 
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -81,7 +102,7 @@ function Gestionusuario({rol}) {
     })
       .then((response) => {
         if (response.ok) {
-          // La actualización fue exitosa, puedes cerrar el modal y refrescar la lista de productos
+          notifySuccess('El usuario ha sido actualizado')// La actualización fue exitosa, puedes cerrar el modal y refrescar la lista de productos
           setShowModal(false);
           loadUsuario(); // Cargar la lista de productos actualizada
         }
@@ -91,24 +112,32 @@ function Gestionusuario({rol}) {
 
   // Función para eliminar un producto
   const handleDelete = (id_Usuario) => {
-    const confirmation = window.confirm('¿Seguro que deseas eliminar este producto?');
-    if (confirmation) {
-      // Realiza la solicitud DELETE al servidor para eliminar el producto
-      fetch(`http://localhost:5000/crud/deleteusuario/${id_Usuario}`, {
-        method: 'DELETE',
+    setDeleteUserId(id_Usuario);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDelete = () => {
+    // Realiza la solicitud DELETE al servidor para eliminar el producto
+    fetch(`http://localhost:5000/crud/deleteusuario/${deleteUserId}`, {
+      method: 'DELETE',
+    })
+      .then((response) => {
+        if (response.ok) {
+          notifySuccess('Registro eliminado correctamente');
+          // La eliminación fue exitosa, refresca la lista de productos
+          loadUsuario();
+        }
       })
-        .then((response) => {
-          if (response.ok) {
-            // La eliminación fue exitosa, refresca la lista de productos
-            loadUsuario();
-          }
-        })
-        .catch((error) => console.error('Error al eliminar el producto:', error));
-    }
+      .catch((error) => console.error('Error al eliminar el producto:', error))
+      .finally(() => {
+        setShowDeleteModal(false);
+        setDeleteUserId(null);
+      });
   };
 
   return (
     <div>
+      <ToastContainer/>
       <Header rol={rol}/>
 
       <Card className="global-margin-top">
@@ -165,7 +194,7 @@ function Gestionusuario({rol}) {
         <Modal.Body>
           <Card className="mt-3">
             <Card.Body>
-              <Card.Title>Registro de Usuario</Card.Title>
+  
               <Form className="mt-3">
                 <Row className="g-3">
                   <Col sm="6" md="6" lg="4">
@@ -180,11 +209,11 @@ function Gestionusuario({rol}) {
                     </FloatingLabel>
                   </Col>
                   <Col sm="6" md="6" lg="4">
-                    <FloatingLabel controlId="correo_Electronico" label="Presentación">
+                    <FloatingLabel controlId="correo_Electronico" label="Correo">
                       <Form.Control
                         type="text"
                         placeholder="Ingrese el correo"
-                        name="Correo_Electronico"
+                        name="correo_Electronico"
                         value={formData.correo_Electronico}
                         onChange={handleFormChange}
                       />
@@ -215,6 +244,24 @@ function Gestionusuario({rol}) {
           </Button>
         </Modal.Footer>
       </Modal>
+
+      <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
+  <Modal.Header closeButton>
+    <Modal.Title>Confirmar eliminación</Modal.Title>
+  </Modal.Header>
+  <Modal.Body className='center'>
+    ¿Seguro que deseas eliminar este usuario?
+  </Modal.Body>
+  <Modal.Footer>
+    <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
+      Cancelar
+    </Button>
+    <Button variant="danger" onClick={confirmDelete}>
+      Eliminar
+    </Button>
+  </Modal.Footer>
+</Modal>
+
     </div>
   );
 }

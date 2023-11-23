@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Table, Form, Row, Col, Container, FloatingLabel, Card, Button, Alert, Modal } from 'react-bootstrap';
 import Header from '../components/Header';
 import { FaSearch, FaTrashAlt, FaPlus } from 'react-icons/fa';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Detallecompra({ rol }) {
   const [productos, setProductos] = useState([]);
@@ -17,6 +19,27 @@ function Detallecompra({ rol }) {
     id_Producto: '',
     total_Compra: '',
     id_Compra: '',
+  });
+
+  const notifySuccess = (message) => {
+    toast.success(message, {
+      position: toast.POSITION.TOP_RIGHT,
+      autoClose: 2000, // Auto cerrar después de 3 segundos
+    });
+  };
+
+  const notifyError = (message) => {
+    toast.error(message, {
+      position: toast.POSITION.TOP_RIGHT,
+      autoClose: 2000,
+    });
+  };
+
+
+  const [formErrors, setFormErrors] = useState({
+    estado: '',
+    presentacion: '',
+    descripcion: '',
   });
 
   function formatearNumeroConComas(numero) {
@@ -69,6 +92,23 @@ function Detallecompra({ rol }) {
   }, []);
 
   const AgregarDetalleProducto = () => {
+    const errors = {};
+  
+    if (!selectedProducto) {
+      errors.selectedProducto = 'Seleccione un producto';
+    }
+  
+    if (!cantidad_Compra.trim()) {
+      errors.cantidad_Compra = 'Ingrese una cantidad';
+    }
+  
+    setFormErrors(errors);
+  
+    if (Object.values(errors).some((error) => error !== '')) {
+      // Puedes agregar más lógica aquí según tus necesidades
+      return;
+    }
+  
     if (selectedProducto && cantidad_Compra) {
       const nuevoDetalle = {
         id_Producto: selectedProducto.id_Producto,
@@ -78,9 +118,7 @@ function Detallecompra({ rol }) {
       };
       setDetallesVenta([...detallesVenta, nuevoDetalle]);
       setCantidadCompra('');
-      setSelectedProducto(null); // Cambiado de '' a null
-    } else {
-      alert('Asegúrese de seleccionar un producto o ingresar una cantidad.');
+      setSelectedProducto(null);
     }
   };
 
@@ -90,6 +128,29 @@ function Detallecompra({ rol }) {
   };
 
   const registrarVenta = () => {
+
+ // Validar campos vacíos
+ const errors = {};
+
+
+
+if (!fecha_Estimada) {
+
+  errors.fecha_Estimada = 'Ingresa la fecha estimada del pedido'
+}
+
+if (!estado) {
+  errors.estado = 'Ingresa el estado del pedido';
+}
+ // Actualizar el estado de los errores
+ setFormErrors(errors);
+
+ // Si hay errores, detener el envío del formulario
+ if (Object.values(errors).some((error) => error !== '')) {
+   return;
+ }
+
+
     const { fecha_compra, hora_compra } = getCurrentTime(); // Obtener fecha y hora actuales
     if (estado && fecha_Estimada && detallesVenta.length > 0) {
       const data = {
@@ -110,7 +171,7 @@ function Detallecompra({ rol }) {
         .then((result) => {
           if (result.message) {
             console.log('Venta registrada con éxito');
-            alert('¡Venta registrada con éxito!');
+            notifySuccess('¡Venta registrada con éxito!');
             setDetallesVenta([]);
             setFechaEstimada('');
             setEstado('');
@@ -125,21 +186,32 @@ function Detallecompra({ rol }) {
           console.error('Error en la solicitud:', error);
         });
     } else {
-      alert('Asegúrese de completar la información necesaria para registrar la venta.');
+     
     }
   };
 
 
   const handleNEstadoChange = (e) => {
-    // Validar que solo se ingresen letras
-    const nuevoNombre = e.target.value.replace(/[^a-zA-Z ]/g, ''); // Solo permite letras y espacios
-    setEstado(nuevoNombre);
+    const nuevoNombre = e.target.value.replace(/[^a-zA-Z ]/g, '');
+    if (!nuevoNombre.trim()) {
+      setFormErrors({ ...formErrors, estado: 'Ingrese un estado válido' });
+    } else {
+      setFormErrors({ ...formErrors, estado: '' });
+      setEstado(nuevoNombre);
+    }
   };
-
+  
   const handleCantidadChange = (e) => {
-    // Validar que solo se ingresen números no negativos
-    const nuevaCantidad = e.target.value.replace(/[^0-9]/g, ''); // Eliminar caracteres no numéricos
-    setCantidadCompra(nuevaCantidad);
+    const nuevaCantidad = e.target.value;
+  
+    // Verificar si el evento es un retroceso (backspace)
+    if (e.nativeEvent.inputType === 'deleteContentBackward' && nuevaCantidad.length === 0) {
+      setCantidadCompra('');
+    } else {
+      // Validar que solo se ingresen números no negativos
+      const nuevoValor = nuevaCantidad.replace(/[^0-9]/g, '');
+      setCantidadCompra(nuevoValor);
+    }
   };
 
 
@@ -159,6 +231,7 @@ function Detallecompra({ rol }) {
 
   return (
     <div>
+      <ToastContainer/>
       <Header rol={rol} />
 
       <Container>
@@ -177,6 +250,9 @@ function Detallecompra({ rol }) {
                       onChange={handleNEstadoChange}
                     />
                   </FloatingLabel>
+                  {formErrors.estado && (
+  <div className="error-message">{formErrors.estado}</div>
+)}
                 </Col>
                 <Col sm="6" md="6" lg="12">
                   <FloatingLabel controlId="fecha_estimada" label="Fecha Estimada">
@@ -186,6 +262,9 @@ function Detallecompra({ rol }) {
                       onChange={(e) => setFechaEstimada(e.target.value)}
                     />
                   </FloatingLabel>
+                  {formErrors.fecha_Estimada && (
+  <div className="error-message">{formErrors.fecha_Estimada}</div>
+)}
                 </Col>
                 <Col sm="12" md="4" lg="4">
                   <FloatingLabel controlId="producto" label="Producto">
@@ -198,11 +277,12 @@ function Detallecompra({ rol }) {
                       readOnly
                     />
                     <div className="button-container">
-                      <Button className="show-button-search" variant="outline-primary" onClick={openProductoModal}>
+                      <Button className="show-button-search" variant="primary" onClick={openProductoModal}>
                         <FaSearch />
                       </Button>
                     </div>
                   </FloatingLabel>
+
                 </Col>
 
                 <Col sm="12" md="4" lg="4">
@@ -213,15 +293,15 @@ function Detallecompra({ rol }) {
                       value={cantidad_Compra}
                       onChange={handleCantidadChange}
                     />
-                  </FloatingLabel>
-                </Col>
-
-
-                <Col sm="12" md="2" lg="2" className="">
-                  <Button className='show-button-add' onClick={AgregarDetalleProducto} variant="outline-success" size="lg">
+                       <div className="button-container">
+                  <Button className='show-button-add' variant="primary" onClick={AgregarDetalleProducto}  size="lg">
                     <FaPlus />
                   </Button>
+                  </div>
+                  </FloatingLabel>
+ 
                 </Col>
+
 
                 <Col sm="12" md="1" lg="12" className='container-top'>
                   <Card className="global-margin-top-compra">

@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar as solidStar } from '@fortawesome/free-solid-svg-icons';
 import { faStar as regularStar } from '@fortawesome/free-regular-svg-icons';
 
+
 function Comentario({rol}) {
   const [calificacion, setCalificacion] = useState(0);
   const [contenido_Comentario, setContenido_Comentario] = useState('');
@@ -63,7 +64,9 @@ function Comentario({rol}) {
 
   return (
     <div>
+      
       <Header rol={rol}/>
+      
 
       <Container>
         <Card className="global-margin-top">

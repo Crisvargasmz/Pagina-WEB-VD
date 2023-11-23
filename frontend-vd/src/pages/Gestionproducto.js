@@ -3,6 +3,9 @@ import { Table, Button, Card, Row, Col, Form, Modal, FloatingLabel } from 'react
 import Header from '../components/Header';
 import { FaSistrix, FaPencil, FaTrashCan } from 'react-icons/fa6';
 import axios from 'axios';
+import { Alert } from 'react-bootstrap';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Gestionproducto({ rol }) {
   const [productos, setProductos] = useState([]);
@@ -19,8 +22,28 @@ function Gestionproducto({ rol }) {
     id_Categoria: '',
   });
 
+  const notifySuccess = (message) => {
+    toast.success(message, {
+      position: toast.POSITION.TOP_CENTER,
+      autoClose: 800, // Auto cerrar después de 3 segundos
+    });
+  };
+
+  const notifyError = (message) => {
+    toast.error(message, {
+      position: toast.POSITION.TOP_CENTER,
+      autoClose: 800,
+    });
+  };
+
+
+
   const [imageUrl, setImageUrl] = useState('');
   const [imageFile, setImageFile] = useState(null); // Nuevo estado para el archivo de imagen
+
+  
+const [showDeleteModal, setShowDeleteModal] = useState(false);
+const [deleteProductoId, setDeleteProductoId] = useState(null);
 
   const handleNewFileChange = async (e) => {
     const file = e.target.files[0];
@@ -30,7 +53,7 @@ function Gestionproducto({ rol }) {
       formData.append('nuevaImagen', file);
 
       try {
-        const response = await axios.post('http://localhost:5000/upload', formData, {
+        const response = await axios.post('http://localhost:5000/upload2', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
@@ -40,9 +63,9 @@ function Gestionproducto({ rol }) {
           // Obtén la URL de la imagen cargada y puedes guardarla en tu estado o donde sea necesario.
           const imageUrl = response.data.imageUrl;
           setImageUrl(imageUrl);
-          alert('Carga de imagen exitosa');
+          notifySuccess('Carga de imagen exitosa');
         } else {
-          alert('Error al cargar la nueva imagen');
+          notifyError('Error al cargar la nueva imagen');
         }
       } catch (error) {
         console.error('Error al cargar la nueva imagen:', error);
@@ -181,7 +204,7 @@ function Gestionproducto({ rol }) {
       });
 
       if (response.data.message === 'Registro actualizado con éxito') {
-        alert('Actualización Exitosa');
+        notifySuccess('Actualización Exitosa');
         // Restablece los campos
         setFormData({
           nombre_Producto: '',
@@ -197,7 +220,7 @@ function Gestionproducto({ rol }) {
         setShowModal(false);
         loadProducto();
       } else {
-        alert('Error al actualizar el producto');
+        notifyError('Error al actualizar el producto');
       }
     } catch (error) {
       console.error('Error en la solicitud:', error);
@@ -206,25 +229,45 @@ function Gestionproducto({ rol }) {
   };
 
 
-
+  const [warningMessage, setWarningMessage] = useState('');
 
 
 
 
   const handleDelete = (id_Producto) => {
-    const confirmation = window.confirm('¿Seguro que deseas eliminar este producto?');
-    if (confirmation) {
-      fetch(`http://localhost:5000/crud/deleteproducto/${id_Producto}`, {
-        method: 'DELETE',
-      })
-        .then((response) => {
-          if (response.ok) {
-            loadProducto();
-          }
-        })
-        .catch((error) => console.error('Error al eliminar el producto:', error));
-    }
+    setDeleteProductoId(id_Producto);
+    setShowDeleteModal(true);
   };
+
+  const confirmDelete = () => {
+    // Realiza la solicitud DELETE al servidor para eliminar el producto
+    fetch(`http://localhost:5000/crud/deleteproducto/${deleteProductoId}`, {
+      method: 'DELETE',
+    })
+      .then((response) => {
+        if (response.ok) {
+          notifySuccess('Registro eliminado correctamente');
+          // La eliminación fue exitosa, refresca la lista de productos
+          loadProducto();
+        } else {
+          return response.json();
+        }
+      })
+      .then((data) => {
+        if (data && data.error) {
+          setWarningMessage('No se puede eliminar este producto porque está vinculado a un detalle de compra.');
+          setTimeout(() => {
+            setWarningMessage('');
+          }, 2000);
+        }
+      })
+      .catch((error) => console.error('Error al eliminar el producto:', error))
+      .finally(() => {
+        setShowDeleteModal(false);
+        setDeleteProductoId(null);
+      });
+  };
+  
 
   const openCategoryModal = () => {
     setShowCategoryModal(true);
@@ -263,7 +306,10 @@ function Gestionproducto({ rol }) {
 
   return (
     <div>
+
+      <ToastContainer/>
       <Header rol={rol} />
+
 
       <Card className="global-margin-top">
         <Card.Body>
@@ -281,6 +327,13 @@ function Gestionproducto({ rol }) {
               </FloatingLabel>
             </Col>
           </Row>
+
+          
+      {warningMessage && (
+  <Alert variant="warning" onClose={() => setWarningMessage('')} dismissible>
+    {warningMessage}
+  </Alert>
+)}
 
           <div className="table-responsive">
             <Table striped bordered hover>
@@ -338,7 +391,7 @@ function Gestionproducto({ rol }) {
         <Modal.Body>
           <Card className="mt-3">
             <Card.Body>
-              <Card.Title>Registro de producto</Card.Title>
+          
               <Form className="mt-3">
                 <Row className="g-3">
                   <Col sm="6" md="6" lg="6">
@@ -474,7 +527,7 @@ function Gestionproducto({ rol }) {
                         value={selectedCategory ? selectedCategory.nombre_Categoria : ''}
                         readOnly
                       />
-                      <Button className='show-button' variant="primary" onClick={openCategoryModal}>
+                      <Button className='show-button-modal' variant="primary" onClick={openCategoryModal}>
                         <FaSistrix />
                       </Button>
                     </FloatingLabel>
@@ -488,7 +541,7 @@ function Gestionproducto({ rol }) {
                         value={selectedBrand ? selectedBrand.nombre_Marca : ''}
                         readOnly
                       />
-                      <Button className='show-button' variant="primary" onClick={openBrandModal}>
+                      <Button className='show-button-modal' variant="primary" onClick={openBrandModal}>
                         <FaSistrix />
                       </Button>
                     </FloatingLabel>
@@ -532,6 +585,23 @@ function Gestionproducto({ rol }) {
           ))}
         </Modal.Body>
       </Modal>
+
+      <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
+  <Modal.Header closeButton>
+    <Modal.Title>Confirmar eliminación</Modal.Title>
+  </Modal.Header>
+  <Modal.Body className='center'>
+    ¿Seguro que deseas eliminar este producto?
+  </Modal.Body>
+  <Modal.Footer>
+    <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
+      Cancelar
+    </Button>
+    <Button variant="danger" onClick={confirmDelete}>
+      Eliminar
+    </Button>
+  </Modal.Footer>
+</Modal>
     </div>
   );
 }

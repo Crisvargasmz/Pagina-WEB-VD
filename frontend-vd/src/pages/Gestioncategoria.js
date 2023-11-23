@@ -3,6 +3,8 @@ import { Alert } from 'react-bootstrap';
 import { Table, Button, Container, Card, Row, Col, Form, Modal, FloatingLabel } from 'react-bootstrap';
 import Header from '../components/Header';
 import { FaSistrix, FaPencil, FaTrashCan } from 'react-icons/fa6';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Gestioncategoria({ rol }) {
   const [categorias, setCategorias] = useState([]);
@@ -11,6 +13,24 @@ function Gestioncategoria({ rol }) {
   const [formData, setFormData] = useState({
     nombre_Categoria: '',
   });
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+const [deletecategoriaId, setDeletecategoriaId] = useState(null);
+
+
+  const notifySuccess = (message) => {
+    toast.success(message, {
+      position: toast.POSITION.TOP_CENTER,
+      autoClose: 800, // Auto cerrar después de 3 segundos
+    });
+  };
+
+  const notifyError = (message) => {
+    toast.error(message, {
+      position: toast.POSITION.TOP_CENTER,
+      autoClose: 800,
+    });
+  };
 
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -71,6 +91,7 @@ function Gestioncategoria({ rol }) {
     })
       .then((response) => {
         if (response.ok) {
+          notifySuccess('Registro actualizado correctamente');
           // La actualización fue exitosa, puedes cerrar el modal y refrescar la lista de productos
           setShowModal(false);
           loadCategorias(); // Cargar la lista de productos actualizada
@@ -79,19 +100,21 @@ function Gestioncategoria({ rol }) {
       .catch((error) => console.error('Error al actualizar el registro:', error));
   };
 
-  // Función para eliminar una categoría
   const handleDelete = (id_Categoria) => {
-    const categoria = categorias.find((categoria) => categoria.id_Categoria === id_Categoria);
+    setDeletecategoriaId(id_Categoria);
+    setShowDeleteModal(true);
+  };
 
-    if (categoria) {
-      const confirmation = window.confirm('¿Seguro que deseas eliminar esta categoría?');
-      if (confirmation) {
+  // Función para eliminar una categoría
+  const confirmDelete = () => {
+  
         // Realiza la solicitud DELETE al servidor para eliminar la categoría
-        fetch(`http://localhost:5000/crud/deletecategoria/${id_Categoria}`, {
+        fetch(`http://localhost:5000/crud/deletecategoria/${deletecategoriaId}`, {
           method: 'DELETE',
         })
           .then((response) => {
             if (response.ok) {
+              notifySuccess('Registro eliminado correctamente');
               // La eliminación fue exitosa, refresca la lista de categorías
               loadCategorias();
             } else {
@@ -109,13 +132,17 @@ function Gestioncategoria({ rol }) {
               }, 2000); // 2000 milisegundos = 2 segundos
             }
           })
-          .catch((error) => console.error('Error al eliminar la categoría:', error));
-      }
-    }
-  };
+          .catch((error) => console.error('Error al eliminar el producto:', error))
+          .finally(() => {
+            setShowDeleteModal(false);
+            setDeletecategoriaId(null);
+          });
+      };
 
   return (
     <div>
+        <ToastContainer/>
+
       <Header rol={rol} />
 
       {/* Agregar un mensaje de advertencia si existe uno */}
@@ -172,7 +199,7 @@ function Gestioncategoria({ rol }) {
         <Modal.Body>
           <Card className="mt-3">
             <Card.Body>
-              <Card.Title>Registro de Categoria</Card.Title>
+    
               <Form className="mt-3">
                 <Row className="g-3">
                   <Col sm="6" md="6" lg="12">
@@ -206,6 +233,23 @@ function Gestioncategoria({ rol }) {
           </Button>
         </Modal.Footer>
       </Modal>
+
+      <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
+  <Modal.Header closeButton>
+    <Modal.Title>Confirmar eliminación</Modal.Title>
+  </Modal.Header>
+  <Modal.Body className='center'>
+    ¿Seguro que deseas eliminar esta categoria?
+  </Modal.Body>
+  <Modal.Footer>
+    <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
+      Cancelar
+    </Button>
+    <Button variant="danger" onClick={confirmDelete}>
+      Eliminar
+    </Button>
+  </Modal.Footer>
+</Modal>
     </div>
   );
 }

@@ -5,6 +5,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar as solidStar } from '@fortawesome/free-solid-svg-icons';
 import { faStar as regularStar } from '@fortawesome/free-regular-svg-icons';
 import { FaSistrix, FaPencil, FaTrashCan} from 'react-icons/fa6';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 function Gestioncomentario({rol}) {
@@ -16,6 +18,24 @@ function Gestioncomentario({rol}) {
     contenido_Comentario: '',
     fecha_Comentario:'',
   });
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+const [deleteComentarioId, setDeleteComentarioId] = useState(null);
+
+  const notifySuccess = (message) => {
+    toast.success(message, {
+      position: toast.POSITION.TOP_CENTER,
+      autoClose: 800, // Auto cerrar después de 3 segundos
+    });
+  };
+
+  const notifyError = (message) => {
+    toast.error(message, {
+      position: toast.POSITION.TOP_CENTER,
+      autoClose: 800,
+    });
+  };
+
   const [usuarios, setUsuarios] = useState([]);
   const [productos, setProductos] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -100,6 +120,7 @@ const filteredComentario = comentarios.filter((comentario) => {
     })
       .then((response) => {
         if (response.ok) {
+          notifySuccess('Registro actualizado correctamente');
           // La actualización fue exitosa, puedes cerrar el modal y refrescar la lista de comentarios
           setShowModal(false);
           loadComentario(); // Cargar la lista de comentarios actualizada
@@ -108,26 +129,35 @@ const filteredComentario = comentarios.filter((comentario) => {
       .catch((error) => console.error('Error al actualizar el registro:', error));
   };
 
-  // Función para eliminar un comentario
   const handleDelete = (id_Comentario) => {
-    const confirmation = window.confirm('¿Seguro que deseas eliminar este comentario?');
-    if (confirmation) {
+    setDeleteComentarioId(id_Comentario);
+    setShowDeleteModal(true);
+  };
+
+  // Función para eliminar un comentario
+  const confirmDelete = () => {
       // Realiza la solicitud DELETE al servidor para eliminar el comentario
-      fetch(`http://localhost:5000/crud/deletecomentarios/${id_Comentario}`, {
+      fetch(`http://localhost:5000/crud/deletecomentarios/${deleteComentarioId}`, {
         method: 'DELETE',
       })
         .then((response) => {
           if (response.ok) {
+            notifySuccess('Registro eliminado correctamente');
             // La eliminación fue exitosa, refresca la lista de comentarios
             loadComentario();
           }
         })
-        .catch((error) => console.error('Error al eliminar el comentario:', error));
-    }
-  };
+        .catch((error) => console.error('Error al eliminar el producto:', error))
+        .finally(() => {
+          setShowDeleteModal(false);
+          setDeleteComentarioId(null);
+        });
+    };
+    
 
   return (
     <div>
+        <ToastContainer/>
       <Header rol={rol}/>
 
       <Card className="global-margin-top">
@@ -174,7 +204,7 @@ const filteredComentario = comentarios.filter((comentario) => {
         <Modal.Body>
           <Card className="mt-3">
             <Card.Body>
-              <Card.Title>Registro de Comentario</Card.Title>
+
               <Form className="mt-3">
                 <Row className="g-3">
                   <Col sm="6" md="6" lg="6">
@@ -219,6 +249,23 @@ const filteredComentario = comentarios.filter((comentario) => {
           </Button>
         </Modal.Footer>
       </Modal>
+      <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
+  <Modal.Header closeButton>
+    <Modal.Title>Confirmar eliminación</Modal.Title>
+  </Modal.Header>
+  <Modal.Body className='center'>
+    ¿Seguro que deseas eliminar este comentario?
+  </Modal.Body>
+  <Modal.Footer>
+    <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
+      Cancelar
+    </Button>
+    <Button variant="danger" onClick={confirmDelete}>
+      Eliminar
+    </Button>
+  </Modal.Footer>
+</Modal>
+       
     </div>
   );
 }

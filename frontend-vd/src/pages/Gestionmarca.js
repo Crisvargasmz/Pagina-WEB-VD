@@ -3,6 +3,8 @@ import { Alert } from 'react-bootstrap';
 import { Table, Button, Container, Card, Row, Col, Form, Modal, FloatingLabel } from 'react-bootstrap';
 import Header from '../components/Header';
 import { FaSistrix, FaPencil, FaTrashCan} from 'react-icons/fa6';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Gestionmarca({rol}) {
   const [marcas, setMarcas] = useState([]);
@@ -11,8 +13,26 @@ function Gestionmarca({rol}) {
   const [formData, setFormData] = useState({
     nombre_Categoria: '',
   });
+
+  const notifySuccess = (message) => {
+    toast.success(message, {
+      position: toast.POSITION.TOP_CENTER,
+      autoClose: 800, // Auto cerrar después de 3 segundos
+    });
+  };
+
+  const notifyError = (message) => {
+    toast.error(message, {
+      position: toast.POSITION.TOP_CENTER,
+      autoClose: 800,
+    });
+  };
+
   
   const [searchQuery, setSearchQuery] = useState('');
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+const [deleteMarcaId, setDeleteMarcaId] = useState(null);
+
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
@@ -70,6 +90,7 @@ function Gestionmarca({rol}) {
     })
       .then((response) => {
         if (response.ok) {
+          notifySuccess('Marca actualizada correctamente');
           // La actualización fue exitosa, puedes cerrar el modal y refrescar la lista de productos
           setShowModal(false);
           loadMarca(); // Cargar la lista de productos actualizada
@@ -78,19 +99,20 @@ function Gestionmarca({rol}) {
       .catch((error) => console.error('Error al actualizar el registro:', error));
   };
 
-  // Función para eliminar una categoría
   const handleDelete = (id_Marca) => {
-    const categoria = marcas.find((marca) => marca.id_Marca === id_Marca);
+    setDeleteMarcaId(id_Marca);
+    setShowDeleteModal(true);
+  };
 
-    if (categoria) {
-      const confirmation = window.confirm('¿Seguro que deseas eliminar esta Marca?');
-      if (confirmation) {
-        // Realiza la solicitud DELETE al servidor para eliminar la categoría
-        fetch(`http://localhost:5000/crud/deletemarcas/${id_Marca}`, {
+  // Función para eliminar una categoría
+ const confirmDelete = () => {
+         // Realiza la solicitud DELETE al servidor para eliminar la categoría
+        fetch(`http://localhost:5000/crud/deletemarcas/${deleteMarcaId}`, {
           method: 'DELETE',
         })
           .then((response) => {
             if (response.ok) {
+              notifySuccess('Registro eliminado correctamente');
               // La eliminación fue exitosa, refresca la lista de categorías
               loadMarca();
             } else {
@@ -108,23 +130,22 @@ function Gestionmarca({rol}) {
               }, 2000); // 2000 milisegundos = 2 segundos
             }
           })
-          .catch((error) => console.error('Error al eliminar la categoria:', error));
-      }
-    }
-  };
+          .catch((error) => console.error('Error al eliminar el producto:', error))
+          .finally(() => {
+            setShowDeleteModal(false);
+            setDeleteMarcaId(null);
+          });
+        };
+        
 
   
 
   return (
     <div>
+          <ToastContainer/>
       <Header rol={rol}/>
 
-        {/* Agregar un mensaje de advertencia si existe uno */}
-        {warningMessage && (
-        <Alert variant="warning" onClose={() => setWarningMessage('')} dismissible>
-          {warningMessage}
-        </Alert>
-      )}
+ 
 
       <Card className="global-margin-top">
         <Card.Body>
@@ -142,6 +163,13 @@ function Gestionmarca({rol}) {
               </FloatingLabel>
             </Col>
           </Row>
+
+                 {/* Agregar un mensaje de advertencia si existe uno */}
+        {warningMessage && (
+        <Alert variant="warning" onClose={() => setWarningMessage('')} dismissible>
+          {warningMessage}
+        </Alert>
+      )}
 
           <Table striped bordered hover responsive>
             <thead>
@@ -174,7 +202,7 @@ function Gestionmarca({rol}) {
         <Modal.Body>
           <Card className="mt-3">
             <Card.Body>
-              <Card.Title>Registro de Marca</Card.Title>
+
               <Form className="mt-3">
                 <Row className="g-3">
                   <Col sm="6" md="6" lg="12">
@@ -208,6 +236,23 @@ function Gestionmarca({rol}) {
           </Button>
         </Modal.Footer>
       </Modal>
+
+      <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
+  <Modal.Header closeButton>
+    <Modal.Title>Confirmar eliminación</Modal.Title>
+  </Modal.Header>
+  <Modal.Body className='center'>
+    ¿Seguro que deseas eliminar esta marca?
+  </Modal.Body>
+  <Modal.Footer>
+    <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
+      Cancelar
+    </Button>
+    <Button variant="danger" onClick={confirmDelete}>
+      Eliminar
+    </Button>
+  </Modal.Footer>
+</Modal>
     </div>
   );
 }

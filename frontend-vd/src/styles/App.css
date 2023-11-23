@@ -62,6 +62,29 @@
   transition: color 0.3s ease; /* Transición suave del color */
 }
 
+.show-button-container {
+  position: relative; /* Ajusta el contenedor a posición relativa */
+ 
+}
+.show-button-modal{
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.show-button-modal{
+  right: 10px;
+  width: 46px;
+  height: 46px;
+  background-color: #28a745;
+  border-color: #28a745;
+
+}
+
 /* Estilos para los botones de búsqueda y agregar */
 /* Estilos para pantallas pequeñas (menos de 768px de ancho, ajusta este valor según sea necesario) */
 .show-button-container {
@@ -101,20 +124,48 @@
   border-color: #218838; /* Cambia el color del borde al pasar el mouse */
 }
 
+.show-button-search:hover,
+.show-button-add:hover{
+  background-color: #218838; /* Cambia el color de fondo al pasar el mouse */
+  border-color: #218838; /* Cambia el color del borde al pasar el mouse */
+
+}
 
 .show-button-search{
   position: absolute;
   right: 10px;
   top: 50%;
+  width: 47px;
+  height: 47px;
   transform: translateY(-50%);
   z-index: 1;
+  background-color: #28a745;
+  border-color: #28a745;
+}
+
+.show-button-add-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; /* Alinea el contenido al extremo derecho */
+  
 }
 
 .show-button-add {
-  width: 56px;
-  height: 56px;
-  z-index: 2; 
+  width: 47px;
+  height: 47px;
+  background-color: #28a745;
+  border-color: #28a745;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 11px; /* Ajusta la posición desde el borde derecho según tus necesidades */
+  z-index: 2;
 }
+
 
 /* Estilos para el centro del contenido */
 .centrado {
@@ -195,16 +246,12 @@
 
 /* Estilos para la imagen del producto */
 .image-card {
-  width: 70%;
-  /* Ajusta el ancho de la imagen al 70% del contenedor */
-  height: 250px;
-  /* Altura fija para evitar imágenes distorsionadas */
+  width: 100%;
+  height: 300px;
   object-fit: cover;
-  /* Escala la imagen para cubrir todo el contenedor sin distorsionarla */
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
   margin: 0 auto;
-  /* Centra la imagen horizontalmente */
 }
 
 /* Estilos para el título del producto */
@@ -441,6 +488,23 @@
 .button-color{
   background-color: #28a745;
   
+}
+
+.sin-acceso-container .sin-acceso-card{
+align-items: center;
+margin-top: 220px;
+
+
+}
+
+.error-message {
+  color: red;
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+}
+
+.center{
+  text-align: center;
 }
 
 

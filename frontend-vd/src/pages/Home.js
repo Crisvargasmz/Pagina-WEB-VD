@@ -6,6 +6,8 @@ import { FaComments } from 'react-icons/fa6';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar as solidStar } from '@fortawesome/free-solid-svg-icons';
 import { faStar as regularStar } from '@fortawesome/free-regular-svg-icons';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 function Catalogo({ rol,id_Usuario}) {
@@ -17,6 +19,22 @@ function Catalogo({ rol,id_Usuario}) {
   const [contenido_Comentario, setContenido_Comentario] = useState('');
   const [showcomentarioModal, setShowcomentarioModal] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState(null);
+
+  const notifySuccess = (message) => {
+    toast.success(message, {
+      position: toast.POSITION.TOP_CENTER,
+      autoClose: 800, // Auto cerrar después de 3 segundos
+    });
+  };
+
+  const notifyError = (message) => {
+    toast.error(message, {
+      position: toast.POSITION.TOP_CENTER,
+      autoClose: 800,
+    });
+  };
+
+
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
@@ -93,12 +111,12 @@ function Catalogo({ rol,id_Usuario}) {
 
       if (response.ok) {
         // El registro se creó exitosamente
-        alert('Registro exitoso');
+        notifySuccess('Registro exitoso');
         // Reiniciar los campos del formulario
         setCalificacion(0);
         setContenido_Comentario('');
       } else {
-        alert('Error al registrar comentario');
+        notifyError('Error al registrar comentario');
       }
     } catch (error) {
       console.error('Error en la solicitud:', error);
@@ -136,6 +154,7 @@ function Catalogo({ rol,id_Usuario}) {
 
   return (
     <div>
+       <ToastContainer/>
       <Header rol={rol} />
 
       <Container className="margen-contenedor">
@@ -181,7 +200,7 @@ function Catalogo({ rol,id_Usuario}) {
                 <FaComments/>
                 </Button>
                 <Card.Body>
-                <Card.Link href="/producto" className="btn btn-primary button-color">
+                <Card.Link  className="btn btn-primary button-color">
                       Agregar
                     </Card.Link>
                 </Card.Body>
@@ -194,6 +213,7 @@ function Catalogo({ rol,id_Usuario}) {
       <Modal show={showcomentarioModal} onHide={closecomentarioModal}>
   <Modal.Header closeButton>
     <Modal.Title>Comentario</Modal.Title>
+    
   </Modal.Header>
   <Modal.Body>
     <Form onSubmit={handleSubmit}>
@@ -216,8 +236,8 @@ function Catalogo({ rol,id_Usuario}) {
                 e.target.style.height = `${e.target.scrollHeight}px`;
               }}
               onKeyDown={(e) => {
-                // Permitir solo letras y números, y algunas teclas de control
-                if (!((e.key >= 'a' && e.key <= 'z') || (e.key >= 'A' && e.key <= 'Z') || (e.key >= '0' && e.key <= '9') || e.key === 'Backspace' || e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'Delete')) {
+                // Permitir solo letras, números y espacios
+                if (!((e.key >= 'a' && e.key <= 'z') || (e.key >= 'A' && e.key <= 'Z') || (e.key >= '0' && e.key <= '9') || e.key === ' ')) {
                   e.preventDefault();
                 }
               }}

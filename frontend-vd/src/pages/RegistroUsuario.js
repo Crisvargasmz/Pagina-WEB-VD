@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { Button, Container, Card, Row, Col, Form, FloatingLabel } from 'react-bootstrap';
 import Header from '../components/Header';
 import '../styles/App.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function RegistroUsuario(rol) {
   const navigate = useNavigate();
@@ -12,14 +14,56 @@ function RegistroUsuario(rol) {
   const [rolUser, setRolUser] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
+  const [formErrors, setFormErrors] = useState({
+    nombre_Usuario: '',
+    correo_Electronico: '',
+    contrasena: '',
+  });
+
+  const notifySuccess = (message) => {
+    toast.success(message, {
+      position: toast.POSITION.TOP_CENTER,
+      autoClose: 800, // Auto cerrar después de 3 segundos
+    });
+  };
+
+  const notifyError = (message) => {
+    toast.error(message, {
+      position: toast.POSITION.TOP_CENTER,
+      autoClose: 800,
+    });
+  };
+
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Verificar que todos los campos estén completos
-    if (!nombre_Usuario || !correo_Electronico || !contrasena || !rolUser) {
-      alert('Por favor, complete todos los campos');
-      return;
-    }
+ 
+        // Validar campos vacíos
+        const errors = {};
+
+        if (!nombre_Usuario) {
+          errors.nombre_Usuario = 'Ingrese un nombre de usuario';
+        }
+    
+        if (!correo_Electronico) {
+          errors.correo_Electronico = 'Ingrese un correo';
+        }
+    
+        if (!contrasena) {
+          errors.contrasena = 'Ingrese la contraseña';
+        }
+  
+    
+        // Actualizar el estado de los errores
+        setFormErrors(errors);
+    
+        // Si hay errores, detener el envío del formulario
+        if (Object.values(errors).some((error) => error !== '')) {
+          return;
+        }
+    
 
     const formData = {
       nombre_Usuario,
@@ -38,7 +82,7 @@ function RegistroUsuario(rol) {
       });
 
       if (response.ok) {
-        alert('Registro exitoso');
+        notifySuccess('Registro exitoso');
         setNombre_Usuario('');
         setCorreo_Electronico('');
         setContrasena('');
@@ -46,7 +90,7 @@ function RegistroUsuario(rol) {
         // Redirigir a la pantalla de inicio de sesión después del registro exitoso
         navigate('/');
       } else {
-        alert('Error al registrar el usuario');
+        notifyError('Error al registrar el usuario');
       }
     } catch (error) {
       console.error('Error en la solicitud:', error);
@@ -57,6 +101,7 @@ function RegistroUsuario(rol) {
 
   return (
     <div>
+        <ToastContainer/>
       <Header rol={rol} />
 
       <Container>
@@ -77,6 +122,7 @@ function RegistroUsuario(rol) {
                       maxLength="20"
                     />
                   </FloatingLabel>
+                  {formErrors.nombre_Usuario && <div className="error-message">{formErrors.nombre_Usuario}</div>}
                 </Col>
 
 
@@ -98,6 +144,7 @@ function RegistroUsuario(rol) {
                       {showPassword ? 'Ocultar' : 'Mostrar'}
                     </Button>
                   </FloatingLabel>
+                  {formErrors.contrasena && <div className="error-message">{formErrors.contrasena}</div>}
                 </Col>
 
                 <Col sm="6" md="6" lg="12">
@@ -109,6 +156,7 @@ function RegistroUsuario(rol) {
                       onChange={(e) => setCorreo_Electronico(e.target.value)}
                     />
                   </FloatingLabel>
+                  {formErrors.correo_Electronico && <div className="error-message">{formErrors.correo_Electronico}</div>}
                 </Col>
 
               </Row>

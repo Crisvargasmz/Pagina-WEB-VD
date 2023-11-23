@@ -2,11 +2,28 @@ import React, { useState } from 'react';
 import { Form, Row, Col, Container, FloatingLabel, Card, Button } from 'react-bootstrap';
 import Header from '../components/Header';
 import '../styles/App.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Categoria({rol}) {
 
   // Crear un estado para cada campo del formulario
   const [nombre_Categoria, setNombre_Categoria] = useState('');
+
+  
+  const notifySuccess = (message) => {
+    toast.success(message, {
+      position: toast.POSITION.TOP_CENTER,
+      autoClose: 800, // Auto cerrar después de 3 segundos
+    });
+  };
+
+  const notifyError = (message) => {
+    toast.error(message, {
+      position: toast.POSITION.TOP_CENTER,
+      autoClose: 800,
+    });
+  };
 
   // Función para manejar el envío del formulario
   const handleSubmit = async (e) => {
@@ -34,11 +51,11 @@ function Categoria({rol}) {
 
       if (response.ok) {
         // El registro se creó exitosamente
-        alert('Registro exitoso');
+       notifySuccess('Registro exitoso');
         // Reiniciar los campos del formulario
         setNombre_Categoria('');
       } else {
-        alert('Error al registrar la categoria');
+        notifyError('Error al registrar la categoria');
       }
     } catch (error) {
       console.error('Error en la solicitud:', error);
@@ -55,6 +72,8 @@ function Categoria({rol}) {
 
   return(
     <div>
+           
+  <ToastContainer/>
       <Header rol={rol}/>
       
       <Container>
