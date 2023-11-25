@@ -5,6 +5,7 @@ import Header from '../components/Header';
 import '../styles/App.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 
 function Usuario({ rol }) {
   const [nombre_Usuario, setNombre_Usuario] = useState('');
@@ -130,12 +131,12 @@ function Usuario({ rol }) {
                       onChange={(e) => setContrasena(e.target.value)}
                     />
                     <Button
-                      variant="outline-secondary"
-                      className="show-password-button"
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
-                      {showPassword ? 'Ocultar' : 'Mostrar'}
-                    </Button>
+                        variant="link"
+                        className="show-password-button"
+                        onClick={() => setShowPassword(!showPassword)}
+                      >
+                        {showPassword ? <AiOutlineEye /> : <AiOutlineEyeInvisible />}
+                      </Button>
                   </FloatingLabel>
                   {formErrors.contrasena && <div className="error-message">{formErrors.contrasena}</div>}
                 </Col>

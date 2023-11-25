@@ -7,6 +7,9 @@ GRANT CREATE,INSERT,UPDATE, DELETE ON variedadesduarte.*TO 'app_modifica';
 CREATE USER 'Devloper'@'localhost' IDENTIFIED BY 'dev2023';
 CREATE USER 'Read'@'localhost' IDENTIFIED BY 'read2023';
 CREATE USER 'Modifier'@'localhost' IDENTIFIED BY 'mod2023';
+CREATE USER 'des1'@'localhost' IDENTIFIED BY 'des1pass';
+GRANT process ON *.* TO 'des1'@'localhost';
+SHOW GRANTS FOR 'des1'@'localhost';
 
 GRANT 'app_desarrollador' TO 'Devloper'@'localhost';
 GRANT 'app_lee' TO 'Read'@'localhost';

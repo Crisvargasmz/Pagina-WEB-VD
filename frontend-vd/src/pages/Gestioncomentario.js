@@ -46,15 +46,13 @@ const [deleteComentarioId, setDeleteComentarioId] = useState(null);
 
 const filteredComentario = comentarios.filter((comentario) => {
   const calificacion = comentario.calificacion ? comentario.calificacion.toString().toLowerCase() : '';
-  const fecha_Comentario = comentario.fecha_Comentario ? comentario.fecha_Comentario.toLowerCase() : '';
   const contenido_Comentario = comentario.contenido_Comentario ? comentario.contenido_Comentario.toLowerCase() : '';
-  const usuario = usuarios.find((usuario) => usuario.id_Usuario === comentario.id_Usuario)?.nombre_Usuario ? usuarios.find((usuario) => usuario.id_Usuario === comentario.id_Usuario)?.nombre_Usuario.toLowerCase() : '';
-  const producto = productos.find((producto) => producto.id_Producto === comentario.id_Producto)?.nombre_Producto ? productos.find((producto) => producto.id_Producto === comentario.id_Producto)?.nombre_Producto.toLowerCase() : '';
+  const usuario = comentario.nombre_Usuario ? comentario.nombre_Usuario.toLowerCase() : '';
+  const producto = comentario.nombre_Producto ? comentario.nombre_Producto.toLowerCase() : '';
   const search = searchQuery.toLowerCase();
 
   return (
     calificacion.includes(search) ||
-    fecha_Comentario.includes(search) ||
     contenido_Comentario.includes(search) ||
     usuario.includes(search) ||
     producto.includes(search) ||
@@ -163,6 +161,18 @@ const filteredComentario = comentarios.filter((comentario) => {
       <Card className="global-margin-top">
         <Card.Body>
           <Card.Title className="mb-3 title ">Listado de comentarios</Card.Title>
+          <Row className="mb-3">
+            <Col>
+              <FloatingLabel controlId="search" label="Buscar">
+                <Form.Control
+                  type="text"
+                  placeholder="Buscar"
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                />
+              </FloatingLabel>
+            </Col>
+          </Row>
           <Table striped bordered hover responsive>
             <thead>
               <tr>

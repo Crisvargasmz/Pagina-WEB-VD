@@ -154,17 +154,18 @@ function Catalogo({ rol,id_Usuario}) {
 
   return (
     <div>
-       <ToastContainer/>
+      <ToastContainer />
       <Header rol={rol} />
 
       <Container className="margen-contenedor">
 
+        {/* Sección de búsqueda */}
         <Row className="margin-top-search">
-          <Col sm="6" md="6" lg="4">
+          <Col sm="8" md="6" lg="4">
             <FloatingLabel className="search-styles" controlId="search" label="Buscar">
               <Form.Control
                 type="text"
-                placeholder="Buscar"
+                placeholder="Buscar..."
                 value={searchQuery}
                 onChange={handleSearchChange}
                 onKeyDown={(e) => {
@@ -178,6 +179,7 @@ function Catalogo({ rol,id_Usuario}) {
           </Col>
         </Row>
 
+        {/* Sección de productos */}
         <Row className="card-styles">
           {filteredProducto.map((producto) => (
             <Col sm="12" md="4" lg="3" key={producto.id_Producto}>
@@ -188,76 +190,72 @@ function Catalogo({ rol,id_Usuario}) {
                   <Card.Text className="product-description">
                     {producto.descripcion}
                   </Card.Text>
-                  <div>
-                    
+                  <div className="product-details">
                     <div className="product-price">C$ {producto.precio.toFixed(2)}</div>
                     <Badge bg="warning" text="dark">
                       {/* Puedes agregar contenido a esta insignia si es necesario */}
                     </Badge>
                   </div>
                 </Card.Body>
-                <Button className='variant-primary button-color' onClick={() => opencomentarioModal(producto.id_Producto,id_Usuario)}>
-                <FaComments/>
+                <Button className='variant-primary button-color' onClick={() => opencomentarioModal(producto.id_Producto, id_Usuario)}>
+                  <FaComments />
                 </Button>
                 <Card.Body>
-                <Card.Link  className="btn btn-primary button-color">
-                      Agregar
-                    </Card.Link>
+                  <Card.Link className="btn btn-primary button-color">
+                    Agregar
+                  </Card.Link>
                 </Card.Body>
               </Card>
             </Col>
           ))}
         </Row>
-        
+
       </Container>
+
+      {/* Modal de comentarios */}
       <Modal show={showcomentarioModal} onHide={closecomentarioModal}>
-  <Modal.Header closeButton>
-    <Modal.Title>Comentario</Modal.Title>
-    
-  </Modal.Header>
-  <Modal.Body>
-    <Form onSubmit={handleSubmit}>
-      <div className="centered-inputs">
-        <Col sm="6" md="6" lg="6" className="mb-3">
-          <FloatingLabel controlId="calificacion" label="">
-            <StarRating rating={calificacion} onRatingChange={setCalificacion} />
-          </FloatingLabel>
-        </Col>
-        <Col sm="12" md="6" lg="12" className="mb-3">
-          <FloatingLabel controlId="contenido_Comentario" label="Comentario">
-            <Form.Control
-              as="textarea"
-              className="auto-expand-textarea"
-              placeholder="Ingrese el comentario"
-              value={contenido_Comentario}  
-              onChange={(e) => {
-                setContenido_Comentario(e.target.value);
-                e.target.style.height = 'auto';
-                e.target.style.height = `${e.target.scrollHeight}px`;
-              }}
-              onKeyDown={(e) => {
-                // Permitir solo letras, números y espacios
-                if (!((e.key >= 'a' && e.key <= 'z') || (e.key >= 'A' && e.key <= 'Z') || (e.key >= '0' && e.key <= '9') || e.key === ' ')) {
-                  e.preventDefault();
-                }
-              }}
-            />
-          </FloatingLabel>
-        </Col>
-        <div className="center-button">
-          <Button variant="primary" type="submit" className="mt-3 button-color" onClick={closecomentarioModal}>
-            Registrar
-          </Button>
-        </div>
-      </div>
-    </Form>
-  </Modal.Body>
-</Modal>
-
+        <Modal.Header closeButton>
+          <Modal.Title>Comentario</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={handleSubmit}>
+            <div className="centered-inputs">
+              <Col sm="6" md="6" lg="6" className="mb-3">
+                <FloatingLabel controlId="calificacion" label="">
+                  <StarRating rating={calificacion} onRatingChange={setCalificacion} />
+                </FloatingLabel>
+              </Col>
+              <Col sm="12" md="6" lg="12" className="mb-3">
+                <FloatingLabel controlId="contenido_Comentario" label="Comentario">
+                  <Form.Control
+                    as="textarea"
+                    className="auto-expand-textarea"
+                    placeholder="Ingrese el comentario"
+                    value={contenido_Comentario}
+                    onChange={(e) => {
+                      setContenido_Comentario(e.target.value);
+                      e.target.style.height = 'auto';
+                      e.target.style.height = `${e.target.scrollHeight}px`;
+                    }}
+                    onKeyDown={(e) => {
+                      // Permitir solo letras, números y espacios
+                      if (!((e.key >= 'a' && e.key <= 'z') || (e.key >= 'A' && e.key <= 'Z') || (e.key >= '0' && e.key <= '9') || e.key === ' ')) {
+                        e.preventDefault();
+                      }
+                    }}
+                  />
+                </FloatingLabel>
+              </Col>
+              <div className="center-button">
+                <Button variant="primary" type="submit" className="mt-3 button-color" onClick={closecomentarioModal}>
+                  Registrar
+                </Button>
+              </div>
+            </div>
+          </Form>
+        </Modal.Body>
+      </Modal>
     </div>
-
-    
-    
   );
 }
 

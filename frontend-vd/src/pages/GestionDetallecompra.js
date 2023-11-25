@@ -93,7 +93,7 @@ function GestionDetalle({ rol }) {
                 <th>Precio</th>
                 <th>Total</th>
                 <th>Estado</th>
-                <th>Acciones</th>
+            
               </tr>
             </thead>
             <tbody>
@@ -105,16 +105,6 @@ function GestionDetalle({ rol }) {
                   <td>C${formatearNumeroConComas(compra.precio_Compra)}</td>
                   <td>C${formatearNumeroConComas(compra.total_Compra)}</td>
                   <td>{compra.estado}</td>
-                  <td>
-                  <div className="button-container">
-    <Button className='actualizar' variant="primary" onClick={() => openModal(compra)}>
-      <FaPencil />
-    </Button>
-    <Button className='eliminar' variant="danger" onClick={() => ("")}>
-      <FaTrashCan />
-    </Button>
-  </div>
-                  </td>
                 </tr> 
               ))}
             </tbody>

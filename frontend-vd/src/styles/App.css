@@ -320,6 +320,25 @@
   color: white;
 }
 
+.product-description {
+  height: 80px; /* Ajusta la altura según tus preferencias */
+  overflow: hidden;
+}
+
+/* Estilos para el botón de comentarios y agregar */
+.variant-primary {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+}
+
+/* Estilos para el modal de comentarios */
+.centered-inputs {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .product-card .btn.btn-primary:hover {
   color: white;
 }
@@ -506,6 +525,12 @@ margin-top: 220px;
 .center{
   text-align: center;
 }
+
+.separator-container {
+  text-align: center; /* Centra el contenido en línea */
+}
+
+
 
 
 

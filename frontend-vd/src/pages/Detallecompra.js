@@ -23,15 +23,15 @@ function Detallecompra({ rol }) {
 
   const notifySuccess = (message) => {
     toast.success(message, {
-      position: toast.POSITION.TOP_RIGHT,
-      autoClose: 2000, // Auto cerrar después de 3 segundos
+      position: toast.POSITION.TOP_CENTER,
+      autoClose: 800, // Auto cerrar después de 3 segundos
     });
   };
 
   const notifyError = (message) => {
     toast.error(message, {
-      position: toast.POSITION.TOP_RIGHT,
-      autoClose: 2000,
+      position: toast.POSITION.TOP_CENTER,
+      autoClose: 800,
     });
   };
 

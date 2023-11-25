@@ -11,6 +11,14 @@ function Estadisticas({ rol }) {
   const [myChart, setMyChart] = useState(null);
   const [myChart2,setMyChart2] = useState(null);
 
+  function formatearNumeroConComas(numero) {
+    // Aplica toFixed para limitar los decimales a dos
+    const numeroFormateado = Number(numero).toFixed(2);
+    
+    // Usa una expresión regular para agregar comas
+    return numeroFormateado.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+
   useEffect(() => {
     fetch('http://localhost:5000/crud/readDetalleCompras')
       .then((response) => response.json())
@@ -37,8 +45,8 @@ function Estadisticas({ rol }) {
           datasets: [{
             label: 'Cantidad de productos',
             data: cantidad,
-            backgroundColor: 'rgba(54, 162, 235, 0.5)',
-            borderColor: 'rgba(54, 162, 235, 1)',
+            backgroundColor: 'rgba(0, 128, 0, 0.5)', // Cambia el color a verde
+            borderColor: 'rgba(0, 128, 0, 1)',
             borderWidth: 1
           }]
         },
@@ -72,8 +80,8 @@ function Estadisticas({ rol }) {
           datasets: [{
             label: 'Total de las compras',
             data: totalcompra,
-            backgroundColor: 'rgba(54, 162, 235, 0.5)',
-            borderColor: 'rgba(54, 162, 235, 1)',
+            backgroundColor: 'rgba(0, 128, 0, 0.5)', // Cambia el color a verde
+            borderColor: 'rgba(0, 128, 0, 1)',
             borderWidth: 1
           }]
         },
@@ -91,24 +99,25 @@ function Estadisticas({ rol }) {
 
   const generarReporteCompras = () => {
     fetch('http://localhost:5000/crud/readDetalleCompras')
-      .then((response) => response.json())
-      .then((detallesCompra) => {
-        console.log('Detalles de compra obtenidos:', detallesCompra);
-  
-        const doc = new jsPDF();
-        doc.text('Reporte de Detalles de Compra', 20, 10);
+    .then((response) => response.json())
+    .then((detallesCompra) => {
+      console.log('Estado de las ventas:', detallesCompra);
+    
+      const doc = new jsPDF();
+      doc.text('Reporte de las ventas', 20, 10);
   
         const headers = ['Producto','Precio', 'Precio Compra', 'Stock', 'Cantidad Compra', 'Total Compra'];
         const data = detallesCompra.map((detalleCompra) => [
           detalleCompra.nombre_Producto,
-          `C$ ${detalleCompra.precio.toFixed(2)}`, // Agrega el signo de córdoba y formatea a dos decimales
-        `C$ ${detalleCompra.precio_Compra.toFixed(2)}`, // Agrega el signo de córdoba y formatea a dos decimales
+          `C$ ${formatearNumeroConComas(detalleCompra.precio)}`, // Agrega el signo de córdoba y formatea a dos decimales
+        `C$ ${formatearNumeroConComas(detalleCompra.precio_Compra)}`, // Agrega el signo de córdoba y formatea a dos decimales
           detalleCompra.cantidad,
           detalleCompra.cantidad_Compra,
           `C$ ${detalleCompra.total_Compra.toFixed(2)}`, // Agrega el signo de córdoba y formatea a dos decimales
         ]);
   
         // Agrega la tabla de detalles al documento PDF
+        try{
         doc.autoTable({
           startY: 20,
           head: [headers],
@@ -117,10 +126,13 @@ function Estadisticas({ rol }) {
           margin: { top: 15 },
         });
   
-        doc.save('reporte_compras.pdf');
-        console.log('Documento PDF generado y descargado.');
+        doc.save('reporte_ventas.pdf');
+          console.log('Documento PDF generado y descargado.');
+        } catch (error) {
+          console.error('Error al generar el PDF con autoTable:', error);
+        }
       })
-      .catch((error) => console.error('Error al obtener los detalles de compra:', error));
+      .catch((error) => console.error('Error al obtener el stock:', error));      
   };
 
   const generarReporteAlmacen = () => {
@@ -135,7 +147,7 @@ function Estadisticas({ rol }) {
         const headers = ['Producto', 'Precio', 'Stock'];
         const data = detallesCompra.map((detalleCompra) => [
           detalleCompra.nombre_Producto,
-          `C$ ${detalleCompra.precio.toFixed(2)}`,
+          `C$ ${formatearNumeroConComas(detalleCompra.precio)}`,
           detalleCompra.cantidad,
         ]);
       
